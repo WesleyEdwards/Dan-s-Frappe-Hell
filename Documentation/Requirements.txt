@@ -72,6 +72,20 @@ Functional Requirements
 
 6. Managerial Functionality
     6.1 There must exist an inventory Management system
-        6.1.1.x Employees can be granted access to this system
+        6.1.1 System must track amount of ingredients in the store
+        6.1.2 System must contain current menu with ingredient requirements for each item
+        6.1.3 System must track ingredient prices
+            6.1.3.1 For purposes of this assignment, manager can modify ingredient prices
+        6.1.4 System must generate prices based on cost of ingredients, cost of labour, and markup percentage
+        6.1.5 System must generate an order list for users to create an order for new ingredients
+        6.1.6 System must deduct from store-level account the price of the order of new ingredients
+        6.1.7 Employees can be granted access to this system
     6.2 There must exist a payroll system
-    6.3 There must exist a store account with tracked transactions
+        6.2.1 Manager must be able to set pay level for each employee
+        6.2.2 System must import employee hour tracking from employee POS
+        6.2.3 Manager must approve pay for each employee
+        6.2.4 Upon approval employee pay is deducted from store account
+        6.2.5 System automatically deducts taxes? (We could make up values)
+    6.3 There must exist a store account 
+        6.3.1 Manager must be able to view store balance and transactions
+        6.3.2 There must exist a search feature to filter transactions
