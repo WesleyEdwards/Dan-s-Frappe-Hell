@@ -87,7 +87,7 @@
 	- Event flow:
 		1. Actor navigates to add funds page
 		2. Actor is presented with current funds
-## 5. Time Tracking
+## 4. Time Tracking
 ![UseCaseDiagram.drawio.png](ucd/ucd_hours.png)
 - Name: Enter Time
 	- Participating Actor: Barista or Cashier
@@ -111,7 +111,7 @@
 		- Actor selects amount of hours to remove from timecard
 		- Actor hits "remove hours" button
 		- Hours are saved to actor's account
-## 6. Make Order
+## 5. Make Order
 ![UseCaseDiagram.drawio.png](ucd/ucd_makeorder.png)
 - Name: Make Order
 	- Participating actor: Customer or Manager
@@ -148,7 +148,7 @@
 	- Event flow:
 		1. Total price of submitted order is calculated
 		2. Balance is deducted from the Actor's account
-## 7. Order Management
+## 6. Order Management
 ![UseCaseDiagram.drawio.png](ucd/ucd_ordermanagement.png)
 - Name: Mark Order Built
 	- Participating Actor: Barista
@@ -182,6 +182,30 @@
 	- Event Flow
 		1. Actor enters orders screen
 		2. Active orders are displayed
+## 7. Stock Management
+![UseCaseDiagram.drawio.png](ucd/ucd_materials.png)
+- Name: View Stock
+	- Participating Actor: Manager or Barista
+	- Entry Condition:
+		- Actor is logged in
+		- Actor is on available stock page
+	- Exit Condition:
+		- Amount of each ingredient available in stock is listed
+	- Event Flow
+		1. Actor enters stock screen
+		2. Stock is displayed
+- Name: Order Materials
+	- Participating Actor: Manager
+	- Entry Condition:
+		- Actor is logged in
+		- Actor is on order stock page
+	- Exit Condition:
+		- Stock has been added to account
+	- Event Flow
+		1. Manager selects amount of each ingredient they'd like to purchase
+		2. Manager hits 'order now' button
+		3. Value is deducted from store Account
+		4. Stock is added to account.
 ## 8. Pay Employees
 ![UseCaseDiagram.drawio.png](ucd/ucd_pay.png)
 - Name: Pay Employees
