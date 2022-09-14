@@ -62,3 +62,21 @@ export interface FoodModifications {
     name: string;
     price: number;
 }
+
+export interface Store {
+    storeBalance: number;
+    currentFoodItems: string[];
+    currentFoodMods: string[];
+    currentEmployees: string[];
+    foodItemStock: FoodItemStock[];
+    foodModStock: FoodModStock[];
+}
+
+export interface FoodItemStock {
+    foodItemId: string;
+    quantity: number;
+}
+export interface FoodModStock {
+    foodItemId: string;
+    quantity: number;
+}
