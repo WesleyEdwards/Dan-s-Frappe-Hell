@@ -1,0 +1,19 @@
+
+# Visual Studio Code #
+.vscode/*
+
+# React #
+node_modules/
+.cache/
+dist/
+.env
+.DS_Store
+coverage/
+
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
