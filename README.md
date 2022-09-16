@@ -24,13 +24,17 @@
 ## Build instructions
 
 1. Clone this repository by using the following command:\
-`$ git clone git@github.com:WesleyEdwards/Dan-s-Frappe-Hell.git`
+   `$ git clone git@github.com:WesleyEdwards/Dan-s-Frappe-Hell.git`
 2. inside the cloned repository, you will see two important directories, titled <b>front-end/</b> and <b>back-end/</b>.
-3. The back-end directory contains a Django Rest Frame-work project. start serving it on port 8000 by typing the command\
-`$ python3 manage.py runserver`.
-4. The front-end directory contains a React.js project. Start serving it on port 3000 by typing the command:\
-`$ npm start`.
-5. Open a web-browser and go to `http//:localhost:3000/`. You will be presented with the project.
+3. The back-end directory contains a Django Rest Frame-work project. navigate into it and install necessary dependencies:\
+   - django, django rest framework, cors headers
+4. start serving it on port 8000 by typing the command\
+   `$ python3 manage.py runserver`.
+5. The front-end directory contains a React.js project. navigate into the directory and install necessary node modules with the following command:\
+   `$ npm install`
+6. Start serving it on port 3000 by typing the command:\
+   `$ npm start`.
+7. Open a web-browser and go to `http//:localhost:3000/`. You will be presented with the project.
 
 ## Unit testing instructions
 
