@@ -1,0 +1,65 @@
+<mxfile host="65bd71144e">
+    <diagram id="rfjSN9cdk0lPBWMgBJ06" name="Page-1">
+        <mxGraphModel dx="1844" dy="890" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="zSOSA6TjUo3DJ6Rty31Y-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="90" width="550" height="390" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" style="edgeStyle=none;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="zSOSA6TjUo3DJ6Rty31Y-5" target="4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="zSOSA6TjUo3DJ6Rty31Y-5" value="Manager" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+                    <mxGeometry x="770" y="200" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="zSOSA6TjUo3DJ6Rty31Y-7" value="Log in" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="140" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="zSOSA6TjUo3DJ6Rty31Y-19" value="Create Account" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="130" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="zSOSA6TjUo3DJ6Rty31Y-20" value="Dan's Frappuccino Hell System - Employee Management" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="110" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="zSOSA6TjUo3DJ6Rty31Y-37" value="&amp;lt;&amp;lt;extends&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="zSOSA6TjUo3DJ6Rty31Y-19" target="zSOSA6TjUo3DJ6Rty31Y-7" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="430.4711687278976" y="490.52500241087444" as="sourcePoint"/>
+                        <mxPoint x="419.5369524269768" y="459.4830138310292" as="targetPoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="4" value="Add Employee" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="250" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&amp;lt;&amp;lt;includes&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="4" target="zSOSA6TjUo3DJ6Rty31Y-7" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="324.9933683619679" y="187.99867367239358" as="sourcePoint"/>
+                        <mxPoint x="440.1906649413436" y="211.77360509007008" as="targetPoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6" value="Delete Employee" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="220" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Set Wage" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="360" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="&amp;lt;&amp;lt;extends&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="6" target="4" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="324.9933683619679" y="187.99867367239358" as="sourcePoint"/>
+                        <mxPoint x="440.1906649413436" y="211.77360509007008" as="targetPoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="&amp;lt;&amp;lt;extends&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="7" target="4" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="334.9933683619679" y="197.99867367239358" as="sourcePoint"/>
+                        <mxPoint x="450.1906649413436" y="221.77360509007008" as="targetPoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
