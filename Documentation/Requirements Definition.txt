@@ -1,0 +1,155 @@
+Requirements Definition
+
+1. Introduction
+    In the food service industry point-of-sale (POS) systems, inventory management, customer facing website and ordering, workflow, and payroll are frequently implemented as individual systems and cobbled together through use of APIs or paperwork.  This can quickly become complicated and increases the number of failure points within the business management system (lost paperwork, software integrations failing etc.). This solution will contain multiple, customisable user roles, a full suite of modules for managers and workers, and a customisable public-facing sales site that will allow for streamlined operation of a store.  This document describes the requirements for a one-stop business management system targeted specifically at the food service industry.  
+
+    This document will describe the requirements and user goals for this solution targeted at an initial customer, Dan's Frappacino Hell. This solution is targeted towards food service business owners looking for a lightweight, easy-to-use management software without needing to mess with multiple pieces of software that will allow for three basic user roles:
+        1. Managers: This user type will have full control over the application and access to all its features and can control others permissions
+        2. Employees: This user type will be configurable by the manager to have access to the various system that each employee of the business needs to acommplish their work
+        3. Customers: This user type will have access to the public-facing sales site and will be able to place online orders, but will have no other access to the software's Functional
+    
+    Section 2 of this document will discuss user roles and goals in more detail. Section 3 contains a list of functional requreiments that outline a feature set to accomplish the goals of this solution, including their developmental priority with the development team.  Section 4 contains a list of non-functional requirements that will allow the development team to meet solution goals and deliverables.  Additional features not included with the first version of this solution will be described in section 5. 
+
+2. User Roles and Goals
+    As stated in the introduction, this solution will contain three overarching, but modifiable user roles. The goals will vary for each user and each user description will include a use-case scenario. Despite the varying goals of each user type, the overall solution will be designed such that users of almost any computer literacy will be able to easily and efficiently use the solution. 
+    2.1 Managers
+        Managers will be the administrative level user of the solution with the ability to modify almost every aspect of the solution.  They will have acess to all managerial functions (described in section 4.6), but will also be able to modify employee access to different parts of the software, depending on their responsibilities.  Consider the following scenario:  Kesha is the manager of Dan's Frappacino Hell and has a new employee joining the team.  She will log into the system with her unique username and password, create a new employee-type user and assign them access to the employee-facing POS system. She will not grant them access to workflow and inventory management since they are brand new. She then sets up the new employees pay rate. Her personal information will already exist within her employee account so this information will not need to be entered again for the payroll system. 
+    2.2 Employees
+        Employees are the heart of any business and need a set of tools that will help them efficiently accomplish tasks.  Employees can be granted access to the follwing tools: Employee-facing POS system, workflow/order management system, and inventory management system. Consider the following scenario: Jim is a long-time employee at Dan's Frappacino Hell during a morning rush.  He will need to switch tasks frequently to keep up with the steady stream of online and in-person orders.  He signs into one of the front computers to access the employee-facing POS system to assist in-person customers with their orders. Later, he signs into the makeline station to help make and clear a backlog of orders.  Towards the end of his shift, the manager asks him to do a count of inventory and create a new order for her to review. 
+    2.3 Customers
+        Hungry customers want a site to be easy to use, efficient, and minimise the amount of time they spend ordering so that they can receive their favourite items faster.  The customer facing section of the solution will have a publicly-accessible menu and a private account where they can store payment and personal information, view order history, and quickly re-order favourited drinks.  
+
+3. Functional Requirements
+    1. User Authentication
+    1.1 System must require all users to authenticate before accessing system functions/features
+        1.1.1 New users must set up individual accounts (high)
+            1.1.1.1 New employees must have username set by manager and initial password with appropriate permissions to be completed by the employee
+            1.1.1.2 New customers must have the ability to set up a customer account
+            1.1.1.3 New account passwords must meet minimum security standards 
+            1.1.1.4 New users must set their initial password and then log back into the software to gain access to system features/functions
+        1.1.2 For any future access to the system users must be prompted for their username or password (high)
+            1.1.2.1 If user enters correct credentials, the user is granted access to the system
+            1.1.2.2 If user enters invalid credentials the user is notified and access is not granted to the system
+            1.1.2.3 If a user has forgotten their credentials, users can request a password reset 
+        1.1.3 Authenticated users must be issued a persistent cookie to verify authentication switching between activities (high)
+        
+    2. User Profile Management and Permission controls
+        2.1 There must exist 3 user types with associated permissions and abilities (high)
+            2.1.1 There must exist a customer account type with limited access 
+                2.1.1.1 Customers must be able to create their own account
+                2.1.1.2 Customer must not have ability to modify any other information
+                2.1.1.3 Customer must have access to customer-facing POS system
+                2.1.1.4 Customer must maintain a balance on their account
+                2.1.1.5 Customer must have a favourites section that only they control
+            2.1.2 There must exist an employee account type
+                2.1.2.1 Employee can be granted access to employee-facing POS, Workflow and Inventory Management
+                2.1.2.2 Employee cannot modify their own access
+                2.1.2.3 Employee must be able to create new customer accounts
+                2.1.2.4 Employee must be able to log hours worked
+            2.1.3 There must exist a manager account type
+                2.1.3.1 Manager must be able to create new employee accounts
+                2.1.3.2 Manager must be able to create new customer accounts
+                2.1.3.3 Manager must be able to set employee access permissions
+                2.1.3.4 Manager must have access to employee-facing POS, Inventory Management, Workflow, and Payroll
+                2.1.3.5 Manager must have access to store account
+        2.2 User must have control over their own account (medium)
+
+    3. Public Access and Controls
+        3.1 General public will not be allowed access to software functionality (high)
+        3.2 General public must be able to see menu items and potential configurations (low)
+        3.3 General public must have access to login page (medium)
+        3.4 General public must have access to customer account creation page (medium)
+
+    4. Point of Sale (POS) functionality 
+        4.1 There must exist a customer-facing POS functionality for a customer to order their own drinks (high)
+            4.1.1 System must contain a menu of all options offered (high)
+                4.1.1.1 Customer must be able to select drink from existing menu items, or create their own drink
+                4.1.1.2 Customer must be able to modify a selected menu item with their preferred ingredients before the item is added to the cart
+            4.1.2 System must have a cart to hold current customer order (high)
+                4.1.2.1 If customer is logged out, or fails to complete the order, the cart is saved to the users account
+            4.1.3 System must take payments from customers at time of order creation
+                4.1.3.1 Balance of cart must be automatically deducted from the users account and added to the store account
+            4.1.4 System must be aesthetically pleasing and easy to navigate (low)
+                4.1.4.1 Simple menu and easy to use controls
+                4.1.4.2 Accessibility options? 
+            4.1.5 Customer must be able to save favourite items to their account (medium)
+                4.1.5.1 Customer must be able to add favourite drinks directly to their cart
+            4.1.6 Workflow system must be notified when a new order is created  (high)
+            
+        4.2 There must exist an employee facing POS system for walk-in customers and order pick-up
+            4.2.1 Employee must be able to find active and past customer orders (high)
+                4.2.1.1 Employee must be able to see status of active orders
+                4.2.1.2 Employee must be able to complete an active order
+            4.2.2 Employee-facing POS must follow requirements 4.1.1-4.1.4 (follows priorities listed in those sections)
+            4.2.3 Employee must be able to reload customer balance
+            4.2.4 Employee must be able to modify customer contact information
+            
+    5. Workflow and Order Status functionality
+        5.1 Employee must be able to view all active customer orders (high)
+        5.2 Employee must be able to clear an order once drink is made (medium)
+        5.3 System may display recipe for item to employee (low)
+        5.4 System must notify/update inventory once order is cleared (high)
+
+
+    6. Managerial Functionality
+        6.1 There must exist an inventory Management system (high)
+            6.1.1 System must track amount of ingredients in the store (high)
+            6.1.2 System must contain current menu with ingredient requirements for each item (medium)
+            6.1.3 System must track ingredient prices (low)
+                6.1.3.1 For purposes of this assignment, manager can modify ingredient prices
+            6.1.4 System may generate prices based on cost of ingredients, cost of labour, and markup percentage (medium)
+            6.1.5 System may generate an order list for users to create an order for new ingredients (medium)
+            6.1.6 System must deduct from store-level account the price of the order of new ingredients (high)
+            6.1.7 Employees can be granted access to this system (high)
+        6.2 There must exist a payroll system (high)
+            6.2.1 Manager must be able to set pay level for each employee at a minimum of $15/hr (high)
+            6.2.2 System must import employee hour tracking from employee POS (high)
+            6.2.3 Manager must approve pay for each employee (high)
+            6.2.4 Upon approval employee pay is deducted from store account (high)
+            6.2.5 System may automatically deducts taxes (low)
+        6.3 There must exist a store account (high)
+            6.3.1 Manager must be able to view store balance and transactions (medium)
+            6.3.2 There must exist a search feature to filter transactions (low)
+
+4. Non-Functional Requirements
+    1. Project must be completed by Dec 4
+        1.1 Sprint 1 to be completed by 16 September 2022 with following items:
+            1.1.1 Git repo with initial documents (Project plan, Use Case Diagrams, Requirements Definition, README.md)
+            1.1.2 Project plan will include summary of project, description of team organisation, description of development process, communicaiton policies/procedures/tools and a risk analysis
+            1.1.3 README.md will include explanation of organisation and name scheme for workspace, version control procedures, tool stack description and setup procedure, build instructions, system testing instructions
+            1.1.4 Use Case Diagrams must document actors and goals
+        1.2 Sprint 2 to be completed by 3 October 2022 with the following items:
+            1.2.1 Product backlog 
+            1.2.2 Revised README.md if needed
+            1.2.3 Revised Project plan if needed
+            1.2.4 Revised requirements if needed
+            1.2.5 Conceptual model with use case diagrams, class diagram and activity diagrams
+            1.2.6 Two prototypes of high-priority features
+            1.2.7 History of scrum 
+        1.3 Sprint 3 to be completed by 16 November 2022 with the following items:
+            1.3.1 Initial implementation with executable unit test cases
+            1.3.2 Sprint planning documents
+            1.3.3 Standup reports
+            1.3.4 Sprint retrospective reports
+        1.4 Sprint 4 to be completed on December 4 2022
+            1.4.1 Final project delivery 
+    2. Team will meet every Monday, Wednesday, and Friday at 1715 to discuss work and collaborate 
+    3. All software elements must have clear, easy to use UI 
+    4. Team will be divided in two
+        4.1 Geoffrey and Josh will design and implement the back-end REST API 
+        4.2 Landon and Wesley will design the front end using REACT
+    4. Team will use Git version control system to track implementation and testing of the project
+        4.1 Software will be added to repository on github
+        4.2 Repo will be managed by a team member 
+        4.3 Pull requests will be reviewed by the other member of frontend/backend team
+    5. Team will define and implement unit tests for the front and backend parts of the solution
+        5.1 Backend testing will be implemented with PyTest 
+        5.2 Frontend testing will be implemented with Selenium
+
+5. Future Features
+    1. Mobile Application
+        This solution will be implemented as a website, however, a helpful solution for businesses would be an accompanying mobile application that performs the same functionality as a website but in a better UX for mobile users.  This will allow the business to deploy tablets instead of machines
+    2. Biometric Authentication for Employee/Manager access
+        Will allow for faster log-on and role switching
+    3. Payment System 
+        The initial project will not have a way to process credit card payments natively, instead customer and store balances will be simulated.  To fully deploy this solution for a business, it would need to accept all major forms of digital payment.
