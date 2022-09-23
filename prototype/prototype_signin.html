@@ -25,11 +25,12 @@
 
     <title>Document</title>
   </head>
-  <body>
+  <body style="background-color: dimgray;">
     <center>
       <form action="submit" method="get">
         <div class="container">
           <h2>Login</h2>
+          <h4>Dan's Frappuccino Hell</h4>
           <div class="login-field">
             <label for="email" class="login-label">Email</label>
             <input type="text" name="email" id="email" />
@@ -38,7 +39,10 @@
             <label for="password" class="login-label">Password</label>
             <input type="text" name="password" id="password" />
           </div>
-          <input type="submit" value="Login" />
+          <!-- <input type="submit" value="Login" /> -->
+          <div class="flex" flex-direction="row" justify-content="flex-end">
+            <button type="submit">Login</button>
+          </div>
           <p style="padding-top: 4vh">The Email and password will be logged to the console upon submission.</p>
           <p>A possible call to the backend has been commented out in prototype_signin.html</p>
         </div>
