@@ -46,7 +46,7 @@ def refreshdb():
         db.executescript(f.read().decode('utf8'))
     return 'Done'
 
-@app.route('/auth/token', methods=('POST'))
+@app.route('/auth/token', methods=(['POST']))
 def get_token():
     if request.method == 'POST':
         email = request.form['email']

@@ -25,7 +25,7 @@
 
     <title>Document</title>
   </head>
-  <body style="background-color: dimgray;">
+  <body style="background-color: dimgray">
     <center>
       <form action="submit" method="get">
         <div class="container">
@@ -43,36 +43,40 @@
           <div class="flex" flex-direction="row" justify-content="flex-end">
             <button type="submit">Login</button>
           </div>
-          <p style="padding-top: 4vh">The Email and password will be logged to the console upon submission.</p>
-          <p>A possible call to the backend has been commented out in prototype_signin.html</p>
+          <p style="padding-top: 4vh">
+            The Email and password will be logged to the console upon
+            submission.
+          </p>
+          <p>
+            A possible call to the backend has been commented out in
+            prototype_signin.html
+          </p>
         </div>
       </form>
     </center>
 
     <script>
-        const submitAction = (e) => {
-            e.preventDefault();
-            const email = document.querySelector("#email").value;
-            const password = document.querySelector("#password").value;
-            console.log(`Email: ${email}, Password: ${password}`);
-        
-            // fetch("http://localhost:3000/login", {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify({
-            //         email,
-            //         password,
-            //     }),
-            // })
-            //     .then((res) => res.json())
-            //     .then((data) => console.log(data));
-        }
+      const submitAction = (e) => {
+        e.preventDefault();
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+        console.log(`Email: ${email}, Password: ${password}`);
 
-        const form = document.querySelector("form");
-        form.addEventListener("submit", submitAction);
+        fetch("http://localhost:5000/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        })
+          .then((res) => console.log(res));
+      };
 
+      const form = document.querySelector("form");
+      form.addEventListener("submit", submitAction);
     </script>
   </body>
 </html>
