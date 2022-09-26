@@ -63,7 +63,7 @@
         console.log(`Email: ${email}, Password: ${password}`);
 
         fetch("http://localhost:5000/", {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
@@ -72,9 +72,13 @@
             password,
           }),
         })
-          .then((res) => console.log(res));
+          .then((data) => {
+            return data.json();
+          }).then((data) => {
+            console.log(data)
+          })
+          .catch((err) => console.log(err));
       };
-
       const form = document.querySelector("form");
       form.addEventListener("submit", submitAction);
     </script>
