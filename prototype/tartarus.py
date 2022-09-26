@@ -4,19 +4,22 @@ import jwt
 from this import d
 from urllib import request
 from flask import Flask
+from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__, instance_relative_config=True)
+CORS(app, resources={r"/*": {"origins": "*"}})
 app.config.from_mapping(
     SECRET_KEY='dev',
-    DATABASE=os.path.join(app.instance_path, 'tartarus.sqlite')
+    DATABASE=os.path.join(app.instance_path, 'tartarus.sqlite'),
+    CORS_HEADERS='Content-Type'
 )
 if not os.path.exists(app.instance_path):
     os.mkdir(app.instance_path)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def hello():
-    return 'Hello, World!'
+    return {'response': 'Hello, World! You have successfully reached the Tartarus API.'}
 
 @app.route('/demo')
 def demo():
