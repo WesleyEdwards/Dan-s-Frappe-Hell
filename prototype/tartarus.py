@@ -3,7 +3,6 @@ import json
 import os
 import sqlite3
 import jwt
-from this import d
 from flask import request
 from flask import Flask
 from flask_cors import CORS
@@ -36,10 +35,10 @@ class User:
     __password = ""
     __permissions = 0
     def __init__(self, name, email, password, permissions = 0):
-        self.name = name
-        self.email = email
-        self.password = password
-        self.permissions = permissions
+        self.__name = name
+        self.__email = email
+        self.__password = password
+        self.__permissions = permissions
     
     def getId(self):
         return self.__id
@@ -130,12 +129,14 @@ def refreshdb():
 @app.route('/auth/token', methods=(['POST']))
 def get_token():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        formdata = request.get_json()
+        email = formdata['email']
+        password = formdata['password']
+        print('')
         db = get_db()
         error = None
         user = db.execute(
-            'SELECT * FROM user where email = ?', (email,)
+            'SELECT * FROM users where email = ?', (email,)
         ).fetchone()
 
         if user is None:
@@ -143,15 +144,14 @@ def get_token():
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password'
         
-        if error is not None:
+        if error is None:
             payload = {
-                'sub':user['id'],
-                'name':user['username'],
-                'permission':user['permission']
+                'sub':user['UserId'],
+                'name':user['email'],
             }
             token = jwt.encode(payload = payload, key='Dan-TheMan-Watson')
-            return token
+            return {'token':token}
         else:
-            return error
+            return {'error':error}
 
 ##########################################
