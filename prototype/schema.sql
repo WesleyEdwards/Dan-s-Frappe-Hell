@@ -7,11 +7,12 @@ CREATE TABLE users(
     password TEXT NOT NULL
 );
 
-/*DROP TABLE IF EXISTS permissions;
+DROP TABLE IF EXISTS permissions;
 
 CREATE TABLE permissions(
-    PermissionId INTEGER PRIMARY KEY AUTOINCREMENT,
-    FOREIGN KEY(UserId) REFERENCES users(UserId),
-    PermissionLevel INTEGER NOT NULL
+    PermissionId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    UserId INTEGER NOT NULL,
+    PermissionLevel INTEGER NOT NULL,
+    FOREIGN KEY(UserId) REFERENCES users(UserId)
 )
---Other tables */
+--Other tables 

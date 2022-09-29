@@ -124,6 +124,7 @@ def refreshdb():
     with app.open_resource('schema.sql') as f:
         script = str(f.read(), 'utf-8')
         db.executescript(script)
+        f.close()
     return {'response': 'Done'}
 
 @app.route('/auth/token', methods=(['POST']))
