@@ -30,11 +30,11 @@ def demo():
 
 # Geoffrey work here #####################
 class User:
-    id = 0
-    name = ""
-    email = ""
-    password = ""
-    permissions = 0
+    __id = 0
+    __name = ""
+    __email = ""
+    __password = ""
+    __permissions = 0
     def __init__(self, name, email, password, permissions = 0):
         self.name = name
         self.email = email
@@ -42,17 +42,17 @@ class User:
         self.permissions = permissions
     
     def getId(self):
-        return self.id
+        return self.__id
     def getName(self):
-        return self.name
+        return self.__name
     def getEmail(self):
-        return self.email
+        return self.__email
     def getPermissions(self):
-        return self.permissions
+        return self.__permissions
     def getPassword(self):
-        return self.password
+        return self.__password
     def setId(self, id):
-        self.id = id
+        self.__id = id
 
 @app.route('/newuser', methods=['GET', 'POST'])
 def add_user():
@@ -86,8 +86,6 @@ def checkExistingUser(user):
         return False
     else:
         return True
-
-
 
 def addUser(user):
     db = get_db()
