@@ -81,11 +81,13 @@ def add_user():
 def checkExistingUser(user):
     db = get_db()
     cur = db.cursor()
-    emails = cur.execute("select email from users")
-    emails.fetchall()
-    if (user.getEmail() in emails):
+    email = cur.execute(f"select email from users where email = '{user.getEmail()}'").fetchone()
+    if (email is None):
+        return False
+    else:
         return True
-    return False
+
+
 
 def addUser(user):
     db = get_db()
@@ -100,7 +102,7 @@ def getUserFromEmail(email):
     output = cur.execute(f"select * from users where email = '{email}'" )
     data = output.fetchone()
     # Insert get permissions
-    user = User(data[1], data[2], data[3], 0)
+    user = User(data[2], data[1], data[3], 0)
     user.setId(data[0])
     return user
 
