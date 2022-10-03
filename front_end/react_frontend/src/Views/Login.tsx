@@ -12,7 +12,7 @@ export const Login = () => {
 
   return (
     <Container maxWidth="md">
-      <Stack padding="8rem" justifyContent="center">
+      <Stack gap="8rem" justifyContent="center">
         <DFHeader title="Sign In" />
         <Button variant="contained" onClick={navigateToHome}>
           Home

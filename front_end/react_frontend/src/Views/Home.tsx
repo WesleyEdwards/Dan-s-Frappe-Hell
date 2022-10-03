@@ -12,8 +12,8 @@ export const Home: FC = () => {
 
   return (
     <Container maxWidth="md">
-      <Stack padding="8rem" justifyContent="center">
-        <DFHeader title="Home" />
+      <Stack gap="8rem" justifyContent="center">
+        <DFHeader title="Home Landing Page" />
         <Button variant="contained" onClick={navigateToLogin}>
           Log-In
         </Button>
