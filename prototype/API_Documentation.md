@@ -30,11 +30,12 @@
 ### /auth/token
 - Issues token to user upon successful login
 - Supported Methods: POST
-- Input: ```
-    {
-        'email': 'testuser@email.com',
-        'password': 'Password1'
-    }
-```
+- Input:
+     ```
+        {
+            'email': 'testuser@email.com',
+            'password': 'Password1'
+        }
+    ```
 - Authentication Required: No
 - Return: jwt token
