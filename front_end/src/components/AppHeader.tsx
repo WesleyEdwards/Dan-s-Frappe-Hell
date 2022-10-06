@@ -9,7 +9,7 @@ export const AppHeader: FC = () => {
     console.log("navigate to sign in");
   };
   return (
-    <Stack direction="row" justifyContent="space-between">
+    <Stack direction="row" justifyContent="right" gap="2rem">
       <RouterTabs />
       <IconButton onClick={navigateToLogin} size="large">
         <AccountCircleIcon fontSize="large" />

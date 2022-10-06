@@ -14,9 +14,11 @@ export const Login = () => {
     <Container maxWidth="md">
       <Stack gap="8rem" justifyContent="center">
         <DFHeader title="Sign In" />
-        <Button variant="contained" onClick={navigateToHome}>
-          Home
-        </Button>
+        <Stack direction="row" justifyContent="center">
+          <Button variant="contained" onClick={navigateToHome}>
+            Home
+          </Button>
+        </Stack>
       </Stack>
     </Container>
   );

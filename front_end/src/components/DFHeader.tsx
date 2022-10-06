@@ -8,7 +8,7 @@ interface DFHeaderProps {
 export const DFHeader: FC<DFHeaderProps> = (props) => {
   const { title } = props;
   return (
-    <Typography variant="h2" padding="4rem">
+    <Typography variant="h4" padding="4rem">
       {title}
     </Typography>
   );

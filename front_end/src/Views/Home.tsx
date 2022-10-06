@@ -13,10 +13,12 @@ export const Home: FC = () => {
   return (
     <Container maxWidth="md">
       <Stack gap="8rem" justifyContent="center">
-        <DFHeader title="Home Landing Page" />
-        <Button variant="contained" onClick={navigateToLogin}>
-          Log-In
-        </Button>
+        <DFHeader title="Welcome to Dan's Frappuccino Hell." />
+        <Stack direction="row" justifyContent="center">
+          <Button variant="contained" onClick={navigateToLogin}>
+            Log-In
+          </Button>
+        </Stack>
       </Stack>
     </Container>
   );
