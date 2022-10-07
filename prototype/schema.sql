@@ -22,7 +22,7 @@ CREATE TABLE Employees(
 
 DROP TABLE IF EXISTS WorkLog;
 
-CREATE TABLE WorkLog(
+/*CREATE TABLE WorkLog(
     WorkLogId INTEGER NOT NULL,
     UserId INTEGER NOT NULL, 
     StartDate DATETIME NOT NULL,
@@ -30,17 +30,17 @@ CREATE TABLE WorkLog(
     HoursWorked NUMERIC NOT NULL,
     TotalPaid NUMERIC NOT NULL,
     FOREIGN KEY(UserId) REFERENCES Users(UserId)
-)
+);*/
 
 DROP TABLE IF EXISTS Balances;
 
 CREATE TABLE Balances(
     BalanceId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     UserId INTEGER NOT NULL,
-    CurrentBalance NUMERIC NOT NULL,
+    CurrentBalance NUMERIC NOT NULL
 );
 
-INSERT INTO Balances (UserId, CurrentBalance) VALUES (-1, 10000.00) --SET UP INITIAL STORE BALANCE
+INSERT INTO Balances (UserId, CurrentBalance) VALUES (-1, 10000.00); --SET UP INITIAL STORE BALANCE
 
 DROP TABLE IF EXISTS BalanceAudit;
 
@@ -52,10 +52,10 @@ CREATE TABLE BalanceAudit(
     TransactionType TEXT NOT NULL,
     AuditDate DATETIME NOT NULL,
     FOREIGN KEY(BalanceId) REFERENCES Balances(BalanceId)
-)
+);
 
 INSERT INTO BalanceAudit (BalanceId, OldBalance, NewBalance, TransactionType, AuditDate)
-VALUES ((select balanceId from Balances where UserId = -1), 0.00, 10000.00, 'INIT', GETDATE()) --LOG INITIAL BALANCE
+VALUES ((select balanceId from Balances where UserId = -1), 0.00, 10000.00, 'INIT', DATETIME('now')); --LOG INITIAL BALANCE
 
 DROP TABLE IF EXISTS Ingredients;
 
@@ -64,7 +64,7 @@ CREATE TABLE Ingredients(
     Name TEXT NOT NULL, 
     Price NUMERIC NOT NULL,
     Stock INTEGER NOT NULL
-)
+);
 
 --Insert base ingredient list from Dans menu items
 
@@ -77,11 +77,11 @@ CREATE TABLE MenuItem(
     Price NUMERIC NOT NULL, 
     Active BOOL NOT NULL, 
     ImagePath TEXT NOT NULL
-)
+);
 
 -- Insert base menu items from Dans menu items
 
-DROP TABLE IF EXISTS OrderHistory;
+DROP TABLE IF EXISTS Orders;
 
 CREATE TABLE Orders(
     OrderId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -94,5 +94,5 @@ CREATE TABLE Orders(
     InProgress BOOL NOT NULL,
     Ready BOOL NOT NULL,
     Favourite BOOL NOT NULL,
-    FOREIGN KEY(UserId) REFERENCES PRIMARY KEY Users(UserId)
-)
+    FOREIGN KEY(UserId) REFERENCES Users(UserId)
+);

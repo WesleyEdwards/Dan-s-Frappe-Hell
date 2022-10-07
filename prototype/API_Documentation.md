@@ -3,38 +3,63 @@
 ## Admin/General
 
 ### /
-- Basic landing page
+- Description: Basic landing page
 - Supported Methods: GET, POST
-- Input: None
 - Authentication Required: No
+- Input: None
 - Return: Welcome message
 
 ### /demo
-- Launches demo login site
+- Description: Launches demo login site
 - Supported Methods: GET
-- Input: None
 - Authentication Required: No
+- Input: None
 - Return: prototype_signin.html (login page)
 
 ### /refreshdb
-- Completely resets the database
+- Description: Completely resets the database
 - Supported Methods: GET
-- Input: None
 - Authentication Required: No
+- Input: None
 - Return: Success message
 
 ## User
 
+### /newuser
+- Description: Allows the addition of new users to the system
+- Supported Methods: GET, POST
+- Authentication Required: No
+- Input - POST: 
+```
+{
+    'firstName': 'John',
+    'lastName': 'Smith',
+    'email': 'emailtest@email.com',
+    'password': 'Password1'
+}
+```
+- Return - POST: error message or user object
+```
+{
+    'userId': '234',
+    'userEmail': 'emailtest@email.com',
+    'userName': 'John Smith',
+    'userPassword': 'Password1'
+}
+```
+- Return - GET: user sign-up form
+
 ## Authentication
 
 ### /auth/token
-- Issues token to user upon successful login
+- Description: Issues token to user upon successful login
 - Supported Methods: POST
-- Input: ```
+- Authentication Required: No
+- Input:
+```
     {
         'email': 'testuser@email.com',
         'password': 'Password1'
     }
 ```
-- Authentication Required: No
 - Return: jwt token
