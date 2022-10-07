@@ -32,7 +32,8 @@
 - Input - POST: 
 ```
 {
-    'name': 'John Smith',
+    'firstName': 'John',
+    'lastName': 'Smith',
     'email': 'emailtest@email.com',
     'password': 'Password1'
 }

@@ -22,7 +22,7 @@ CREATE TABLE Employees(
 
 DROP TABLE IF EXISTS WorkLog;
 
-CREATE TABLE WorkLog(
+/*CREATE TABLE WorkLog(
     WorkLogId INTEGER NOT NULL,
     UserId INTEGER NOT NULL, 
     StartDate DATETIME NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE WorkLog(
     HoursWorked NUMERIC NOT NULL,
     TotalPaid NUMERIC NOT NULL,
     FOREIGN KEY(UserId) REFERENCES Users(UserId)
-);
+);*/
 
 DROP TABLE IF EXISTS Balances;
 
