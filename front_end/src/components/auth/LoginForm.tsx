@@ -3,10 +3,11 @@ import React, { FC, useState } from "react";
 
 interface LoginFormProps {
   switchToCreateAccount: () => void;
+  switchToForgotPassword: () => void;
 }
 
 export const LoginForm: FC<LoginFormProps> = (props) => {
-  const { switchToCreateAccount } = props;
+  const { switchToCreateAccount, switchToForgotPassword } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -57,7 +58,9 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
       </Stack>
 
       <Stack direction="row" gap="1rem" justifyContent="center">
-        <Button variant="text">Forgot Password?</Button>
+        <Button variant="text" onClick={switchToForgotPassword}>
+          Forgot Password?
+        </Button>
         <Divider orientation="vertical" flexItem />
         <Button variant="text" onClick={switchToCreateAccount} sx={{ mx: 2 }}>
           Create Account

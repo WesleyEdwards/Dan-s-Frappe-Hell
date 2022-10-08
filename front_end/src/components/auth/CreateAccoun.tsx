@@ -9,13 +9,13 @@ import {
 import { useFormik } from "formik";
 import React, { FC } from "react";
 import * as yup from "yup";
-import { formikTextFieldProps } from "../utils/helperFunctions";
+import { formikTextFieldProps } from "../../utils/helperFunctions";
 
-interface CreateAccountFormProps {
+interface CreateAccountProps {
   switchToLogin: () => void;
 }
 
-export const CreateAccountForm: FC<CreateAccountFormProps> = (props) => {
+export const CreateAccount: FC<CreateAccountProps> = (props) => {
   const { switchToLogin } = props;
 
   const login = () => {
@@ -91,11 +91,11 @@ export const CreateAccountForm: FC<CreateAccountFormProps> = (props) => {
 
       <Stack direction="row" justifyContent="center">
         <Button variant="contained" onClick={login}>
-          Login
+          Create Account
         </Button>
       </Stack>
     </Stack>
   );
 };
 
-export default CreateAccountForm;
+export default CreateAccount;
