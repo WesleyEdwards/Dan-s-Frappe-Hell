@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users(
     UserId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -8,6 +8,9 @@ CREATE TABLE Users(
     password TEXT NOT NULL, 
     PermissionLevel INTEGER NOT NULL
 );
+
+-- Default Manager login: manager@dfh.com, password: password
+insert into Users(email, FirstName, LastName, password, PermissionLevel) values ('manager@dfh.com','default', 'manager','pbkdf2:sha256:260000$rKdwVgn05Bq2Uh8h$0f30a3773ac0fe972e6647885c1fdcc227075fe10b15211b46d74990faef8536',4);
 
 DROP TABLE IF EXISTS Employees;
 
