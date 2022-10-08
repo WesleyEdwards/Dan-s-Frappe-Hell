@@ -101,10 +101,10 @@ def get_token():
             now = int(time.time())
             payload = {
                 'sub':user['UserId'],
-                'firstName':user['firstName'],
-                'lastName':user['lastName'],
+                'firstName':user['FirstName'],
+                'lastName':user['LastName'],
                 'email':user['email'],
-                'permissions':user['permissions'],
+                'permissions':user['PermissionLevel'],
                 'iat':now,
                 'exp':now + 30 * 60, # Expires 30 minutes from issue
             }
@@ -123,6 +123,8 @@ def check_token(token,permission_level=0) -> 'tuple[User,bool]':
     If User is null, that means the token doesn't exist or is otherwise invalid.
     If the boolean is false and the user is not null, that means the token is valid, but the user's permissions are not high enough.
     """
+    # Return 401 error if token is invalid
+    # Return 403 error if token is valid, but no permissions
     try:
         decoded = jwt.decode(token, current_app.secret_key)
     except:
