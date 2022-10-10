@@ -8,6 +8,7 @@ import { RouterTabs } from "./RouterTabs";
 export const AppHeader: FC = () => {
   const navigate = useNavigate();
   const navigateToLogin = () => {
+    setAnchorEl(null);
     navigate("/login");
   };
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -28,7 +29,7 @@ export const AppHeader: FC = () => {
         }}
       >
         <Button sx={{ p: 2 }} variant="text" onClick={navigateToLogin}>
-          Login
+          Sign In
         </Button>
       </Popover>
     </Stack>
