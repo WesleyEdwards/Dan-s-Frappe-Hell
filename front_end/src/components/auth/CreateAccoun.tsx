@@ -18,10 +18,6 @@ interface CreateAccountProps {
 export const CreateAccount: FC<CreateAccountProps> = (props) => {
   const { switchToLogin } = props;
 
-  const login = () => {
-    formik.submitForm();
-  };
-
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -45,7 +41,6 @@ export const CreateAccount: FC<CreateAccountProps> = (props) => {
     }),
     onSubmit: (values) => {
       console.log(values);
-      alert("login not implemented");
     },
   });
 
@@ -90,7 +85,7 @@ export const CreateAccount: FC<CreateAccountProps> = (props) => {
       />
 
       <Stack direction="row" justifyContent="center">
-        <Button variant="contained" onClick={login}>
+        <Button variant="contained" onClick={formik.submitForm}>
           Create Account
         </Button>
       </Stack>

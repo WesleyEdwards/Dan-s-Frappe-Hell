@@ -1,6 +1,16 @@
-import { Button, Divider, Stack, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Divider,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useFormik } from "formik";
 import React, { FC, useState } from "react";
-
+import * as yup from "yup";
+import { formikTextFieldProps } from "../../utils/helperFunctions";
+import { User, login } from "../../sdk";
 interface LoginFormProps {
   switchToCreateAccount: () => void;
   switchToForgotPassword: () => void;
@@ -8,25 +18,33 @@ interface LoginFormProps {
 
 export const LoginForm: FC<LoginFormProps> = (props) => {
   const { switchToCreateAccount, switchToForgotPassword } = props;
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  const login = () => {
-    setEmailError("");
-    setPasswordError("");
-    if (email.length === 0) {
-      setEmailError("Please enter an email");
-      return;
-    }
-    if (password.length === 0) {
-      setPasswordError("Please enter a password");
-      return;
-    }
-
-    alert("login not implemented");
+  const handleLoginSuccess = (token: string, user: User) => {
+    localStorage.setItem("token", token);
+    alert(
+      `Welcome ${user.firstName} ${user.lastName}. You have successfully Logged in.`
+    );
   };
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: yup.object({
+      email: yup.string().required("Required"),
+      password: yup.string().required("Required"),
+    }),
+    onSubmit: (values) => {
+      setError(null);
+      login(values.password, values.email).then((data) => {
+        console.log(data);
+        data.token && handleLoginSuccess(data.token, data.user);
+        data.error && setError(data.error);
+      });
+    },
+  });
 
   return (
     <Stack gap="2rem" justifyContent="center">
@@ -34,25 +52,18 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
         Sign In
       </Typography>
       <TextField
-        label="Email"
-        variant="outlined"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        error={!!emailError}
-        helperText={emailError}
+        {...formikTextFieldProps(formik, "email", "Email")}
+        helperText={formik.touched.email && formik.errors.email}
       />
       <TextField
-        label="Password"
-        variant="outlined"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        error={!!passwordError}
-        helperText={passwordError}
+        {...formikTextFieldProps(formik, "password", "Password")}
+        helperText={formik.touched.password && formik.errors.password}
         type="password"
       />
 
+      {error && <Alert severity="error">{error}</Alert>}
       <Stack direction="row" justifyContent="center">
-        <Button variant="contained" onClick={login}>
+        <Button variant="contained" onClick={formik.submitForm}>
           Login
         </Button>
       </Stack>
