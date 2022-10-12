@@ -12,56 +12,6 @@ from tartarus.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@bp.route('/newuser', methods=['GET', 'POST'])
-def add_user():
-    if request.method == 'POST':
-        result = request.get_json()
-        newUser = User(
-            result['name'],
-            result['email'],
-            generate_password_hash(result['password']),
-            0
-        )
-        if(checkExistingUser(newUser)):
-            return {'error': 'User already exists'}
-        else:
-            addedUser = addUser(newUser)
-            return json.dumps({
-                'userId': addedUser.getId(),
-                'userEmail' : addedUser.getEmail(),
-                'userName': addedUser.getName(),
-                'userPassword': addedUser.getPassword() 
-                })
-    else:
-        return {'response': 'This is in place of the user sign-up form'}
-
-    
-def checkExistingUser(user):
-    db = get_db()
-    cur = db.cursor()
-    email = cur.execute(f"select email from users where email = '{user.getEmail()}'").fetchone()
-    if (email is None):
-        return False
-    else:
-        return True
-
-def addUser(user):
-    db = get_db()
-    cur = db.cursor()
-    cur.execute(f"insert into users(email, name, password) values ('{user.getEmail()}', '{user.getName()}', '{user.getPassword()}')")
-    db.commit()
-    return getUserFromEmail(user.getEmail())
-
-def getUserFromEmail(email):
-    db = get_db()
-    cur = db.cursor()
-    output = cur.execute(f"select * from users where email = '{email}'" )
-    data = output.fetchone()
-    # Insert get permissions
-    user = User(data[2], data[1], data[3], 0)
-    user.setId(data[0])
-    return user
-
 # TOKEN METHODS
 @bp.route('/token', methods=(['POST']))
 def get_token():
@@ -74,6 +24,7 @@ def get_token():
         db = get_db()
         token = None
         error = None
+        status = 200
         user = db.execute(
             'SELECT * FROM users where email = ?', (email,)
         ).fetchone()
@@ -81,9 +32,11 @@ def get_token():
         if user is None:
             error = 'Incorrect email.'
             userJson = None
+            status = 401
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password'
             userJson = None
+            status = 401
         else:
             userJson = {
                 'userId':user['UserId'],
@@ -109,11 +62,14 @@ def get_token():
                 'exp':now + 30 * 60, # Expires 30 minutes from issue
             }
             token = jwt.encode(headers=header, payload=payload, key=current_app.secret_key)
-        return {
+        return (
+            {
             'token':token,
             'error':error,
             'user':userJson
-            }
+            },
+            status
+            )
 
 # Need a token check method here
 def check_token(token,permission_level=0) -> 'tuple[User,bool]':
@@ -126,13 +82,16 @@ def check_token(token,permission_level=0) -> 'tuple[User,bool]':
     # Return 401 error if token is invalid
     # Return 403 error if token is valid, but no permissions
     try:
-        decoded = jwt.decode(token, current_app.secret_key)
-    except:
+        decoded = jwt.decode(token, current_app.secret_key, 'HS256')
+    except Exception as e:
+        print(e)
         return None,False
     # verify not timed out
-    if decoded['exp'] >= int(time.time()):
+    if decoded['exp'] <= int(time.time()):
+        print(decoded['exp'])
+        print(int(time.time()))
         return None,False
-    user = User(decoded['firstName'], decoded['lastName'], decoded['email'], decoded['password'], int(decoded['permissions']))
+    user = User(decoded['firstName'], decoded['lastName'], decoded['email'], int(decoded['permissions']))
     
     return user, user.getPermissions() >= permission_level
     
