@@ -1,0 +1,2 @@
+include tartarus/schema.sqlite
+global-exclude *.pyc
