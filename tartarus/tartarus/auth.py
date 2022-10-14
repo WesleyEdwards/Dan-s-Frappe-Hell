@@ -2,7 +2,7 @@ import functools
 import time
 import jwt
 import json
-from .models.User import User
+from .models.User import User, getUserByEmail
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
@@ -21,14 +21,10 @@ def get_token():
         email = formdata['email']
         password = formdata['password']
         print('')
-        db = get_db()
         token = None
         error = None
         status = 200
-        user = db.execute(
-            'SELECT * FROM users where email = ?', (email,)
-        ).fetchone()
-
+        user = getUserByEmail(email)
         if user is None:
             error = 'Incorrect email.'
             userJson = None
