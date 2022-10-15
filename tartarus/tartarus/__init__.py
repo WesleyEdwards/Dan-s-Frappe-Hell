@@ -42,4 +42,8 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    # Register Ingredient Endpoints
+    from . import ingredients
+    app.register_blueprint(ingredients.bp)
+
     return app
