@@ -49,7 +49,7 @@ def get_all():
         status
     )
 
-@bp.route('/<int:id>',methods=(['GET','POST']))
+@bp.route('/<id>',methods=(['GET']))
 def get_id(id):
     """Returns ingredient of ID"""
     token = request.headers['Authorization'].split(' ')[-1]
