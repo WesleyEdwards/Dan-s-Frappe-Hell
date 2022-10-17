@@ -64,12 +64,38 @@ DROP TABLE IF EXISTS Ingredients;
 
 CREATE TABLE Ingredients(
     IngredientId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    Name TEXT NOT NULL, 
+    Name TEXT NOT NULL,
+    Kind INTEGER NOT NULL, 
     Price NUMERIC NOT NULL,
-    Stock INTEGER NOT NULL
+    Stock INTEGER NOT NULL,
+    Upcharge NUMERIC NOT NULL
 );
 
 --Insert base ingredient list from Dans menu items
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Whole Milk',1,0.15,100,0.25);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Soy Milk',1,0.20,100,0.30);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Espresso',2,0.55,100,0.75);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Frappuccino Blend',3,0.10,200,0.12);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Frappuccino Chips',3,0.13,150,0.15);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Pumpkin Spice',4,0.25,90,0.30);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Caramel',4,0.15,100,0.20);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Whipped Cream',5,0.05,200,0.07);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Chocolate Drizzle',5,0.08,100,0.10);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Splenda',6,0.02,100,0.03);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Sugar',6,0.03,100,0.04);
+INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
+VALUES ('Matcha Powder',7,0.55,60,0.65);
 
 DROP TABLE IF EXISTS MenuItem;
 
