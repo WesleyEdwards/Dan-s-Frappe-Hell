@@ -45,7 +45,7 @@ class AuthActions(object):
         return self._client.post(
             '/auth/token',
             json={'email': username, 'password': password}
-        )
+        ).json['token']
 
     def logout(self):
         return self._client.get('/auth/logout')
