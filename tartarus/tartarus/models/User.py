@@ -1,4 +1,5 @@
 import sqlite3
+from webbrowser import get
 from tartarus.db import get_db
 
 from colorama import Cursor
@@ -42,7 +43,7 @@ def getUserByEmail(email):
     output = cur.execute(f"select * from users where email = '{email}'" )
     data = output.fetchone()
     if (data is not None):
-        user = User(data[2], data[3], data[4], data[5])
+        user = User(data[2], data[3], data[1], data[4], data[5])
         user.setId(data[0])
         return user
     else:
@@ -50,11 +51,11 @@ def getUserByEmail(email):
 def getUserById(id):
     db = get_db()
     cur = db.cursor()
-    output = cur.execute(f"select * from users where id = '{id}'" )
+    output = cur.execute(f"select * from users where UserId = '{id}'" )
     data = output.fetchone()
     if (data is not None):
-        user = User(data[2], data[3], data[1], data[4], data[5])
-        user.setId(data[0])
+        user = User(data[2], data[3], data[1], data[4], int(data[5]))
+        user.setId(id)
         return user
     else:
         return None
@@ -74,14 +75,45 @@ def checkExistingUser(email):
 def addUser(user:User):
     db = get_db()
     cur = db.cursor()
-    cur.execute(f"Insert into users (email, FirstName, LastName, password, PermissionLevel) values ('{user.getEmail()}', '{user.getFirstName()}', '{user.getLastName()}', '{user.getPassword()}', '{user.getPermissions}')")
+    cur.execute(f"Insert into users (email, FirstName, LastName, password, PermissionLevel) values ('{user.getEmail()}', '{user.getFirstName()}', '{user.getLastName()}', '{user.getPassword()}', '{user.getPermissions()}')")
     db.commit()
 
-def createUserJSON(user):
+def updatePermissions(id, permission):
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(f"update users set permissionlevel = {permission} where UserId = {id}")
+    db.commit()
+
+def updateEmail(id, email):
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(f"update users set email = '{email}' where userId = {id}")
+    db.commit()
+
+def updateName(id, firstName, lastName):
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(f"update users set FirstName = '{firstName}', LastName = '{lastName}' where userId = {id}")
+    db.commit()
+
+def updatePassword (id, password):
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(f"update users set password = '{password}' where userId = {id}")
+    db.commit()
+
+
+def createUserJSON(user:User):
+    id = user.getId()
+    fname = user.getFirstName()
+    lname = user.getLastName()
+    email = user.getEmail()
+    perm = user.getPermissions()
+    
     return {
-                'userId':user['UserId'],
-                'firstName':user['FirstName'],
-                'lastName':user['LastName'],
-                'email':user['email'],
-                'permissions':user['PermissionLevel']
+                'userId':id,
+                'firstName':fname,
+                'lastName':lname,
+                'email':email,
+                'permissions':perm
             }

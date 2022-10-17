@@ -2,7 +2,7 @@ import functools
 import time
 import jwt
 import json
-from .models.User import User, getUserByEmail
+from .models.User import User, getUserByEmail, createUserJSON, getUserById
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
@@ -25,22 +25,17 @@ def get_token():
         error = None
         status = 200
         user = getUserByEmail(email)
+        print(user.getPassword())
         if user is None:
             error = 'Incorrect email.'
             userJson = None
             status = 401
-        elif not check_password_hash(user['password'], password):
+        elif not check_password_hash(user.getPassword(), password):
             error = 'Incorrect password'
             userJson = None
             status = 401
         else:
-            userJson = {
-                'userId':user['UserId'],
-                'firstName':user['FirstName'],
-                'lastName':user['LastName'],
-                'email':user['email'],
-                'permissions':user['PermissionLevel']
-            }
+            userJson = json.dumps(createUserJSON(user))
         
         if error is None:
             header = {
@@ -48,12 +43,19 @@ def get_token():
                 'typ':'JWT'
             }
             now = int(time.time())
+
+            id = user.getId()
+            fname = user.getFirstName()
+            lname = user.getLastName()
+            uemail = user.getEmail()
+            perm = user.getPermissions()
+
             payload = {
-                'sub':user['UserId'],
-                'firstName':user['FirstName'],
-                'lastName':user['LastName'],
-                'email':user['email'],
-                'permissions':user['PermissionLevel'],
+                'sub':id,
+                'firstName':fname,
+                'lastName':lname,
+                'email':uemail,
+                'permissions':perm,
                 'iat':now,
                 'exp':now + 30 * 60, # Expires 30 minutes from issue
             }
@@ -62,7 +64,7 @@ def get_token():
             {
             'token':token,
             'error':error,
-            'user':userJson
+            'user': '{' +userJson + '}'
             },
             status
             )
@@ -87,7 +89,7 @@ def check_token(token,permission_level=0) -> 'tuple[User,bool]':
         print(decoded['exp'])
         print(int(time.time()))
         return None,False
-    user = User(decoded['firstName'], decoded['lastName'], decoded['email'], int(decoded['permissions']))
+    user = getUserById(int(decoded['sub']))
     
-    return user, user.getPermissions() >= permission_level
+    return user, (user.getPermissions() >= permission_level)
     
