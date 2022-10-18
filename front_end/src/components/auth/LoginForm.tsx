@@ -1,16 +1,21 @@
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Alert,
   Button,
   Divider,
   Stack,
   TextField,
+  IconButton,
   Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
 import React, { FC, useState } from "react";
+import { LoadingButton } from "@mui/lab";
+
 import * as yup from "yup";
 import { formikTextFieldProps } from "../../utils/helperFunctions";
-import { User, login } from "../../sdk";
+import { useAuth } from "../../utils/AuthContext";
+import { useNavigate } from "react-router-dom";
 interface LoginFormProps {
   switchToCreateAccount: () => void;
   switchToForgotPassword: () => void;
@@ -20,11 +25,11 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
   const { switchToCreateAccount, switchToForgotPassword } = props;
   const [error, setError] = useState<string | null>(null);
 
-  const handleLoginSuccess = (token: string, user: User) => {
-    localStorage.setItem("token", token);
-    alert(
-      `Welcome ${user.firstName} ${user.lastName}. You have successfully Logged in.`
-    );
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const navigateToHome = () => {
+    navigate("/home");
   };
 
   const formik = useFormik({
@@ -36,21 +41,30 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
       email: yup.string().required("Required"),
       password: yup.string().required("Required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { setSubmitting }) => {
       setError(null);
-      login(values.password, values.email).then((data) => {
-        console.log(data);
-        data.token && handleLoginSuccess(data.token, data.user);
-        data.error && setError(data.error);
-      });
+      login(values.password, values.email)
+        .then((res) => {
+          if (res === "success") {
+            navigate("/home");
+          } else {
+            setError("Invalid email or password.");
+          }
+        })
+        .then(() => setSubmitting(false));
     },
   });
 
   return (
     <Stack gap="2rem" justifyContent="center">
-      <Typography variant="h4" align="center">
-        Sign In
-      </Typography>
+      <Stack direction="row">
+        <IconButton>
+          <ArrowBackIcon onClick={navigateToHome} />
+        </IconButton>
+        <Typography variant="h4" align="center" width="100%" sx={{ mr: 5 }}>
+          Sign In
+        </Typography>
+      </Stack>
       <TextField
         {...formikTextFieldProps(formik, "email", "Email")}
         helperText={formik.touched.email && formik.errors.email}
@@ -63,9 +77,13 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
 
       {error && <Alert severity="error">{error}</Alert>}
       <Stack direction="row" justifyContent="center">
-        <Button variant="contained" onClick={formik.submitForm}>
+        <LoadingButton
+          variant="contained"
+          onClick={formik.submitForm}
+          loading={formik.isSubmitting}
+        >
           Login
-        </Button>
+        </LoadingButton>
       </Stack>
 
       <Stack direction="row" gap="1rem" justifyContent="center">

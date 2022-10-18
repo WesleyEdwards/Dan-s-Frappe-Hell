@@ -28,16 +28,14 @@ def get_all():
     for x in ingredients:
         if permissions > 0:
             price = x.getPrice()
-            stock = x.getStock()
         else:
             price = None
-            stock = x.getStock()
         ingredient = {
             'IngredientId':x.getId(), 
             'Name':x.getName(), 
             'Kind':x.getKind().name,
             'Price':price,
-            'Stock':stock,
+            'Stock':x.getStock(),
             'Upcharge':x.getUpcharge()
             }        
         ingredientsPayload.append(ingredient)
