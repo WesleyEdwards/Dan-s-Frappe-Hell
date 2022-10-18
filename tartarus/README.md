@@ -40,6 +40,153 @@ Related objects:
 
 - [User](#user)
 
+## /ingredients
+
+### /
+
+> Retrieves all ingredients
+
+METHODS: `GET`
+
+Authentication Required: `NO`, However to retrieve information on purchase price **(NOT UPCHARGE)**, user must have manager permissions and be logged in.
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "ingredients":[<Ingredient>]
+}
+```
+Related objects:
+
+- [Ingredient](#ingredient)
+
+### /\<id>
+
+> Gets information on an ingredient from IngredientId
+
+METHODS: `GET`
+
+Authentication Required: `NO`, However to retrieve information on purchase price **(NOT UPCHARGE)**, user must have manager permissions and be logged in.
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "ingredient":<Ingredient>
+}
+```
+Related objects:
+
+- [Ingredient](#ingredient)
+
+### /kind
+
+> Returns all Ingredient Kinds and their integer mapping
+
+METHODS: `GET`
+
+Authentication Required: `NO`
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "kinds":{<str>:<int>}
+}
+```
+
+### /kind/\<kind>
+
+> Returns all ingredients of kind \<kind>
+>
+> Accepts the integer or string representation of the kind
+
+METHODS: `GET`
+
+Authentication Required: `NO`, However to retrieve information on purchase price **(NOT UPCHARGE)**, user must have manager permissions and be logged in.
+
+Parameters:
+- `None`
+
+Returns
+if `<kind>` is of a valid type:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "ingredients":[<Ingredient>]
+}
+```
+if `<kind>` is of an invalid type:
+```json
+STATUS: 400
+{
+    "error":<str>,
+    "ingredients":[]
+}
+```
+Related objects:
+
+- [Ingredient](#ingredient)
+
+### /create
+
+> Adds a new ingredient to the database
+
+METHODS: `GET`
+
+Authentication Required: `YES` must have manager level permissions
+
+Parameters:
+- `'Name'` -> str name of ingredient
+- `'Kind'` -> str/int kind of ingredient
+- `'Price'` -> float, cost for store to purchase more of ingredient
+- `'Stock'` -> int, amount of ingredient in stock
+- `'Upcharge'` -> float, cost for customer to add one unit of ingredient to drink.
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "ingredient":{}
+}
+```
+
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "ingredient":{}
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "ingredient":<Ingredient>
+}
+```
+Related objects:
+
+- [Ingredient](#ingredient)
+
 ## Objects
 
 ### USER
@@ -55,3 +202,17 @@ Related objects:
     "permissions":<int>
 }
 ```
+
+### INGREDIENT
+
+> Represents an ingredient for a drink.
+
+```json
+{
+    "IngredientId":<int>,
+    "Name":<str>,
+    "Kind":<str>,
+    "Price":<float>,
+    "Stock":<int>,
+    "Upcharge":<float>
+}
