@@ -59,7 +59,6 @@ export const AuthProvider: FC<AuthProps> = (props) => {
       if (res.user !== null && res.user !== undefined) {
         localStorage.setItem("token", res.token);
         setCurrentUser(res.user);
-        console.log("login success, ", res.user);
         return "success";
       }
       return undefined;
