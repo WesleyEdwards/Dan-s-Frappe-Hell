@@ -18,7 +18,7 @@ class Ingredient:
         ADDIN=7
         @classmethod
         def list(cls):
-            return list(map(lambda c: c.value,cls))
+            return list(map(lambda c: c.value, cls))
 
     def __init__(self, name, kind, price, stock, upcharge, id=0):
         self.__id = id
