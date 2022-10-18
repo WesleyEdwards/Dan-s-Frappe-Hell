@@ -73,7 +73,7 @@ CREATE TABLE Ingredients(
 
 --Insert base ingredient list from Dans menu items
 INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
-VALUES ('Whole Milk',1,0.15,100,0.25);
+VALUES ('Whole Milk',1,0.15,9,0.25);
 INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)
 VALUES ('Soy Milk',1,0.20,100,0.30);
 INSERT INTO Ingredients (Name, Kind, Price, Stock, Upcharge)

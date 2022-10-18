@@ -31,7 +31,7 @@ def get_all():
             stock = x.getStock()
         else:
             price = None
-            stock = x.getStock() > 0
+            stock = x.getStock()
         ingredient = {
             'IngredientId':x.getId(), 
             'Name':x.getName(), 
