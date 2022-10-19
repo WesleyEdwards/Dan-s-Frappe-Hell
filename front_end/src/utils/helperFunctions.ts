@@ -29,6 +29,21 @@ export function formikTextFieldProps<T extends FormikValues>(
   };
 }
 
+export function formikTextFieldNumberProps<T extends FormikValues>(
+  formik: ReturnType<typeof useFormik<T>>,
+  field: keyof T,
+  label: string
+): TextFieldProps {
+  return {
+    label,
+    type: "number",
+    name: field.toString(),
+    value: formik.values[field],
+    onChange: formik.handleChange,
+    error: formik.touched[field] && !!formik.errors[field],
+  };
+}
+
 export function hasPermission(
   userPermission: Permission,
   requiredPermission: Permission

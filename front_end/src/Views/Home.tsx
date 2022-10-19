@@ -1,43 +1,29 @@
-import { Container, Grid, Stack, Typography } from "@mui/material";
+import { Container, Grid, Stack } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../components/DFHeader";
 import { DrinkCard } from "../components/DrinkCard";
-const backendUrl = "http://localhost:5000";
+import { Loading } from "../components/Loading";
+import { getIngredients, Ingredient } from "../sdk";
 
 export const Home: FC = () => {
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const [drinks, setDrinks] = useState([
+  const drinks = [
     "Frappe",
     "Cappuccino",
     "Latte",
     "Mocha",
     "Flat White",
     "Vanilla Bean",
-  ]);
+  ];
 
-  const [ingredients, setIngredients] = useState([""]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
-  async function fetchData() {
-    fetch(`${backendUrl}/ingredients/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "",
-      },
-    })
-      .then((r) => r.json())
-      .then((json) => {
-        const ingredientNames = [];
-        let result = json.ingredients;
-        console.log(result);
-        for (let i of result) {
-          ingredientNames.push(i.Name);
-        }
-        setIngredients(result);
-      });
-  }
+  useEffect(() => {
+    getIngredients().then((res) => {
+      setIngredients(res);
+    });
+  }, []);
+
+  if (ingredients.length === 0) return <Loading />;
 
   return (
     <Container maxWidth="md">
