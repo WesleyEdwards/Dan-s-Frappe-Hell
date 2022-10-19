@@ -12,6 +12,7 @@ export const RouterTabs = () => {
     "/profile",
     "/customer-management",
     "/employee-management",
+    "/cashier-view"
   ]);
   const currentTab = routeMatch?.pattern?.path;
   const { user } = useAuth();
@@ -30,6 +31,10 @@ export const RouterTabs = () => {
     },
   ];
   const workerTabs = [
+    {
+      label: "Cashier View",
+      path: "/cashier-view",
+    },
     {
       label: "Inventory",
       path: "/inventory",
