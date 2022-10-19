@@ -1,4 +1,5 @@
 import { makePostRequest, makeGetRequest } from "./utils/apiUtils";
+import { IngredientRow } from "./Views/admin/Inventory";
 
 export enum Permission {
   NONE = "0",
@@ -13,6 +14,8 @@ export enum IngredientType {
   TOPPING = "TOPPING",
   SWEETENER = "SWEETENER",
   ADDIN = "ADDIN",
+  COFFEE = "COFFEE",
+  SHOT = "SHOT",
 }
 export interface User {
   email: string;
@@ -46,4 +49,20 @@ export function loginUser(
 
 export function getIngredients(): Promise<Ingredient[]> {
   return makeGetRequest("ingredients/").then((res) => res.ingredients);
+}
+
+export function getIngredientKinds(): Promise<IngredientType[]> {
+  return makeGetRequest("ingredients/kind").then((res) => res.kinds);
+}
+
+export function createIngredient(
+  ingredient: IngredientRow
+): Promise<Ingredient> {
+  return makePostRequest("ingredients/create", {
+    Kind: ingredient.kind,
+    Name: ingredient.name,
+    Price: ingredient.price,
+    Stock: ingredient.stock,
+    Upcharge: ingredient.upCharge,
+  });
 }

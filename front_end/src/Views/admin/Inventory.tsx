@@ -1,6 +1,7 @@
 import { Container, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { FC, useEffect, useState } from "react";
+import CreateIngredient from "../../components/CreateIngredient";
 import { DFHeader } from "../../components/DFHeader";
 import { EditIngredientDialogue } from "../../components/EditIngredientDialogue";
 import { Loading } from "../../components/Loading";
@@ -20,6 +21,10 @@ export const Inventory: FC = () => {
   const [selectedIngredient, setSelectedIngredient] = useState<
     IngredientRow | undefined
   >();
+
+  const onSubmit = (ingredient: IngredientRow) => {
+    alert("Edit ingredient is not implemented yet");
+  };
 
   const handleClose = () => {
     setSelectedIngredient(undefined);
@@ -78,7 +83,10 @@ export const Inventory: FC = () => {
       <Container maxWidth="md">
         <DFHeader title="Inventory" />
         <Stack gap="2rem" justifyContent="center" sx={{ pb: 12 }}>
-          <Typography variant="body1">Ingredients</Typography>
+          <Stack direction="row" justifyContent="space-between">
+            <Typography variant="body1">Ingredients</Typography>
+            <CreateIngredient />
+          </Stack>
           {ingredientRows.length !== 0 ? (
             <DataGrid
               rows={ingredientRows}
@@ -100,6 +108,7 @@ export const Inventory: FC = () => {
       <EditIngredientDialogue
         ingredient={selectedIngredient}
         handleClose={handleClose}
+        onSubmitted={onSubmit}
       />
     </>
   );
