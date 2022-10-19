@@ -8,7 +8,7 @@ import {
   IconButton,
   Popover,
 } from "@mui/material";
-import Badge, { BadgeProps } from "@mui/material/Badge";
+import Badge from "@mui/material/Badge";
 import { Stack } from "@mui/system";
 import React, { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
