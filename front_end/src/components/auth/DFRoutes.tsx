@@ -4,10 +4,10 @@ import { Permission } from "../../sdk";
 import { useAuth } from "../../utils/AuthContext";
 import { hasPermission } from "../../utils/helperFunctions";
 import { PrivateRoute } from "../../utils/PrivateRoute";
-import CustomerManagement from "../../Views/CustomerManagement";
-import EmployeeManagement from "../../Views/EmployeeManagement";
+import CustomerManagement from "../../Views/admin/CustomerManagement";
+import EmployeeManagement from "../../Views/admin/EmployeeManagement";
+import Inventory from "../../Views/admin/Inventory";
 import Home from "../../Views/Home";
-import Inventory from "../../Views/Inventory";
 import Login from "../../Views/Login";
 import Profile from "../../Views/Profile";
 

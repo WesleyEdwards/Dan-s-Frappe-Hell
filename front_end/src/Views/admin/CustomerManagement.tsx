@@ -1,6 +1,6 @@
 import { Container, Stack, Typography } from "@mui/material";
 import React, { FC } from "react";
-import { DFHeader } from "../components/DFHeader";
+import { DFHeader } from "../../components/DFHeader";
 
 export const CustomerManagement: FC = () => {
   return (
