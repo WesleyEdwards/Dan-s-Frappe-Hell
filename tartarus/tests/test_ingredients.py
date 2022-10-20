@@ -44,3 +44,23 @@ def test_create_ingredient(client,auth):
         assert test_ingredient[key] == res.json['ingredient'][key]
     assert res.json['ingredient']['IngredientId'] != 0
 
+    res2 = client.get(f"/ingredients/{res.json['ingredient']['IngredientId']}", headers={'Authorization':f'Bearer {token}'})
+    for key in test_ingredient:
+        assert test_ingredient[key] == res2.json['ingredient'][key]
+
+def test_edit_ingredient(client,auth):
+    token = auth.login()
+    test_ingredient = {
+        "IngredientId":1,
+        "Name":"EditedIngredient",
+        "Kind":"ADDIN",
+        "Price":100.0,
+        "Stock":999,
+        "Upcharge":100.0
+    }
+    res = client.post('/ingredients/update', headers={'Authorization':f'Bearer {token}'},json=test_ingredient)
+    assert res.status_code == 200
+    for key in test_ingredient:
+        assert test_ingredient[key] == res.json['ingredient'][key]
+
+
