@@ -32,14 +32,14 @@ class Ingredient:
     def fromID(cls, id):
         """Returns the ingredient corresponding to `id`"""
         db = get_db()
-        ingredient = db.execute('SELECT * FROM Ingredients where IngredientId = ?',(id,)).fetchone()
+        ingredient = db.execute('SELECT * FROM Ingredients where IngredientId = ?',(int(id),)).fetchone()
         return cls(
             ingredient['Name'],
             ingredient['Kind'],
             ingredient['Price'],
             ingredient['Stock'],
             ingredient['Upcharge'],
-            id
+            int(id)
         )
 
     @classmethod

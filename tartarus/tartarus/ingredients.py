@@ -1,4 +1,3 @@
-from ast import Pass
 import functools
 import time
 import jwt
@@ -69,6 +68,36 @@ def get_id(id):
         'Stock':ingredient.getStock(),
         'Upcharge':ingredient.getUpcharge()
         }        
+    return (
+        {
+        'error':error,
+        'ingredient':ingredientPayload
+        },
+        status
+    )
+
+@bp.route('/update', methods=['POST'])
+def update_ingredient():
+    token = request.headers['Authorization'].split(' ')[-1]
+    user,authorized = check_token(token,3)
+    status = 200
+    error = None
+    ingredientPayload = {}
+    if not user:
+        status = 401
+        error = "Invalid Token"
+    if not authorized:
+        status = 403
+        error = "Insufficient Permissions"
+    if status == 200:
+        data = request.get_json()
+        ingredient = Ingredient.fromID(data['IngredientId'])
+        ingredient.setName(data['Name'])
+        ingredient.setKind(data['Kind'])
+        ingredient.setPrice(data['Name'])
+        ingredient.setStock(data['Stock'])
+        ingredient.setUpcharge(data['Upcharge'])
+        ingredientPayload = ingredient.getJson()
     return (
         {
         'error':error,

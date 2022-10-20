@@ -46,4 +46,8 @@ def create_app(test_config=None):
     from . import ingredients
     app.register_blueprint(ingredients.bp)
 
+    # Register MenuItem Endpoints
+    from . import menuitems
+    app.register_blueprint(menuitems.bp)
+
     return app
