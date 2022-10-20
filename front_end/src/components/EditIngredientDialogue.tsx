@@ -13,21 +13,24 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import React, { FC, useEffect } from "react";
-import { IngredientRow } from "../Views/admin/Inventory";
 import * as yup from "yup";
-import { formikTextFieldNumberProps } from "../utils/helperFunctions";
+import {
+  formikTextFieldNumberProps,
+  formikTextFieldProps,
+} from "../utils/helperFunctions";
 import { IngredientType } from "../sdk";
+import { IngredientRow } from "./IngredientsEdit";
 
 interface EditIngredientDialogueProps {
   ingredient: IngredientRow | undefined;
   handleClose: () => void;
   newIngredient?: boolean;
-  onSubmitted: (ingredient: IngredientRow) => void;
+  submitIngredient: (ingredient: IngredientRow) => void;
 }
 export const EditIngredientDialogue: FC<EditIngredientDialogueProps> = (
   props
 ) => {
-  const { ingredient, handleClose, newIngredient, onSubmitted } = props;
+  const { ingredient, handleClose, newIngredient, submitIngredient } = props;
 
   const onClose = () => {
     formik.setFieldValue("upCharge", undefined);
@@ -50,26 +53,32 @@ export const EditIngredientDialogue: FC<EditIngredientDialogueProps> = (
       price: yup.number().required("Required"),
       stock: yup.number().required("Required"),
       name: yup.string().required("Required"),
-      kind: yup.string().required("Required"),
+      kind: yup.string().nullable().required("Required"),
     }),
     onSubmit: (values) => {
-      onSubmitted({
-        id: ingredient?.id ?? "-1",
+      if (!ingredient) return;
+      submitIngredient({
+        id: ingredient.id,
         kind: values.kind ?? IngredientType.ADDIN,
-        name: values.name ?? "Test",
-        price: values.price ?? 1,
-        upCharge: values.upCharge ?? -1,
-        stock: values.stock ?? -5,
+        name: values.name ?? "",
+        price: values.price ?? 0,
+        upCharge: values.upCharge ?? 0,
+        stock: values.stock ?? 0,
       });
-      onClose();
     },
   });
 
   useEffect(() => {
-    formik.setFieldValue("upCharge", ingredient?.upCharge);
-    formik.setFieldValue("price", ingredient?.price);
-    formik.setFieldValue("stock", ingredient?.stock);
-    formik.setFieldValue("name", ingredient?.name);
+    if (newIngredient) {
+      formik.handleReset({ ...ingredient });
+    } else {
+      if (!ingredient) return;
+      formik.setFieldValue("upCharge", ingredient.upCharge);
+      formik.setFieldValue("price", ingredient.price);
+      formik.setFieldValue("stock", ingredient.stock);
+      formik.setFieldValue("name", ingredient.name);
+      formik.setFieldValue("kind", ingredient.kind);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredient]);
 
@@ -83,21 +92,18 @@ export const EditIngredientDialogue: FC<EditIngredientDialogueProps> = (
           </DialogContentText>
 
           <TextField
-            label="Name"
-            value={formik.values["name"]}
-            onChange={(e) => {
-              formik.setFieldValue("name", e.target.value);
-            }}
+            {...formikTextFieldProps(formik, "name", "Name")}
+            helperText={formik.touched.name && formik.errors.name}
           />
           <TextField
             sx={{ flex: 1 }}
             {...formikTextFieldNumberProps(formik, "stock", "Stock")}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            helperText={formik.touched.stock && formik.errors.stock}
           />
           {newIngredient && (
-            <FormControl error={false}>
+            <FormControl
+              error={formik.touched.kind && formik.values.kind === undefined}
+            >
               <InputLabel style={{ paddingBottom: 20 }}>Kind</InputLabel>
               <Select
                 value={formik.values.kind}
@@ -140,7 +146,7 @@ export const EditIngredientDialogue: FC<EditIngredientDialogueProps> = (
         <Button
           variant="contained"
           disabled={!formik.dirty}
-          onClick={() => formik.handleSubmit()}
+          onClick={() => formik.submitForm()}
         >
           Save
         </Button>
