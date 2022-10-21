@@ -109,6 +109,8 @@ CREATE TABLE MenuItem(
 );
 
 -- Insert base menu items from Dans menu items
+INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
+Values ('Green Devil', '{"1":1,"7":2,"8":1,"11":2}',0.0,TRUE,'');
 
 DROP TABLE IF EXISTS Orders;
 

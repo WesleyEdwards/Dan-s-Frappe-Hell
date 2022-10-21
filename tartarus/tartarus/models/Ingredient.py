@@ -32,14 +32,14 @@ class Ingredient:
     def fromID(cls, id):
         """Returns the ingredient corresponding to `id`"""
         db = get_db()
-        ingredient = db.execute('SELECT * FROM Ingredients where IngredientId = ?',(id,)).fetchone()
+        ingredient = db.execute('SELECT * FROM Ingredients where IngredientId = ?',(int(id),)).fetchone()
         return cls(
             ingredient['Name'],
             ingredient['Kind'],
             ingredient['Price'],
             ingredient['Stock'],
             ingredient['Upcharge'],
-            id
+            int(id)
         )
 
     @classmethod
@@ -65,7 +65,7 @@ class Ingredient:
     def addToDatabase(self):
         db = get_db()
         cur = db.cursor()
-        cur.execute(f"insert into Ingredients(name, kind, price, stock, upcharge) values ('{self.getName()}', '{self.getKind().value}', '{self.getPrice()}','{self.getStock()}','{self.getUpcharge}')")
+        cur.execute(f"insert into Ingredients(name, kind, price, stock, upcharge) values ('{self.getName()}', '{self.getKind().value}', '{self.getPrice()}','{self.getStock()}','{self.getUpcharge()}')")
         db.commit()
         self.__id = db.execute('SELECT * FROM Ingredients where Name = ?',(self.getName(),)).fetchone()['IngredientId']
         
@@ -84,6 +84,52 @@ class Ingredient:
         return self.__stock
     def getUpcharge(self):
         return self.__upcharge
+
+    def getJson(self):
+        return {
+            'IngredientId':self.getId(), 
+            'Name':self.getName(), 
+            'Kind':self.getKind().name,
+            'Price':self.getPrice(),
+            'Stock':self.getStock(),
+            'Upcharge':self.getUpcharge()
+        }
+
+    def setName(self, name:str):
+        if self.__name != name:
+            self.__name = name
+            db = get_db()
+            cur = db.cursor()
+            cur.execute(f"UPDATE Ingredients SET name = {name} WHERE IngredientId = {self.getId()}")
+
+    def setKind(self, kind:'str|int|Kind'):
+        kind = self.convert_kind(kind)
+        if self.__kind != kind:
+            self.__kind = kind
+            db = get_db()
+            cur = db.cursor()
+            cur.execute(f"UPDATE Ingredients SET kind = {kind.value} WHERE IngredientId = {self.getId()}")
+
+    def setPrice(self, price:float):
+        if self.__price != price:
+            self.__price = price
+            db = get_db()
+            cur = db.cursor()
+            cur.execute(f"UPDATE Ingredients SET price = {price} WHERE IngredientId = {self.getId()}")
+
+    def setStock(self, stock:int):
+        if self.__stock != stock:
+            self.__stock = stock
+            db = get_db()
+            cur = db.cursor()
+            cur.execute(f"UPDATE Ingredients SET stock = {stock} WHERE IngredientId = {self.getId()}")
+
+    def setUpcharge(self, upcharge:float):
+        if self.__upcharge != upcharge:
+            self.__upcharge = upcharge
+            db = get_db()
+            cur = db.cursor()
+            cur.execute(f"UPDATE Ingredients SET upcharge = {upcharge} WHERE IngredientId = {self.getId()}")
 
     @staticmethod
     def convert_kind( kind: 'str|int|Kind') -> Kind:

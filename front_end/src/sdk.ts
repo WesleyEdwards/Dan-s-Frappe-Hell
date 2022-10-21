@@ -1,5 +1,4 @@
 import { makePostRequest, makeGetRequest } from "./utils/apiUtils";
-import { IngredientRow } from "./Views/admin/Inventory";
 
 export enum Permission {
   NONE = "0",
@@ -56,13 +55,9 @@ export function getIngredientKinds(): Promise<IngredientType[]> {
 }
 
 export function createIngredient(
-  ingredient: IngredientRow
+  ingredient: CreateIngredientType
 ): Promise<Ingredient> {
-  return makePostRequest("ingredients/create", {
-    Kind: ingredient.kind,
-    Name: ingredient.name,
-    Price: ingredient.price,
-    Stock: ingredient.stock,
-    Upcharge: ingredient.upCharge,
-  });
+  return makePostRequest("ingredients/create", ingredient);
 }
+
+export type CreateIngredientType = Omit<Ingredient, "IngredientId">;

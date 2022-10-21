@@ -187,6 +187,238 @@ Related objects:
 
 - [Ingredient](#ingredient)
 
+## /menuitems
+
+### /
+
+> Retrieves all menuitems
+
+METHODS: `GET`
+
+Authentication Required: `NO`
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "menuitems":[<MenuItem>]
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+
+### /\<id>
+
+> Gets information on an menu item from MenuId
+
+METHODS: `GET`
+
+Authentication Required: `NO`
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+
+
+### /recipe/\<recipe>
+
+> Returns menu item of recipe
+>
+> This is the primary method for users to "create" drinks and how this model should be accessed in most cases
+
+METHODS: `GET`
+
+Authentication Required: `YES`, must have customer privileges
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "menuitem":{}
+}
+```
+
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+
+### /active
+
+> Returns all 'Active' MenuItems
+
+METHODS: `GET`
+
+Authentication Required: `NO`
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "menuitems":[<MenuItem>]
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+
+### /activate/\<id>
+
+> Sets menu item of \<id> to be Active
+
+METHODS: `GET`
+
+Authentication Required: `YES`, must have manager level permissions
+
+Parameters:
+- `None`
+
+Returns:
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "menuitem":{}
+}
+```
+
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "menuitem":{}
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+
+Related objects:
+
+- [MenuItem](#menuitem)
+
+### /deactivate/\<id>
+
+> Sets menu item of \<id> to be Inactive
+
+METHODS: `GET`
+
+Authentication Required: `YES`, must have manager level permissions
+
+Parameters:
+- `None`
+
+Returns:
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "menuitem":{}
+}
+```
+
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "menuitem":{}
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+
+Related objects:
+
+- [MenuItem](#menuitem)
+
+### /update
+
+> Updates existing menu item or creates if does not exist
+
+METHODS: `POST`
+
+Authentication Required: `YES` must have manager level permissions
+
+Parameters:
+- `'Name'` -> str name of menu item
+- `'Recipe'` -> dict mapping ingredient ID to quantity
+- `'Active'` -> bool, Whether drink should show up on homepage
+- `'ImagePath'` -> str, path to image of drink
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "menuitem":{}
+}
+```
+
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "menuitem":{}
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+
 ## Objects
 
 ### USER
@@ -216,3 +448,18 @@ Related objects:
     "Stock":<int>,
     "Upcharge":<float>
 }
+```
+### MENUITEM
+
+> Represents a menu item (drink)
+```json
+{
+    "MenuId":<int>,
+    "Name":<str>,
+    "Recipe":{<IngredientId>:<int>},
+    "Price":<float>,
+    "Active":<bool>,
+    "ImagePath":<str>
+}
+```
+`Recipe` is a dictionary of ingredient Ids as `<str>` mapped to quantities `<int>`
