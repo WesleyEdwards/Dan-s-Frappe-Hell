@@ -111,6 +111,16 @@ CREATE TABLE MenuItem(
 -- Insert base menu items from Dans menu items
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
 Values ('Green Devil', '{"1":1,"7":2,"8":1,"11":2}',0.0,TRUE,'');
+INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
+Values ('Fire and Brimstone', '{"1":2,"3":4,"6":2,"9":1,"10":2}',0.0,TRUE,'');
+INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
+Values ('Cerberus Special', '{"2":3,"4":4,"5":1,"12":3}',0.0,TRUE,'');
+INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
+Values ('Holy Hades', '{"3":1,"4":2,"9":1,"10":2}',0.0,TRUE,'');
+INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
+Values ('Tortured Soul', '{"5":1,"3":2,"6":1,"4":2}',0.0,TRUE,'');
+INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
+Values ('Pain and Suffering', '{"2":3,"3":1,"4":2,"5":4}',0.0,TRUE,'');
 
 DROP TABLE IF EXISTS Orders;
 
