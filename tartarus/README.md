@@ -40,6 +40,385 @@ Related objects:
 
 - [User](#user)
 
+## /ingredients
+
+### /
+
+> Retrieves all ingredients
+
+METHODS: `GET`
+
+Authentication Required: `NO`, However to retrieve information on purchase price **(NOT UPCHARGE)**, user must have manager permissions and be logged in.
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "ingredients":[<Ingredient>]
+}
+```
+Related objects:
+
+- [Ingredient](#ingredient)
+
+### /\<id>
+
+> Gets information on an ingredient from IngredientId
+
+METHODS: `GET`
+
+Authentication Required: `NO`, However to retrieve information on purchase price **(NOT UPCHARGE)**, user must have manager permissions and be logged in.
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "ingredient":<Ingredient>
+}
+```
+Related objects:
+
+- [Ingredient](#ingredient)
+
+### /kind
+
+> Returns all Ingredient Kinds and their integer mapping
+
+METHODS: `GET`
+
+Authentication Required: `NO`
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "kinds":{<str>:<int>}
+}
+```
+
+### /kind/\<kind>
+
+> Returns all ingredients of kind \<kind>
+>
+> Accepts the integer or string representation of the kind
+
+METHODS: `GET`
+
+Authentication Required: `NO`, However to retrieve information on purchase price **(NOT UPCHARGE)**, user must have manager permissions and be logged in.
+
+Parameters:
+- `None`
+
+Returns
+if `<kind>` is of a valid type:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "ingredients":[<Ingredient>]
+}
+```
+if `<kind>` is of an invalid type:
+```json
+STATUS: 400
+{
+    "error":<str>,
+    "ingredients":[]
+}
+```
+Related objects:
+
+- [Ingredient](#ingredient)
+
+### /create
+
+> Adds a new ingredient to the database
+
+METHODS: `GET`
+
+Authentication Required: `YES` must have manager level permissions
+
+Parameters:
+- `'Name'` -> str name of ingredient
+- `'Kind'` -> str/int kind of ingredient
+- `'Price'` -> float, cost for store to purchase more of ingredient
+- `'Stock'` -> int, amount of ingredient in stock
+- `'Upcharge'` -> float, cost for customer to add one unit of ingredient to drink.
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "ingredient":{}
+}
+```
+
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "ingredient":{}
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "ingredient":<Ingredient>
+}
+```
+Related objects:
+
+- [Ingredient](#ingredient)
+
+## /menuitems
+
+### /
+
+> Retrieves all menuitems
+
+METHODS: `GET`
+
+Authentication Required: `NO`
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "menuitems":[<MenuItem>]
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+
+### /\<id>
+
+> Gets information on an menu item from MenuId
+
+METHODS: `GET`
+
+Authentication Required: `NO`
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+
+
+### /recipe/\<recipe>
+
+> Returns menu item of recipe
+>
+> This is the primary method for users to "create" drinks and how this model should be accessed in most cases
+
+METHODS: `GET`
+
+Authentication Required: `YES`, must have customer privileges
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "menuitem":{}
+}
+```
+
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+
+### /active
+
+> Returns all 'Active' MenuItems
+
+METHODS: `GET`
+
+Authentication Required: `NO`
+
+Parameters:
+- `None`
+
+Returns
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "menuitems":[<MenuItem>]
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+
+### /activate/\<id>
+
+> Sets menu item of \<id> to be Active
+
+METHODS: `GET`
+
+Authentication Required: `YES`, must have manager level permissions
+
+Parameters:
+- `None`
+
+Returns:
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "menuitem":{}
+}
+```
+
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "menuitem":{}
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+
+Related objects:
+
+- [MenuItem](#menuitem)
+
+### /deactivate/\<id>
+
+> Sets menu item of \<id> to be Inactive
+
+METHODS: `GET`
+
+Authentication Required: `YES`, must have manager level permissions
+
+Parameters:
+- `None`
+
+Returns:
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "menuitem":{}
+}
+```
+
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "menuitem":{}
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+
+Related objects:
+
+- [MenuItem](#menuitem)
+
+### /update
+
+> Updates existing menu item or creates if does not exist
+
+METHODS: `POST`
+
+Authentication Required: `YES` must have manager level permissions
+
+Parameters:
+- `'Name'` -> str name of menu item
+- `'Recipe'` -> dict mapping ingredient ID to quantity
+- `'Active'` -> bool, Whether drink should show up on homepage
+- `'ImagePath'` -> str, path to image of drink
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "menuitem":{}
+}
+```
+
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "menuitem":{}
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "menuitem":<MenuItem>
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+
 ## Objects
 
 ### USER
@@ -55,3 +434,32 @@ Related objects:
     "permissions":<int>
 }
 ```
+
+### INGREDIENT
+
+> Represents an ingredient for a drink.
+
+```json
+{
+    "IngredientId":<int>,
+    "Name":<str>,
+    "Kind":<str>,
+    "Price":<float>,
+    "Stock":<int>,
+    "Upcharge":<float>
+}
+```
+### MENUITEM
+
+> Represents a menu item (drink)
+```json
+{
+    "MenuId":<int>,
+    "Name":<str>,
+    "Recipe":{<IngredientId>:<int>},
+    "Price":<float>,
+    "Active":<bool>,
+    "ImagePath":<str>
+}
+```
+`Recipe` is a dictionary of ingredient Ids as `<str>` mapped to quantities `<int>`

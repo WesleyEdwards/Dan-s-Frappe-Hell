@@ -3,22 +3,36 @@ import { Button, IconButton, Popover } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/AuthContext";
 import { RouterTabs } from "./RouterTabs";
+import ViewCart from "./ViewCart";
 
 export const AppHeader: FC = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
   const navigateToLogin = () => {
     setAnchorEl(null);
     navigate("/login");
   };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    logout();
+    navigate("/home");
+  };
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   return (
-    <Stack direction="row" justifyContent="right" gap="2rem">
+    <Stack direction="row" justifyContent="right" gap="3rem">
       <RouterTabs />
+
+      <ViewCart />
+
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="large">
         <AccountCircleIcon fontSize="large" />
       </IconButton>
+
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}
@@ -28,9 +42,15 @@ export const AppHeader: FC = () => {
           horizontal: "left",
         }}
       >
-        <Button sx={{ p: 2 }} variant="text" onClick={navigateToLogin}>
-          Sign In
-        </Button>
+        {user ? (
+          <Button sx={{ p: 2 }} variant="text" onClick={handleLogout}>
+            Sign Out
+          </Button>
+        ) : (
+          <Button sx={{ p: 2 }} variant="text" onClick={navigateToLogin}>
+            Sign In
+          </Button>
+        )}
       </Popover>
     </Stack>
   );
