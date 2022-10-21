@@ -4,6 +4,7 @@ import React, {
   useState,
   FC,
   ReactNode,
+  useEffect,
 } from "react";
 import { User, loginUser } from "../sdk";
 
@@ -58,6 +59,7 @@ export const AuthProvider: FC<AuthProps> = (props) => {
     return loginUser(email, password).then((res) => {
       if (res.user !== null && res.user !== undefined) {
         localStorage.setItem("token", res.token);
+        localStorage.setItem("userObject", JSON.stringify(res.user));
         setCurrentUser(res.user);
         return "success";
       }
@@ -69,6 +71,12 @@ export const AuthProvider: FC<AuthProps> = (props) => {
     setCurrentUser(null);
     localStorage.clear();
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("userObject")) {
+      setCurrentUser(JSON.parse(localStorage.getItem("userObject") || ""));
+    }
+  }, []);
 
   const contextValue: Context = {
     user: currentUser,
