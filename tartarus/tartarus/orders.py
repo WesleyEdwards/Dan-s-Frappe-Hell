@@ -166,7 +166,11 @@ def get_cart_of_user(id):
     if not requester:
         status = 401
         error = "Invalid Token"
-    order = Order.ofUserCart(id)
+    try:
+        order = Order.ofUserCart(id)
+    except TartarusException as e:
+        error = str(e)
+        status = 404
     if requester.getPermissions() >= 1 or id != requester.getId():
         status = 403
         error = "Insufficient Privileges"

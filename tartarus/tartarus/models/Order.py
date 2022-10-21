@@ -5,7 +5,7 @@ from enum import Enum
 
 from tartarus.models.MenuItem import MenuItem
 from tartarus.models.TartarusException import TartarusException
-from tartarus.models.User import User
+from tartarus.models.User import User, getUserById
 class Order:
     class Status(Enum):
         CART=1
@@ -56,6 +56,8 @@ class Order:
         db = get_db()
         order = db.execute('SELECT * FROM Orders where userId = ? AND Status= ?',(int(userId),cls.Status.CART.value,)).fetchone()
         if order == None:
+            if getUserById(userId) == None:
+                raise TartarusException("Invalid user")
             order = cls(userId, datetime.utcnow(), {}, 0, cls.Status.CART)
             order.addToDatabase()
             return order
