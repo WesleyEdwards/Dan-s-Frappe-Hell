@@ -1,10 +1,14 @@
 import { Button } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
-import { createIngredient, getIngredientKinds, IngredientType } from "../sdk";
-import { IngredientRow } from "../Views/admin/Inventory";
+import React, { FC, useState } from "react";
+import { createIngredient, IngredientType } from "../sdk";
 import { EditIngredientDialogue } from "./EditIngredientDialogue";
+import { IngredientRow } from "./IngredientsEdit";
 
-export const CreateIngredient: FC = () => {
+interface CreateIngredientProps {
+  refreshIngredientList: () => void;
+}
+export const CreateIngredient: FC<CreateIngredientProps> = (props) => {
+  const { refreshIngredientList } = props;
   const [ingredient, setIngredient] = useState<IngredientRow | undefined>();
 
   const handleClose = () => {
@@ -22,9 +26,15 @@ export const CreateIngredient: FC = () => {
   };
 
   const createNewIngredient = (ingredient: IngredientRow) => {
-    createIngredient(ingredient).then((res) => {
-      console.log(res);
-    });
+    createIngredient({
+      Kind: ingredient.kind as IngredientType,
+      Name: ingredient.name,
+      Price: ingredient.price,
+      Stock: ingredient.stock,
+      Upcharge: ingredient.upCharge,
+    })
+      .then(refreshIngredientList)
+      .then(handleClose);
   };
   return (
     <>
@@ -35,7 +45,7 @@ export const CreateIngredient: FC = () => {
         ingredient={ingredient}
         handleClose={handleClose}
         newIngredient={true}
-        onSubmitted={createNewIngredient}
+        submitIngredient={createNewIngredient}
       />
     </>
   );
