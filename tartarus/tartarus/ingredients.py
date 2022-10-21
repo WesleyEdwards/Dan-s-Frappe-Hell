@@ -79,7 +79,7 @@ def get_id(id):
 @bp.route('/update', methods=['POST'])
 def update_ingredient():
     token = request.headers['Authorization'].split(' ')[-1]
-    user,authorized = check_token(token,3)
+    user,authorized = check_token(token,2)
     status = 200
     error = None
     ingredientPayload = {}

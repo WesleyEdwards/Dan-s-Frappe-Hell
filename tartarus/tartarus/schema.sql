@@ -118,12 +118,9 @@ CREATE TABLE Orders(
     OrderId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     UserId INTEGER NOT NULL,
     OrderDate DATETIME NOT NULL,
-    Items TEXT NOT NULL, --Comma delimited string of MenuIds 
+    Items TEXT NOT NULL, --json dictionary of menuids to quantities 
     TotalPrice NUMERIC NOT NULL,
-    Active BOOL NOT NULL,
-    Received BOOL NOT NULL,
-    InProgress BOOL NOT NULL,
-    Ready BOOL NOT NULL,
-    Favourite BOOL NOT NULL,
+    Status BOOL NOT NULL,
+    Favorite BOOL NOT NULL,
     FOREIGN KEY(UserId) REFERENCES Users(UserId)
 );
