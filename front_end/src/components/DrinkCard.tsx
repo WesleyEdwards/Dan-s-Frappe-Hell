@@ -10,17 +10,15 @@ import {
   Typography,
 } from "@mui/material";
 import { FC, useState } from "react";
-import { Ingredient } from "../sdk";
+import { MenuItem, RecipeItem } from "../sdk";
 import { IngredientSelect } from "./IngredientSelect";
 
 interface DrinkCardProps {
-  drink: string;
-  description: string;
-  ingredients: Ingredient[];
+  menuitem: MenuItem;
 }
 
 export const DrinkCard: FC<DrinkCardProps> = (props) => {
-  const { drink, description, ingredients } = props;
+  const { menuitem } = props;
 
   const [open, setOpen] = useState(false);
 
@@ -47,21 +45,23 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
       >
         <CardContent style={{ justifyContent: "center" }}>
           <Typography variant="h5" gutterBottom>
-            {drink}
+            {menuitem.Name}
           </Typography>
-          <Typography variant="subtitle1">{description}</Typography>
         </CardContent>
       </Card>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent style={{ width: 500 }}>
           <>
             <DialogContentText variant="h4" style={{ paddingBottom: 40 }}>
-              Customize your {drink}
+              Customize your {menuitem.Name}
             </DialogContentText>
-            {ingredients.map((ingredient) => {
+            {Object.entries(menuitem.Recipe).map(([id, amount]) => {
               return (
                 <FormControl style={{ width: 400, paddingBottom: 35 }} error>
-                  <IngredientSelect ingredient={ingredient} />
+                  <IngredientSelect
+                      id={id}
+                      amount = {amount}
+                  />
                 </FormControl>
               );
             })}

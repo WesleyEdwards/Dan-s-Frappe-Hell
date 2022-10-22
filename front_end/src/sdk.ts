@@ -24,6 +24,11 @@ export interface User {
   userId: string;
 }
 
+export interface RecipeItem{
+  IngredientId: string;
+  quantity: number;
+}
+
 export interface Ingredient {
   IngredientId: string;
   Kind: IngredientType;
@@ -31,6 +36,15 @@ export interface Ingredient {
   Price: number | null | undefined;
   Stock: number | null | undefined;
   Upcharge: number;
+}
+
+export interface MenuItem{
+  MenuId: number;
+  Name: string;
+  Recipe:{ [id:string] : number;}
+  Price: number;
+  Active: boolean;
+  ImagePath: string;
 }
 
 export interface LoginResponse {
@@ -50,8 +64,16 @@ export function getIngredients(): Promise<Ingredient[]> {
   return makeGetRequest("ingredients/").then((res) => res.ingredients);
 }
 
+export function getMenuItems(): Promise<MenuItem[]> {
+  return makeGetRequest("menuitems/").then((res) => res.menuitems);
+}
+
 export function getIngredientKinds(): Promise<IngredientType[]> {
   return makeGetRequest("ingredients/kind").then((res) => res.kinds);
+}
+
+export function getIngredientById(id: string): Promise<Ingredient> {
+  return makeGetRequest(`ingredients/${id}`).then((res) => res.ingredient);
 }
 
 export function createIngredient(
