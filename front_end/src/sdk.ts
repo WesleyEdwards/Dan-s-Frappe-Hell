@@ -24,7 +24,7 @@ export interface User {
   userId: string;
 }
 
-export interface RecipeItem{
+export interface RecipeItem {
   IngredientId: string;
   quantity: number;
 }
@@ -38,10 +38,10 @@ export interface Ingredient {
   Upcharge: number;
 }
 
-export interface MenuItem{
+export interface MenuItem {
   MenuId: number;
   Name: string;
-  Recipe:{ [id:string] : number;}
+  Recipe: { [id: string]: number };
   Price: number;
   Active: boolean;
   ImagePath: string;
@@ -58,6 +58,17 @@ export function loginUser(
   email: string
 ): Promise<LoginResponse> {
   return makePostRequest("auth/token", { password, email });
+}
+
+export function createAccount(
+  firstName: string,
+  lastName: string,
+  password: string,
+  email: string
+): Promise<LoginResponse> {
+  return makePostRequest("users/new", { password, email }).then(() => {
+    return loginUser(password, email);
+  });
 }
 
 export function getIngredients(): Promise<Ingredient[]> {
