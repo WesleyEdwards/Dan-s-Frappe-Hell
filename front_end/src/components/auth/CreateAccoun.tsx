@@ -1,5 +1,7 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { LoadingButton } from "@mui/lab";
 import {
+  Alert,
   Button,
   IconButton,
   Stack,
@@ -7,16 +9,22 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import * as yup from "yup";
+import { createAccount } from "../../sdk";
+import { useAuth } from "../../utils/AuthContext";
 import { formikTextFieldProps } from "../../utils/helperFunctions";
 
 interface CreateAccountProps {
   switchToLogin: () => void;
+  navigateToHome: () => void;
 }
 
 export const CreateAccount: FC<CreateAccountProps> = (props) => {
-  const { switchToLogin } = props;
+  const { switchToLogin, navigateToHome } = props;
+  const { login } = useAuth();
+
+  const [error, setError] = useState<string | null>(null);
 
   const formik = useFormik({
     initialValues: {
@@ -39,8 +47,27 @@ export const CreateAccount: FC<CreateAccountProps> = (props) => {
       firstName: yup.string().required("Please enter your first name"),
       lastName: yup.string().required("Please enter your last name"),
     }),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: (values, { setSubmitting }) => {
+      setError(null);
+      setSubmitting(true);
+      createAccount(
+        values.firstName,
+        values.lastName,
+        values.password,
+        values.email
+      )
+        .then(() => {
+          login(values.password, values.email)
+            .then((res) => {
+              if (res === "success") {
+                navigateToHome();
+              } else {
+                setError("Invalid email or password.");
+              }
+            })
+            .then(() => setSubmitting(false));
+        })
+        .then(navigateToHome);
     },
   });
 
@@ -83,11 +110,17 @@ export const CreateAccount: FC<CreateAccountProps> = (props) => {
         }
         type="password"
       />
+      {error && <Typography color="error">{error}</Typography>}
 
+      {error && <Alert severity="error">{error}</Alert>}
       <Stack direction="row" justifyContent="center">
-        <Button variant="contained" onClick={formik.submitForm}>
+        <LoadingButton
+          variant="contained"
+          onClick={formik.submitForm}
+          loading={formik.isSubmitting}
+        >
           Create Account
-        </Button>
+        </LoadingButton>
       </Stack>
     </Stack>
   );

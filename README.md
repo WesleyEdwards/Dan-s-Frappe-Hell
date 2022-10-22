@@ -37,9 +37,9 @@
 
 ## Unit testing instructions
 
-- Unit tests for the back-end can be found under the <b>tests</b> directory with-in the Flask project.
-- The script `tests.py` can be run to run all of the included unit tests.
-
+1. Navigate to the `tartarus/` directory and run `install_tartarus.sh`
+   - This adds the tartarus directory to the import path for python and is a one time step.
+2. Run `pytest` in the same directory
 ## System testing instructions
 
 - The system can be tested by running both the front-end and the back-end simultaneously and navigating to all possible locations on the web-app.

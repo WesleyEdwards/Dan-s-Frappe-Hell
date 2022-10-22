@@ -15,22 +15,19 @@ import { LoadingButton } from "@mui/lab";
 import * as yup from "yup";
 import { formikTextFieldProps } from "../../utils/helperFunctions";
 import { useAuth } from "../../utils/AuthContext";
-import { useNavigate } from "react-router-dom";
+
 interface LoginFormProps {
   switchToCreateAccount: () => void;
   switchToForgotPassword: () => void;
+  navigateToHome: () => void;
 }
 
 export const LoginForm: FC<LoginFormProps> = (props) => {
-  const { switchToCreateAccount, switchToForgotPassword } = props;
+  const { switchToCreateAccount, switchToForgotPassword, navigateToHome } =
+    props;
   const [error, setError] = useState<string | null>(null);
 
   const { login } = useAuth();
-  const navigate = useNavigate();
-
-  const navigateToHome = () => {
-    navigate("/home");
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -46,7 +43,7 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
       login(values.password, values.email)
         .then((res) => {
           if (res === "success") {
-            navigate("/home");
+            navigateToHome();
           } else {
             setError("Invalid email or password.");
           }

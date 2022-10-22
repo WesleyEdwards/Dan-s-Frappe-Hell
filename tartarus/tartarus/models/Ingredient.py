@@ -100,7 +100,7 @@ class Ingredient:
             self.__name = name
             db = get_db()
             cur = db.cursor()
-            cur.execute(f"UPDATE Ingredients SET name = {name} WHERE IngredientId = {self.getId()}")
+            cur.execute(f"UPDATE Ingredients SET Name = '{name}' WHERE IngredientId = {self.getId()}")
 
     def setKind(self, kind:'str|int|Kind'):
         kind = self.convert_kind(kind)
