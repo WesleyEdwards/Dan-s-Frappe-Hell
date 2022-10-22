@@ -35,7 +35,7 @@ def get_token():
             userJson = None
             status = 401
         else:
-            userJson = json.dumps(createUserJSON(user))
+            userJson = createUserJSON(user)
         
         if error is None:
             header = {
@@ -64,7 +64,7 @@ def get_token():
             {
             'token':token,
             'error':error,
-            'user': '{' +userJson + '}'
+            'user': userJson
             },
             status
             )
