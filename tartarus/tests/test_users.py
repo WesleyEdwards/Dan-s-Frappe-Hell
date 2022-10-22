@@ -2,7 +2,7 @@ from email import header
 from getpass import getuser
 import json
 from pydoc import resolve
-from tartarus.tartarus.models.User import createUserJSON
+from tartarus.models.User import createUserJSON
 import tartarus.users
 from tartarus.models.User import (
     User, getUserByEmail

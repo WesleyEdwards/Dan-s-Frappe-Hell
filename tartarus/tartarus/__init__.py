@@ -42,8 +42,10 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    # Register User Endpoints
     from . import users
     app.register_blueprint(users.bp)
+
     # Register Ingredient Endpoints
     from . import ingredients
     app.register_blueprint(ingredients.bp)
@@ -51,5 +53,9 @@ def create_app(test_config=None):
     # Register MenuItem Endpoints
     from . import menuitems
     app.register_blueprint(menuitems.bp)
+
+    # Register Order Endpoints
+    from . import orders
+    app.register_blueprint(orders.bp)
 
     return app

@@ -79,7 +79,7 @@ def get_id(id):
 @bp.route('/update', methods=['POST'])
 def update_ingredient():
     token = request.headers['Authorization'].split(' ')[-1]
-    user,authorized = check_token(token,3)
+    user,authorized = check_token(token,2)
     status = 200
     error = None
     ingredientPayload = {}
@@ -94,7 +94,7 @@ def update_ingredient():
         ingredient = Ingredient.fromID(data['IngredientId'])
         ingredient.setName(data['Name'])
         ingredient.setKind(data['Kind'])
-        ingredient.setPrice(data['Name'])
+        ingredient.setPrice(data['Price'])
         ingredient.setStock(data['Stock'])
         ingredient.setUpcharge(data['Upcharge'])
         ingredientPayload = ingredient.getJson()
