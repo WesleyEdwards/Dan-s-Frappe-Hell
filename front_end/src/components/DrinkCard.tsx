@@ -10,8 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import { FC, useState } from "react";
+import { Drink } from "../api/models";
 import { IngredientSelect } from "./IngredientSelect";
-import { Drink } from "../sdk";
 
 interface DrinkCardProps {
   drink: Drink;

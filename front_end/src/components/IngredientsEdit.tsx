@@ -1,6 +1,6 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { FC, useEffect, useState } from "react";
-import { getIngredients } from "../sdk";
+import { getIngredients } from "../api/api-functions";
 import { Loading } from "./Loading";
 
 export interface IngredientRow {
