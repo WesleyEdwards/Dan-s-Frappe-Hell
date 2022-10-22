@@ -65,10 +65,8 @@ export function createAccount(
   lastName: string,
   password: string,
   email: string
-): Promise<LoginResponse> {
-  return makePostRequest("users/new", { password, email }).then(() => {
-    return loginUser(password, email);
-  });
+): Promise<unknown> {
+  return makePostRequest("users/new", { password, email, firstName, lastName });
 }
 
 export function getIngredients(): Promise<Ingredient[]> {
