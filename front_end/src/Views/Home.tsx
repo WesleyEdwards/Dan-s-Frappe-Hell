@@ -3,33 +3,35 @@ import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../components/DFHeader";
 import { DrinkCard } from "../components/DrinkCard";
 import { Loading } from "../components/Loading";
-import { getMenuItems, MenuItem} from "../sdk";
+import { getIngredients, getMenuItems, Drink } from "../sdk";
+import { mapMenuItemsToIngredients } from "../utils/helperFunctions";
 
 export const Home: FC = () => {
+  const [drinks, setDrinks] = useState<Drink[]>();
 
-
-  const[menuitems, setMenuItems] = useState<MenuItem[]>([]);
-
+  const fetchDrinks = async () => {
+    setDrinks(undefined);
+    const menuItems = await getMenuItems();
+    const ingredients = await getIngredients();
+    const newDrinks = mapMenuItemsToIngredients(menuItems, ingredients);
+    setDrinks(newDrinks);
+  };
 
   useEffect(() => {
-    getMenuItems().then((res) => {
-      setMenuItems(res);
-    });
-  },[]);
+    fetchDrinks();
+  }, []);
 
-  if(menuitems.length === 0) return <Loading />;
+  if (drinks === undefined) return <Loading />;
 
   return (
     <Container maxWidth="md">
       <Stack gap="2rem" justifyContent="center">
         <DFHeader title="Welcome to Dan's Frappuccino Hell" />
         <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
-          {menuitems.map((menuitem) => {
+          {drinks.map((drink) => {
             return (
               <Grid item md={6}>
-                <DrinkCard
-                  menuitem={menuitem}
-                />
+                <DrinkCard drink={drink} />
               </Grid>
             );
           })}
