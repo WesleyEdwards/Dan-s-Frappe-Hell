@@ -10,26 +10,23 @@ import {
   Typography,
 } from "@mui/material";
 import { FC, useState } from "react";
-import { MenuItem, RecipeItem } from "../sdk";
 import { IngredientSelect } from "./IngredientSelect";
+import { Drink } from "../sdk";
 
 interface DrinkCardProps {
-  menuitem: MenuItem;
+  drink: Drink;
 }
 
 export const DrinkCard: FC<DrinkCardProps> = (props) => {
-  const { menuitem } = props;
+  const { drink } = props;
 
   const [open, setOpen] = useState(false);
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClick = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleAddToCart = () => {
+    alert("This feature is not yet implemented");
     handleClose();
   };
 
@@ -45,7 +42,7 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
       >
         <CardContent style={{ justifyContent: "center" }}>
           <Typography variant="h5" gutterBottom>
-            {menuitem.Name}
+            {drink.menuItem.Name}
           </Typography>
         </CardContent>
       </Card>
@@ -53,14 +50,14 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
         <DialogContent style={{ width: 500 }}>
           <>
             <DialogContentText variant="h4" style={{ paddingBottom: 40 }}>
-              Customize your {menuitem.Name}
+              Customize your {drink.menuItem.Name}
             </DialogContentText>
-            {Object.entries(menuitem.Recipe).map(([id, amount]) => {
+            {drink.recipe.map((recipeItem) => {
               return (
                 <FormControl style={{ width: 400, paddingBottom: 35 }} error>
                   <IngredientSelect
-                      id={id}
-                      amount = {amount}
+                    ingredient={recipeItem.ingredient}
+                    initialQuantity={recipeItem.quantity}
                   />
                 </FormControl>
               );
@@ -75,3 +72,5 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
     </>
   );
 };
+
+export default DrinkCard;
