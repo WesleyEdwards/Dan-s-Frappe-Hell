@@ -14,6 +14,15 @@ export function loginUser(
   return makePostRequest("auth/token", { password, email });
 }
 
+export function createAccount(
+  firstName: string,
+  lastName: string,
+  password: string,
+  email: string
+): Promise<unknown> {
+  return makePostRequest("users/new", { password, email, firstName, lastName });
+}
+
 export function createIngredient(
   ingredient: CreateIngredientType
 ): Promise<Ingredient> {
@@ -21,7 +30,9 @@ export function createIngredient(
 }
 
 export function getAllUsers(): Promise<User[]> {
-  return makeGetRequest("users/all").then((res) => res.users);
+  return makeGetRequest("users/all").then((res) => {
+    return Promise.resolve([]);
+  });
 }
 
 export function getIngredients(): Promise<Ingredient[]> {
