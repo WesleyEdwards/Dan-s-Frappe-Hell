@@ -23,6 +23,7 @@ export interface User {
   permissions: Permission;
   userId: string;
 }
+
 export interface Ingredient {
   IngredientId: string;
   Kind: IngredientType;
@@ -66,6 +67,15 @@ export function loginUser(
   email: string
 ): Promise<LoginResponse> {
   return makePostRequest("auth/token", { password, email });
+}
+
+export function createAccount(
+  firstName: string,
+  lastName: string,
+  password: string,
+  email: string
+): Promise<unknown> {
+  return makePostRequest("users/new", { password, email, firstName, lastName });
 }
 
 export function getIngredients(): Promise<Ingredient[]> {
