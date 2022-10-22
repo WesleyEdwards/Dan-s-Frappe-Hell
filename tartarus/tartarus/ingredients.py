@@ -94,7 +94,7 @@ def update_ingredient():
         ingredient = Ingredient.fromID(data['IngredientId'])
         ingredient.setName(data['Name'])
         ingredient.setKind(data['Kind'])
-        ingredient.setPrice(data['Name'])
+        ingredient.setPrice(data['Price'])
         ingredient.setStock(data['Stock'])
         ingredient.setUpcharge(data['Upcharge'])
         ingredientPayload = ingredient.getJson()

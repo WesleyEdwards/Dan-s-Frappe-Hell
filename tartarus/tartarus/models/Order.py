@@ -40,6 +40,8 @@ class Order:
         """Returns the order corresponding to `id`"""
         db = get_db()
         order = db.execute('SELECT * FROM Orders where OrderId = ?',(int(id),)).fetchone()
+        if not order:
+            return order
         return cls(
             order['UserId'],
             order['OrderDate'],
@@ -151,13 +153,13 @@ class Order:
         """
         if not items == self.__items:
             if self.getStatus().value > 1:
-                raise Exception("Cannot edit items after order has been placed")
+                raise TartarusException("Cannot edit items after order has been placed")
             items = self.__validateItems(items)
             self.__items = items
             self.__totalPrice = self.__calculateTotalPrice()
             db = get_db()
             cur = db.cursor()
-            cur.execute(f"UPDATE Orders SET items = {json.dumps(items)} WHERE OrderId = {self.getId()}")
+            cur.execute(f"UPDATE Orders SET items = '{json.dumps(items)}' WHERE OrderId = {self.getId()}")
             cur.execute(f"UPDATE Orders SET totalPrice = {self.__totalPrice} WHERE OrderId = {self.getId()}")
 
 
@@ -177,20 +179,21 @@ class Order:
             cur = db.cursor()
             if status == self.Status.PLACED: # Lock in Price and orderDate
                 self.__items = self.__validateItems(self.__items)
-                cur.execute(f"UPDATE Orders SET items = {json.dumps(self.__items)} WHERE OrderId = {self.getId()}")
+                cur.execute(f"UPDATE Orders SET items = '{json.dumps(self.__items)}' WHERE OrderId = {self.getId()}")
                 self.__orderDate = datetime.utcnow()
-                cur.execute(f"UPDATE Orders SET orderDate = {self.__orderDate} WHERE OrderId = {self.getId()}")
+                cur.execute(f"UPDATE Orders SET orderDate = ? WHERE OrderId = {self.getId()}",(self.__orderDate,))
                 self.__totalPrice = self.__calculateTotalPrice()
                 cur.execute(f"UPDATE Orders SET totalPrice = {self.__totalPrice} WHERE OrderId = {self.getId()}")
-            cur.execute(f"UPDATE Orders SET status {status.value} WHERE OrderId = {self.getId()}")
+            cur.execute(f"UPDATE Orders SET status = {status.value} WHERE OrderId = {self.getId()}")
 
     def __calculateTotalPrice(self):
         """Goes through and gets the price of each MenuItem in the order, and returns the total + tax"""
         TAX = 0.07
         subtotal = 0
+        print(self.__items)
         for key in self.__items:
-            subtotal += key["price"] * key["quantity"]
-        return subtotal + subtotal * TAX
+            subtotal += self.__items[key]["price"] * self.__items[key]["quantity"]
+        return round(subtotal + subtotal * TAX,2)
 
     def __validateItems(self, items):
         """
@@ -200,13 +203,14 @@ class Order:
             ingredientid: {"price":<float>, "quantity":<int>}
         }
         """
+        print(items)
         for key in items:
-            if not (key.get("price") and key.get("quantity")):
+            if not (items[key].get("price") and items[key].get("quantity")):
                 raise TartarusException("Items list formatted incorrectly. See Tartarus api doc for proper format")
             item = MenuItem.fromID(key)
-            key["price"] = item.calculate_price()
-            if key["quantity"] < 0:
-                key["quantity"] = 0
+            items[key]["price"] = item.calculate_price(item.getRecipe())
+            if items[key]["quantity"] < 0:
+                items[key]["quantity"] = 0
         return items
 
     @staticmethod

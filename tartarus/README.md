@@ -419,6 +419,319 @@ Related objects:
 
 - [MenuItem](#menuitem)
 
+## /orders
+
+### /
+
+> Retrieves all orders
+
+METHODS: `GET`
+
+Authentication Required: `YES` Must have employee level permissions or higher
+
+Parameters:
+- `None`
+
+Returns
+
+if token is invalid:
+
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "orders":[]
+}
+```
+
+  
+
+if not authorized:
+
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "orders":[]
+}
+```
+
+If valid:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "orders":[<Order>]
+}
+```
+Related objects:
+
+- [Order](#order)
+
+### /\<id>
+
+> Gets order from OrderId
+
+METHODS: `GET`
+
+Authentication Required: `YES`, UserId of requester must match UserId of order OR must have at least employee permissions
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "orders":None
+}
+```
+
+if not authorized:
+
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "orders":None
+}
+```
+
+If valid:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "order":<Order>
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+
+
+### /order/status/\<status>
+
+> Returns orders at status level \<status>
+
+METHODS: `GET`
+
+Authentication Required: `YES`, must have at least employee permissions
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "orders":[]
+}
+```
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "orders":[]
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "orders":[<Order>]
+}
+```
+
+related objects:
+- [Order](#order)
+
+### /user/\<id>
+
+> Orders belonging to user of UserId: \<id>
+
+METHODS: `GET`
+
+Authentication Required: `YES`, UserId of requester must match UserId of order OR must have at least employee permissions
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "orders":[]
+}
+```
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "orders":[]
+}
+```
+if valid:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "orders":[<Order>]
+}
+```
+Related objects:
+
+- [Order](#order)
+
+### /user/\<id>/favorites
+
+> Favorited Orders belonging to user of UserId: \<id>
+
+METHODS: `GET`
+
+Authentication Required: `YES`, UserId of requester must match UserId of order OR must have at least employee permissions
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "orders":[]
+}
+```
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "orders":[]
+}
+```
+if valid:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "orders":[<Order>]
+}
+```
+Related objects:
+
+- [Order](#order)
+
+### /user/\<id>/cart
+
+> Cart belonging to user of UserId: \<id>
+>
+>  If a user's cart already exists, will return the existing "cart" order. Otherwise creates a new Order
+>
+> This will be the only method of creating orders
+
+METHODS: `GET`
+
+Authentication Required: `YES`, UserId of requester must match UserId of order OR must have at least employee permissions
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "order":None
+}
+```
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "order":None
+}
+```
+if valid:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "orders":[<Order>]
+}
+```
+Related objects:
+
+- [Order](#order)
+
+### /update
+
+> Updates existing Order
+> 
+> You cannot update the totalprice, drinkprice (in items dictionary), and datetime manually.
+> Once status is moved to PLACED, these values are automatically calculated and stored.
+>
+> State can only increase sequentially from one state to another. 
+> CART -> PLACED -> FINISHED -> FULFILLED
+> You cannot jump steps and you cannot go backwards a step.
+> 
+> Once a order is in the PLACED state, you cannot update the items dictionary.
+
+METHODS: `POST`
+
+Authentication Required: `YES`, UserId of requester must match UserId of order OR must have at least employee permissions
+
+Parameters:
+- `'OrderId'` -> int id of order to modify
+- `'Items'` -> dict mapping MenuItem ID to dict of `{"quantity":<int>,"price":<float>}`
+    - whatever gets passed in "price" is ignored, you can just pass Null values.
+- `'Favorite'` -> bool, Whether order has been marked as "Favorite" by user
+- `'Status'` -> str, status of order.
+
+Returns
+if token is invalid:
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "order":{}
+}
+```
+
+if not authorized:
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "order":{}
+}
+```
+If valid:
+```json
+STATUS:200
+{
+    "error":<str>,
+    "order":<MenuItem>
+}
+```
+Related objects:
+
+- [MenuItem](#menuitem)
+- [Order](#order)
+
 ## Objects
 
 ### USER
@@ -463,3 +776,17 @@ Related objects:
 }
 ```
 `Recipe` is a dictionary of ingredient Ids as `<str>` mapped to quantities `<int>`
+
+### ORDER
+
+> Represents an order whether active or not (in cart)
+```json
+{
+    "OrderId":<int>,
+    "UserId":<int>,
+    "Favorite":<bool>,
+    "Items":{<MenuId>:{"quantity":<int>,"price":<float>}},
+    "OrderDate":<datetime>,
+    "Status":<str>,
+    "TotalPrice":<float>
+}

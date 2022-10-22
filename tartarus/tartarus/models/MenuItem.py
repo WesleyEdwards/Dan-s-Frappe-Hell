@@ -141,9 +141,11 @@ class MenuItem:
     def calculate_price(recipe:dict) -> float:
         """Calculates the price of a drink (Base + cost of ingredients"""
         BASEPRICE = 1.00
+        price = BASEPRICE
         for key in recipe:
             ing = Ingredient.fromID(key)
-            BASEPRICE += (ing.getUpcharge() * recipe[key])
+            price += (ing.getUpcharge() * recipe[key])
+        return round(price,2)
 
         
 

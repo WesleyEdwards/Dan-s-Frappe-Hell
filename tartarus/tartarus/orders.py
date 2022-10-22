@@ -1,6 +1,7 @@
 import functools
 from multiprocessing.util import is_abstract_socket_namespace
 import time
+import traceback
 import jwt
 import json
 from .models.User import User
@@ -13,7 +14,7 @@ from flask import (
 
 from tartarus.db import get_db
 
-bp = Blueprint('menuitems', __name__, url_prefix='/menuitems')
+bp = Blueprint('orders', __name__, url_prefix='/orders')
 
 # TOKEN METHODS
 @bp.route('/', methods=(['GET']))
@@ -45,7 +46,7 @@ def get_all():
 
 @bp.route('/<id>',methods=(['GET']))
 def get_id(id):
-    """Returns menu item of ID"""
+    """Returns order of ID"""
     token = request.headers.get('Authorization',"").split(' ')[-1]
     requester,_ = check_token(token)
     error = None
@@ -58,7 +59,7 @@ def get_id(id):
     if order == None:
         status = 404
         error = "Order not found"
-    if requester.getPermissions() >= 1 or order.getUserId() != requester.getId():
+    if requester.getPermissions() < 1 and order.getUserId() != requester.getId():
         status = 403
         error = "Insufficient Privileges"
     if not error:
@@ -66,7 +67,7 @@ def get_id(id):
     return (
         {
         'error':error,
-        'menuitem':orderPayload
+        'order':orderPayload
         },
         status
     )
@@ -93,8 +94,8 @@ def get_all_in_state(state):
             status = 400
             error = "Invalid state"
         for x in orders:
-            item = x.getJson()       
-            ordersPayload.append(item)
+            order = x.getJson()       
+            ordersPayload.append(order)
     return (
         {
         'error':error,
@@ -115,7 +116,7 @@ def get_all_of_user(id):
         status = 401
         error = "Invalid Token"
     orders = Order.ofUser(id)
-    if requester.getPermissions() >= 1 or id != requester.getId():
+    if requester.getPermissions() < 1 and id != requester.getId():
         status = 403
         error = "Insufficient Privileges"
     if not error:
@@ -141,7 +142,7 @@ def get_favorites_of_user(id):
         status = 401
         error = "Invalid Token"
     orders = Order.ofUserFavorite(id)
-    if requester.getPermissions() >= 1 or id != requester.getId():
+    if requester.getPermissions() < 1 and id != requester.getId():
         status = 403
         error = "Insufficient Privileges"
     if not error:
@@ -171,7 +172,7 @@ def get_cart_of_user(id):
     except TartarusException as e:
         error = str(e)
         status = 404
-    if requester.getPermissions() >= 1 or id != requester.getId():
+    if requester.getPermissions() < 1 and id != requester.getId():
         status = 403
         error = "Insufficient Privileges"
     if not error:
@@ -199,13 +200,13 @@ def update_order():
     if order == None:
         status = 404
         error = "Order not Found"
-    if requester.getPermissions() >= 1 or order.getUserId() != requester.getId():
+    if requester.getPermissions() < 1 and order.getUserId() != requester.getId():
         status = 403
         error = "Insufficient Privileges"
     if status == 200:
         try:
             order.setFavorite(data["Favorite"])
-            order.setItems(json.loads(data["Items"]))
+            order.setItems(data["Items"])
             order.setStatus(data["Status"])
         except TartarusException as t:
             status = 400
@@ -214,6 +215,7 @@ def update_order():
             status = 400
             error = "Invalid Parameters"
             print(e)
+            print(traceback.print_tb(e.__traceback__))
         if not error:
             orderPayload = order.getJson()
     return (
