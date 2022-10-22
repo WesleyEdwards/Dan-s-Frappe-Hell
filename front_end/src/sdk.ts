@@ -23,12 +23,6 @@ export interface User {
   permissions: Permission;
   userId: string;
 }
-
-export interface RecipeItem{
-  IngredientId: string;
-  quantity: number;
-}
-
 export interface Ingredient {
   IngredientId: string;
   Kind: IngredientType;
@@ -38,10 +32,24 @@ export interface Ingredient {
   Upcharge: number;
 }
 
-export interface MenuItem{
+export interface Drink {
+  menuItem: MenuItem;
+  recipe: RecipeItem[];
+}
+
+export interface RecipeItem {
+  ingredient: Ingredient;
+  quantity: number;
+}
+
+export interface MappingOfIngredientToQuantity {
+  [ingredientId: string]: number;
+}
+
+export interface MenuItem {
   MenuId: number;
   Name: string;
-  Recipe:{ [id:string] : number;}
+  Recipe: MappingOfIngredientToQuantity;
   Price: number;
   Active: boolean;
   ImagePath: string;
