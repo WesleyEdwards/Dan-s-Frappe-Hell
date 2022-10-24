@@ -24,7 +24,7 @@ class Order:
     __status = Status.CART
     __favorite = False
 
-    def __init__(self, userId:int, orderDate:datetime, items:'dict|str', totalPrice:float, status:'int|str|Status', favorite=False, id=0):
+    def __init__(self, userId:int, orderDate:datetime, items:'list[dict]|str', totalPrice:float, status:'int|str|Status', favorite=False, id=0):
         self.__id = id
         self.__userId = userId
         self.__orderDate = orderDate
@@ -60,7 +60,7 @@ class Order:
         if order == None:
             if getUserById(userId) == None:
                 raise TartarusException("Invalid user")
-            order = cls(userId, datetime.utcnow(), {}, 0, cls.Status.CART)
+            order = cls(userId, datetime.utcnow(), [], 0, cls.Status.CART)
             order.addToDatabase()
             return order
         return cls(order['UserId'],order['OrderDate'],order['Items'],order['TotalPrice'],order['Status'],order['Favorite'],order['OrderId'])
