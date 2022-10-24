@@ -19,7 +19,7 @@ class Order:
     __id = -1
     __userId = -1
     __orderDate = datetime.now()
-    __items = {}
+    __items = []
     __totalPrice = 0.0
     __status = Status.CART
     __favorite = False
@@ -191,8 +191,8 @@ class Order:
         TAX = 0.07
         subtotal = 0
         print(self.__items)
-        for key in self.__items:
-            subtotal += self.__items[key]["price"] * self.__items[key]["quantity"]
+        for item in self.__items:
+            subtotal += item["price"] * item["quantity"]
         return round(subtotal + subtotal * TAX,2)
 
     def __validateItems(self, items):
@@ -204,13 +204,13 @@ class Order:
         }
         """
         print(items)
-        for key in items:
-            if not (items[key].get("price") and items[key].get("quantity")):
+        for item in items:
+            if not (item.get("price") and item.get("quantity") and item.get("menuId")):
                 raise TartarusException("Items list formatted incorrectly. See Tartarus api doc for proper format")
-            item = MenuItem.fromID(key)
-            items[key]["price"] = item.calculate_price(item.getRecipe())
-            if items[key]["quantity"] < 0:
-                items[key]["quantity"] = 0
+            itemObj = MenuItem.fromID(item.get("menuId"))
+            item["price"] = itemObj.calculate_price(itemObj.getRecipe())
+            if item["quantity"] < 0:
+                item["quantity"] = 0
         return items
 
     @staticmethod
