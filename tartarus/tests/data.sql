@@ -6,4 +6,4 @@ Values ('Active', '{"1":100}',0.0,TRUE,'');
 
 -- Insert Test Order
 INSERT INTO Orders (UserId, OrderDate, Items, TotalPrice, Status, Favorite)
-Values (1, '20220204 10:34:09 AM', '{"1":{"quantity":1,"price":0}}',0,1,TRUE)
+Values (1, '20220204 10:34:09 AM', '[{"menuId":1,"quantity":1,"price":0}]',0,1,TRUE)

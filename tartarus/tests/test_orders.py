@@ -47,7 +47,7 @@ def test_update_order(client,auth):
     test_order = {
         "OrderId":1,
         "Favorite":False,
-        "Items":{"1":{"quantity":1,"price":1},"2":{"quantity":2,"price":1}},
+        "Items":[{"menuId":1,"quantity":1,"price":1},{"menuId":2,"quantity":2,"price":1}],
         "Status":"PLACED",
     }
     res = client.post('/orders/update', headers={'Authorization':f'Bearer {token}'}, json=test_order)
@@ -56,10 +56,15 @@ def test_update_order(client,auth):
     for key in test_order:
         assert res.json['order'][key] != None
         if key == "Items":
-            items = test_order[key]
-            for item in items:
-                assert items[item]["quantity"] == res.json['order'][key][item]["quantity"]
-                assert res.json['order'][key][item]["price"] > 0
+            def get_id(elem):
+                return elem.get("menuId")
+            test_items = sorted(test_order[key],key=get_id)
+            res_items = sorted(res.json['order']['Items'],key=get_id)
+            assert len(test_items) == len(res_items)
+            for i in range(len(test_items)):
+                assert test_items[i]["menuId"] == res_items[i]["menuId"]
+                assert test_items[i]["quantity"] == res_items[i]["quantity"]
+                assert res_items[i]["price"] > 0
         else:
             assert test_order[key] == res.json['order'][key]
     
