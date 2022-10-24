@@ -100,7 +100,7 @@ class Order:
     def addToDatabase(self):
         db = get_db()
         cur = db.cursor()
-        cur.execute(f"insert into Orders(userid, orderdate, items, totalprice, status, favorite) values ('{self.getUserId()}', '{self.getOrderDate()}', '{json.dumps(self.getItems())}','{self.getTotalPrice()}','{self.getStatus()}','{self.getFavorite()}')")
+        cur.execute(f"insert into Orders(userid, orderdate, items, totalprice, status, favorite) values ('{self.getUserId()}', '{self.getOrderDate()}', '{json.dumps(self.getItems())}','{self.getTotalPrice()}','{self.getStatus().value}','{self.getFavorite()}')")
         db.commit()
         self.__id = db.execute('SELECT * FROM Orders where orderdate = ?',(self.getOrderDate(),)).fetchone()['OrderId']
         
