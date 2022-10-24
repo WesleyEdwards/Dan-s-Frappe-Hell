@@ -163,18 +163,19 @@ def get_cart_of_user(id):
     requester,_ = check_token(token)
     error = None
     status = 200
-    orderPayload=[]
+    orderPayload=None
     if not requester:
         status = 401
         error = "Invalid Token"
-    try:
-        order = Order.ofUserCart(id)
-    except TartarusException as e:
-        error = str(e)
-        status = 404
-    if requester.getPermissions() < 1 and id != requester.getId():
+    elif  requester.getPermissions() < 1 and id != requester.getId():
         status = 403
         error = "Insufficient Privileges"
+    else:
+        try:
+            order = Order.ofUserCart(id)
+        except TartarusException as e:
+            error = str(e)
+            status = 404
     if not error:
         orderPayload = order.getJson()
     return (
