@@ -101,6 +101,8 @@ class Ingredient:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE Ingredients SET Name = '{name}' WHERE IngredientId = {self.getId()}")
+            cur.close()
+            db.commit()
 
     def setKind(self, kind:'str|int|Kind'):
         kind = self.convert_kind(kind)
@@ -109,6 +111,8 @@ class Ingredient:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE Ingredients SET kind = {kind.value} WHERE IngredientId = {self.getId()}")
+            cur.close()
+            db.commit()
 
     def setPrice(self, price:float):
         if self.__price != price:
@@ -116,6 +120,8 @@ class Ingredient:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE Ingredients SET price = {price} WHERE IngredientId = {self.getId()}")
+            cur.close()
+            db.commit()
 
     def setStock(self, stock:int):
         if self.__stock != stock:
@@ -123,6 +129,8 @@ class Ingredient:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE Ingredients SET stock = {stock} WHERE IngredientId = {self.getId()}")
+            cur.close()
+            db.commit()
 
     def setUpcharge(self, upcharge:float):
         if self.__upcharge != upcharge:
@@ -130,6 +138,8 @@ class Ingredient:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE Ingredients SET upcharge = {upcharge} WHERE IngredientId = {self.getId()}")
+            cur.close()
+            db.commit()
 
     @staticmethod
     def convert_kind( kind: 'str|int|Kind') -> Kind:

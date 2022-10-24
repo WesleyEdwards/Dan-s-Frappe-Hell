@@ -99,6 +99,8 @@ class MenuItem:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE MenuItem SET active = {active} WHERE MenuId = {self.getId()}")
+            cur.close()
+            db.commit()
     
     def setImagePath(self, imagepath:str):
         if not imagepath == self.__imagepath:
@@ -106,6 +108,8 @@ class MenuItem:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE MenuItem SET imagepath = {imagepath} WHERE MenuId = {self.getId()}")
+            cur.close()
+            db.commit()
 
     def setName(self, name:str):
         if not name == self.__name:
@@ -113,6 +117,8 @@ class MenuItem:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE MenuItem SET name = '{name}' WHERE MenuId = {self.getId()}")
+            cur.close()
+            db.commit()
     
     def getId(self):
         return int(self.__id)
