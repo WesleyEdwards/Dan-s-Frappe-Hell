@@ -3,7 +3,7 @@ import Tab from "@mui/material/Tab";
 import { Link } from "react-router-dom";
 import { hasPermission, useRouteMatch } from "../utils/helperFunctions";
 import { useAuth } from "../utils/AuthContext";
-import { Permission } from "../sdk";
+import { Permission } from "../api/models";
 
 export const RouterTabs = () => {
   const routeMatch = useRouteMatch([

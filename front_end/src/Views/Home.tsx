@@ -3,8 +3,9 @@ import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../components/DFHeader";
 import { DrinkCard } from "../components/DrinkCard";
 import { Loading } from "../components/Loading";
-import { getIngredients, getMenuItems, Drink } from "../sdk";
+import { getIngredients, getMenuItems } from "../api/api-functions";
 import { mapMenuItemsToIngredients } from "../utils/helperFunctions";
+import { Drink } from "../api/models";
 
 export const Home: FC = () => {
   const [drinks, setDrinks] = useState<Drink[]>();

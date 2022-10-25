@@ -28,7 +28,7 @@ def get_all():
     if not requester:
         status = 401
         error = "Invalid Token"
-    if not authorized:
+    elif not authorized:
         status = 403
         error = "Insufficient Permissions"
     if status == 200:
@@ -36,12 +36,12 @@ def get_all():
         for x in orders:
             order = x.getJson()       
             ordersPayload.append(order)
-        return (
-            {
-            'error':error,
-            'orders':ordersPayload
-            },
-            status
+    return (
+        {
+        'error':error,
+        'orders':ordersPayload
+        },
+        status
         )
 
 @bp.route('/<id>',methods=(['GET']))
@@ -198,10 +198,10 @@ def update_order():
     if not requester:
         status = 401
         error = "Invalid Token"
-    if order == None:
+    elif order == None:
         status = 404
         error = "Order not Found"
-    if requester.getPermissions() < 1 and order.getUserId() != requester.getId():
+    elif requester.getPermissions() < 1 and order.getUserId() != requester.getId():
         status = 403
         error = "Insufficient Privileges"
     if status == 200:

@@ -9,10 +9,11 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import {FC, useEffect, useState} from "react";
+import { FC, useEffect, useState } from "react";
+import { useAuth } from "../utils/AuthContext";
+import { Drink, Order, OrderItem } from "../api/models";
 import { IngredientSelect } from "./IngredientSelect";
-import {Drink, getCartOrder, Order, updateOrder, OrderItem} from "../sdk";
-import {useAuth} from "../utils/AuthContext";
+import { getCartOrder, updateOrder } from "../api/api-functions";
 
 interface DrinkCardProps {
   drink: Drink;
@@ -38,13 +39,13 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
   }, []);
 
   const handleAddToCart = () => {
-    if(!cartOrder) return;
+    if (!cartOrder) return;
     const newList: OrderItem[] = [];
-    console.log(cartOrder.Items)
+    console.log(cartOrder.Items);
     cartOrder.Items.forEach((i) => {
       return newList.push(i);
     });
-    newList.push({menuId: drink.menuItem.MenuId, quantity: 1, price: 0})
+    newList.push({ menuId: drink.menuItem.MenuId, quantity: 1, price: 0 });
     return updateOrder(cartOrder.OrderId, newList, false, "CART");
   };
 
