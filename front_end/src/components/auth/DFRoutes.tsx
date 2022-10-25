@@ -1,12 +1,13 @@
 import React, { FC } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Permission } from "../../sdk";
+import { Permission } from "../../api/models";
 import { useAuth } from "../../utils/AuthContext";
 import { hasPermission } from "../../utils/helperFunctions";
 import { PrivateRoute } from "../../utils/PrivateRoute";
 import CustomerManagement from "../../Views/admin/CustomerManagement";
 import EmployeeManagement from "../../Views/admin/EmployeeManagement";
 import Inventory from "../../Views/admin/Inventory";
+import BaristaView from "../../Views/employee/BaristaView";
 import CashierView from "../../Views/employee/CashierView";
 import Home from "../../Views/Home";
 import Login from "../../Views/Login";
@@ -40,6 +41,11 @@ export const DFRoutes: FC = () => {
     {
       path: "/cashier-view",
       element: <CashierView />,
+      permissionRequired: Permission.WORKER,
+    },
+    {
+      path: "/barista-view",
+      element: <BaristaView />,
       permissionRequired: Permission.WORKER,
     },
     {

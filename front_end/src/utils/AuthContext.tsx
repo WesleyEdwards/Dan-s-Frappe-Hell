@@ -6,7 +6,8 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { User, loginUser } from "../sdk";
+import { loginUser } from "../api/api-functions";
+import { User } from "../api/models";
 
 interface Context {
   user: User | null | undefined;
@@ -51,7 +52,6 @@ export const AuthProvider: FC<AuthProps> = (props) => {
     firstName: string,
     lastName: string
   ) => {
-    console.log("createAccount");
     return Promise.resolve();
   };
 

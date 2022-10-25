@@ -3,7 +3,7 @@ import Tab from "@mui/material/Tab";
 import { Link } from "react-router-dom";
 import { hasPermission, useRouteMatch } from "../utils/helperFunctions";
 import { useAuth } from "../utils/AuthContext";
-import { Permission } from "../sdk";
+import { Permission } from "../api/models";
 
 export const RouterTabs = () => {
   const routeMatch = useRouteMatch([
@@ -12,7 +12,8 @@ export const RouterTabs = () => {
     "/profile",
     "/customer-management",
     "/employee-management",
-    "/cashier-view"
+    "/cashier-view",
+    "/barista-view",
   ]);
   const currentTab = routeMatch?.pattern?.path;
   const { user } = useAuth();
@@ -34,6 +35,10 @@ export const RouterTabs = () => {
     {
       label: "Cashier View",
       path: "/cashier-view",
+    },
+    {
+      label: "Barista View",
+      path: "/barista-view",
     },
     {
       label: "Inventory",

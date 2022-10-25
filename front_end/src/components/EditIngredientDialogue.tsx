@@ -18,7 +18,7 @@ import {
   formikTextFieldNumberProps,
   formikTextFieldProps,
 } from "../utils/helperFunctions";
-import { IngredientType } from "../sdk";
+import { IngredientType } from "../api/models";
 import { IngredientRow } from "./IngredientsEdit";
 
 interface EditIngredientDialogueProps {

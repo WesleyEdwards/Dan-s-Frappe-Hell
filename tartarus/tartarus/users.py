@@ -28,7 +28,7 @@ def create_user():
                 lastName,
                 email,
                 password,
-                3
+                1
             ))
         except Exception as e:
             print(e)
@@ -77,9 +77,10 @@ def changePermissions():
     newUser = None
     token = request.headers['Authorization']
     auth = check_token(token, 3)
-    user = auth[0]
+
     form = request.get_json()
-    newPerm = form['permLevel']
+    user = getUserById(form['userId'])
+    newPerm = form['newPerm']
     if(auth[1]):
         try:
             updatePermissions(user.getId(), newPerm)
