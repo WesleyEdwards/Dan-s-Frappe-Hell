@@ -9,9 +9,10 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import { FC, useState } from "react";
+import {FC, useEffect, useState} from "react";
 import { IngredientSelect } from "./IngredientSelect";
-import { Drink } from "../sdk";
+import {Drink, getCartOrder, Order, updateOrder, OrderItem} from "../sdk";
+import {useAuth} from "../utils/AuthContext";
 
 interface DrinkCardProps {
   drink: Drink;
@@ -24,10 +25,27 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
 
   const handleClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { user } = useAuth();
+  const [cartOrder, setCartOrder] = useState<Order>();
+  const fetchCartOrder = async () => {
+    setCartOrder(undefined);
+    const order = await getCartOrder(user?.userId || " ");
+    setCartOrder(order);
+  };
+
+  useEffect(() => {
+    fetchCartOrder();
+  }, []);
 
   const handleAddToCart = () => {
-    alert("This feature is not yet implemented");
-    handleClose();
+    if(!cartOrder) return;
+    const newList: OrderItem[] = [];
+    console.log(cartOrder.Items)
+    cartOrder.Items.forEach((i) => {
+      return newList.push(i);
+    });
+    newList.push({menuId: drink.menuItem.MenuId, quantity: 1, price: 0})
+    return updateOrder(cartOrder.OrderId, newList, false, "CART");
   };
 
   return (

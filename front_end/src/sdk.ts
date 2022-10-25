@@ -47,6 +47,7 @@ export interface MappingOfIngredientToQuantity {
   [ingredientId: string]: number;
 }
 
+
 export interface MenuItem {
   MenuId: number;
   Name: string;
@@ -56,10 +57,26 @@ export interface MenuItem {
   ImagePath: string;
 }
 
+export interface Order{
+  OrderId: number;
+  UserId: number;
+  Favorite: boolean;
+  Items: OrderItem[];
+  OrderDate: number;
+  Status: string;
+  TotalPrice: number;
+}
+
 export interface LoginResponse {
   token: string;
   error: string;
   user: User;
+}
+
+export interface OrderItem {
+  menuId: number;
+  quantity: number;
+  price: number;
 }
 
 export function loginUser(
@@ -98,6 +115,19 @@ export function createIngredient(
   ingredient: CreateIngredientType
 ): Promise<Ingredient> {
   return makePostRequest("ingredients/create", ingredient);
+}
+
+export function getCartOrder(userId: string): Promise<Order> {
+  return makeGetRequest(`orders/user/${userId}/cart`).then((res) => res.order);
+}
+
+export function updateOrder(
+    orderId: number,
+    items: OrderItem[],
+    favorite: boolean,
+    status: string
+): Promise<unknown> {
+  return makePostRequest("orders/update", {orderId, items, favorite, status});
 }
 
 export type CreateIngredientType = Omit<Ingredient, "IngredientId">;
