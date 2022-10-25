@@ -52,7 +52,6 @@ export const AuthProvider: FC<AuthProps> = (props) => {
     firstName: string,
     lastName: string
   ) => {
-    console.log("createAccount");
     return Promise.resolve();
   };
 

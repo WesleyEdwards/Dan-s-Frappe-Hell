@@ -43,20 +43,25 @@ def create_user():
 #TODO: figure out how to append data to a dictionary
 @bp.route('/all', methods=(['GET']))
 def getAllUsers():
-    users = {}
+    users = []
     error = None
     status = 200
-    token = request.headers['Authorization']
-    if (check_token(token, 3)[1]):
+    token = request.headers.get('Authorization').split(" ")[-1]
+    print(token)
+    requester, authorized = check_token(token, 2)
+    if requester == None:
+        error = "Invalid Token"
+        status = 401
+    elif not authorized:
+        error = "Incorrect Permissions"
+        status = 403
+    else:
         i = 1
         for element in getUserList():
            user = User(element[2], element[3], element[1], element[4], element[5])
            user.setId(element[0])
-           users[f'user{i}'] = createUserJSON(user)
+           users.append(createUserJSON(user))
            i += 1
-    else:
-        error = "Invalid token or permissions"
-        status = 403
     return (
         {
             'users': users,
@@ -72,9 +77,10 @@ def changePermissions():
     newUser = None
     token = request.headers['Authorization']
     auth = check_token(token, 3)
-    user = auth[0]
+
     form = request.get_json()
-    newPerm = form['permLevel']
+    user = getUserById(form['userId'])
+    newPerm = form['newPerm']
     if(auth[1]):
         try:
             updatePermissions(user.getId(), newPerm)

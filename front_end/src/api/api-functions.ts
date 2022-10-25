@@ -37,9 +37,16 @@ export function createIngredient(
 }
 
 export function getAllUsers(): Promise<User[]> {
-  return makeGetRequest("users/all").then((res) => {
-    return Promise.resolve([]);
-  });
+  return makeGetRequest("users/all").then((res) => res.users);
+}
+
+export function modifyUserPermission(
+  userId: string,
+  newPerm: string
+): Promise<User[]> {
+  return makePostRequest("users/permissions", { userId, newPerm }).then(
+    (res) => res.users
+  );
 }
 
 export function getIngredients(): Promise<Ingredient[]> {
