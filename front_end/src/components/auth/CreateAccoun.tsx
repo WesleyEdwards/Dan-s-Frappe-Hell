@@ -1,17 +1,10 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { LoadingButton } from "@mui/lab";
-import {
-  Alert,
-  Button,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, IconButton, Stack, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import React, { FC, useState } from "react";
 import * as yup from "yup";
-import { createAccount } from "../../sdk";
+import { createAccount } from "../../api/api-functions";
 import { useAuth } from "../../utils/AuthContext";
 import { formikTextFieldProps } from "../../utils/helperFunctions";
 

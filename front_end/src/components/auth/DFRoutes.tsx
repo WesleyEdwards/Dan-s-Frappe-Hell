@@ -1,9 +1,9 @@
-import React, {FC} from "react";
-import {Navigate, Route, Routes} from "react-router-dom";
-import {Permission} from "../../sdk";
-import {useAuth} from "../../utils/AuthContext";
-import {hasPermission} from "../../utils/helperFunctions";
-import {PrivateRoute} from "../../utils/PrivateRoute";
+import React, { FC } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { Permission } from "../../api/models";
+import { useAuth } from "../../utils/AuthContext";
+import { hasPermission } from "../../utils/helperFunctions";
+import { PrivateRoute } from "../../utils/PrivateRoute";
 import CustomerManagement from "../../Views/admin/CustomerManagement";
 import EmployeeManagement from "../../Views/admin/EmployeeManagement";
 import Inventory from "../../Views/admin/Inventory";

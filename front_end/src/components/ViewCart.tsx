@@ -7,7 +7,7 @@ import {
   IconButton, Typography,
 } from "@mui/material";
 import Badge from "@mui/material/Badge";
-import React, {FC, useEffect, useState} from "react";
+import React, { FC, useEffect, useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {getCartOrder, Order, updateOrder, getMenuItemById, MenuItem} from "../sdk";
 import {useAuth} from "../utils/AuthContext";
@@ -42,38 +42,27 @@ export const ViewCart: FC = () => {
     alert("Need to implement subtracting of user balance")
     fetchCartOrder()
     setOpen(false);
-  }
+  };
 
   const [cartOrder, setCartOrder] = useState<Order>();
   const [menuItems, setMenuItems] = useState<MenuItem[]>();
 
 
   const fetchCartOrder = async () => {
-    getCartOrder(user?.userId || "1").then((red)=>{
+    if(!user?.userId) return;
+    getCartOrder(user.userId).then((red)=>{
       setCartOrder(red)
     });
   };
 
   useEffect(()=>{
     fetchCartOrder()
-  })
-  //
-  //
-  // useEffect(() => {
-  //   const newList: MenuItem[]  = []
-  //   getCartOrder(user?.userId || "1").then((res)=>{
-  //     setCartOrder(res)
-  //     res.Items.map((i)=>{
-  //       getMenuItemById(i.menuId.toString()).then((red)=>{
-  //         newList.push(red)
-  //       })
-  //     })
-  //   })
-  //   setMenuItems(newList)
-  // }, []);
+  }, [user]);
 
-  if(cartOrder === undefined){
-    return <Loading/>
+
+  if (!user) return <></>;
+  if (cartOrder === undefined) {
+    return <Loading />;
   }
 
   return (

@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { Navigate, Route, RouteProps, Routes } from "react-router-dom";
-import { Permission } from "../sdk";
+import { Permission } from "../api/models";
 import { useAuth } from "./AuthContext";
 import { hasPermission } from "./helperFunctions";
 

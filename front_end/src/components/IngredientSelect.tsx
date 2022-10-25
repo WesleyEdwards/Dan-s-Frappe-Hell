@@ -6,7 +6,7 @@ import {
   Select,
 } from "@mui/material";
 import React, { FC, useState } from "react";
-import { Ingredient } from "../sdk";
+import { Ingredient } from "../api/models";
 
 interface IngredientSelectProps {
   ingredient: Ingredient;

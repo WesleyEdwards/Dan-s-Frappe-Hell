@@ -9,7 +9,8 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import {FC, useEffect, useState} from "react";
+import { FC, useState } from "react";
+import { Drink } from "../api/models";
 import { IngredientSelect } from "./IngredientSelect";
 import {Drink, getCartOrder, Order, updateOrder, OrderItem} from "../sdk";
 import {useAuth} from "../utils/AuthContext";

@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import React, { FC, useState } from "react";
-import { createIngredient, IngredientType } from "../sdk";
+import { createIngredient } from "../api/api-functions";
+import { IngredientType } from "../api/models";
 import { EditIngredientDialogue } from "./EditIngredientDialogue";
 import { IngredientRow } from "./IngredientsEdit";
 
