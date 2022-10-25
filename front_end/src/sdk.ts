@@ -95,8 +95,15 @@ export function createAccount(
   return makePostRequest("users/new", { password, email, firstName, lastName });
 }
 
+export function getOrdersByStatus(status: string): Promise<Order[]>{
+  return makeGetRequest(`orders/status/${status}`).then((res)=>res.orders)
+}
+
 export function getIngredients(): Promise<Ingredient[]> {
   return makeGetRequest("ingredients/").then((res) => res.ingredients);
+}
+export function getMenuItemById(id: string): Promise<MenuItem>{
+  return makeGetRequest(`menuitems/${id}`).then((res)=> res.menuitem)
 }
 
 export function getMenuItems(): Promise<MenuItem[]> {
@@ -122,12 +129,12 @@ export function getCartOrder(userId: string): Promise<Order> {
 }
 
 export function updateOrder(
-    orderId: number,
-    items: OrderItem[],
-    favorite: boolean,
-    status: string
-): Promise<unknown> {
-  return makePostRequest("orders/update", {orderId, items, favorite, status});
+    OrderId: number,
+    Items: OrderItem[],
+    Favorite: boolean,
+    Status: string
+): Promise<Order> {
+  return makePostRequest("orders/update", {OrderId, "Items": Items, "Favorite": Favorite, "Status": Status}).then((res) => res.order);
 }
 
 export type CreateIngredientType = Omit<Ingredient, "IngredientId">;

@@ -3,13 +3,13 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
-  IconButton,
+  DialogContentText, FormControl,
+  IconButton, Typography,
 } from "@mui/material";
 import Badge from "@mui/material/Badge";
 import React, {FC, useEffect, useState} from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import {getCartOrder, Order} from "../sdk";
+import {getCartOrder, Order, updateOrder, getMenuItemById, MenuItem} from "../sdk";
 import {useAuth} from "../utils/AuthContext";
 import {Loading} from "./Loading";
 
@@ -17,32 +17,65 @@ import {Loading} from "./Loading";
 export const ViewCart: FC = () => {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
+
   const handleCartClick = () => {
-    setOpen(true);
+    const newList: MenuItem[]  = []
+    getCartOrder(user?.userId || "1").then((res)=>{
+      setCartOrder(res)
+      res.Items.map((i)=>{
+        getMenuItemById(i.menuId.toString()).then((red)=>{
+          newList.push(red)
+        })
+      })
+      setMenuItems(newList)
+      setOpen(true);
+    })
+
   };
   const handleCartClose = () => {
     setOpen(false);
   };
+
   const handleCheckOut = () => {
-    //Todo handle checkout
+    if(!cartOrder) return;
+    updateOrder(cartOrder.OrderId, cartOrder.Items, cartOrder.Favorite, "PLACED")
+    alert("Need to implement subtracting of user balance")
+    fetchCartOrder()
     setOpen(false);
   }
 
   const [cartOrder, setCartOrder] = useState<Order>();
+  const [menuItems, setMenuItems] = useState<MenuItem[]>();
+
 
   const fetchCartOrder = async () => {
-    setCartOrder(undefined);
-    const orders = await getCartOrder(user?.userId || "");
-    setCartOrder(orders);
+    getCartOrder(user?.userId || "1").then((red)=>{
+      setCartOrder(red)
+    });
   };
 
-  useEffect(() => {
-    fetchCartOrder();
-  }, []);
+  useEffect(()=>{
+    fetchCartOrder()
+  })
+  //
+  //
+  // useEffect(() => {
+  //   const newList: MenuItem[]  = []
+  //   getCartOrder(user?.userId || "1").then((res)=>{
+  //     setCartOrder(res)
+  //     res.Items.map((i)=>{
+  //       getMenuItemById(i.menuId.toString()).then((red)=>{
+  //         newList.push(red)
+  //       })
+  //     })
+  //   })
+  //   setMenuItems(newList)
+  // }, []);
 
   if(cartOrder === undefined){
     return <Loading/>
   }
+
   return (
     <>
       <IconButton
@@ -50,18 +83,27 @@ export const ViewCart: FC = () => {
         onClick={handleCartClick}
         sx={{ width: "4rem", height: "4rem" }}
       >
-        {/*<Badge badgeContent={cartOrder?.Items.length} color="secondary">*/}
+        {/*<Badge badgeContent={cartSize} color="secondary">*/}
           <ShoppingCartIcon />
         {/*</Badge>*/}
       </IconButton>
 
       <Dialog open={open} onClose={handleCartClose}>
-        <DialogContent>
+        <DialogContent style={{width:400}}>
           <DialogContentText>Your Cart</DialogContentText>
+          {cartOrder.Items.length == 0 && <Typography>You Have Nothing In Your Cart</Typography>}
+          {!menuItems && <Loading/>}
+          {menuItems && menuItems.map((item) => {
+            return (
+                <FormControl style={{ width: 400, paddingBottom: 35 }} error>
+                  <Typography>{item.Name}</Typography>
+                </FormControl>
+            );
+          })}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCartClose}>Close Cart</Button>
-          <Button onClick={handleCheckOut}>Checkout</Button>
+          {cartOrder.Items.length > 0 && <Button onClick={handleCheckOut}>Checkout</Button>}
         </DialogActions>
       </Dialog>
     </>

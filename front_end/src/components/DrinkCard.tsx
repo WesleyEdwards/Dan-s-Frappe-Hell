@@ -26,27 +26,52 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
   const handleClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { user } = useAuth();
-  const [cartOrder, setCartOrder] = useState<Order>();
+  const [staticCartOrder, setStaticCartOrder] = useState<Order>();
+  const [dynamicCartOrder, setDynamicCartOrder] = useState<Order>();
+
+
   const fetchCartOrder = async () => {
-    setCartOrder(undefined);
-    const order = await getCartOrder(user?.userId || " ");
-    setCartOrder(order);
+    setStaticCartOrder(undefined);
+    setDynamicCartOrder(undefined)
+    const order = await getCartOrder(user?.userId || "1");
+    setStaticCartOrder(order);
   };
 
   useEffect(() => {
     fetchCartOrder();
   }, []);
 
-  const handleAddToCart = () => {
-    if(!cartOrder) return;
+  const handleAddToCart = async () => {
+
+    if (!staticCartOrder) return;
     const newList: OrderItem[] = [];
-    console.log(cartOrder.Items)
-    cartOrder.Items.forEach((i) => {
-      return newList.push(i);
+    let duplicate = false;
+    await getCartOrder(staticCartOrder.OrderId.toString()).then((res)=>{
+      res.Items.forEach((i)=>{
+        if(i.menuId === drink.menuItem.MenuId){
+          const q = i.quantity += 1
+          duplicate = true
+          return newList.push({menuId: drink.menuItem.MenuId, quantity:q, price:0})
+        }else{
+          return newList.push(i)
+        }
+      })
+      if(!duplicate) {
+        newList.push({menuId: drink.menuItem.MenuId, quantity: 1, price: 0})
+      }
+      console.log("New List: " + newList)
+      updateOrder(staticCartOrder.OrderId, newList, false, "CART").then((res) =>{
+        console.log("Updated Return: " + res.Items)
+        setDynamicCartOrder(res)
+      })
     });
-    newList.push({menuId: drink.menuItem.MenuId, quantity: 1, price: 0})
-    return updateOrder(cartOrder.OrderId, newList, false, "CART");
+    // cartOrder.Items.forEach((i) => {
+    //   return newList.push(i);
+    // });
+    setOpen(false)
+
   };
+
 
   return (
     <>

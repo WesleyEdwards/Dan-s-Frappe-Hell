@@ -1,20 +1,32 @@
-import {Container, Grid, Stack, Typography} from "@mui/material";
+import {Button, Container, Grid, Stack, Typography} from "@mui/material";
 import React, {FC, useEffect, useState} from "react";
 import {DFHeader} from "../../components/DFHeader";
-import {DrinkCard} from "../../components/DrinkCard";
-import {getMenuItems, MenuItem} from "../../sdk";
+import {getMenuItems, getOrdersByStatus, MenuItem, Order, updateOrder} from "../../sdk";
 import {Loading} from "../../components/Loading";
 
 export const CashierView: FC = () => {
 
     const [menuitems, setMenuItems] = useState<MenuItem[]>([]);
+    const [finishedOrders, setFinishedOrders] = useState<Order[]>([])
     useEffect(() => {
         getMenuItems().then((res) => {
             setMenuItems(res);
+        getOrdersByStatus("FINISHED").then((red)=>{
+            setFinishedOrders(red)
+            console.log("Finished Orders: " + finishedOrders)
+        })
         });
     }, []);
 
     if (menuitems.length === 0) return <Loading/>;
+
+    const completeOrder = (order: Order) => {
+        updateOrder(order.OrderId, order.Items, order.Favorite, "FULFILLED").then((res)=>{
+            getOrdersByStatus("FINISHED").then((red)=>{
+                setFinishedOrders(red)
+            })
+        })
+    }
 
 
     return (
@@ -32,10 +44,13 @@ export const CashierView: FC = () => {
                 </Grid>
                 <Typography variant="h5" gutterBottom>Customer Pickup</Typography>
                 <Grid container rowSpacing={4} columnSpacing={{md: 8}}>
-                    {menuitems.map((menuitem) => {
+                    {finishedOrders.map((order) => {
                         return (
-                            <Grid item md={6}>
-                            </Grid>
+                            <div>
+                                <Typography>Order {order.OrderId}</Typography>
+                                <Button onClick={()=>{completeOrder(order)}}>Mark as completed</Button>
+                            </div>
+
                         );
                     })}
                 </Grid>
