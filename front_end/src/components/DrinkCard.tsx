@@ -9,45 +9,26 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useState } from "react";
-import { useAuth } from "../utils/AuthContext";
-import { Drink, Order, OrderItem } from "../api/models";
+import { FC, useState } from "react";
+import { Drink } from "../api/models";
 import { IngredientSelect } from "./IngredientSelect";
-import { getCartOrder, updateOrder } from "../api/api-functions";
 
 interface DrinkCardProps {
   drink: Drink;
+  handleAddToCart: (drink: Drink) => void;
 }
 
 export const DrinkCard: FC<DrinkCardProps> = (props) => {
-  const { drink } = props;
+  const { drink, handleAddToCart } = props;
 
   const [open, setOpen] = useState(false);
 
+  const onAddToCart = () => {
+    handleAddToCart(drink);
+    setOpen(false);
+  };
   const handleClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const { user } = useAuth();
-  const [cartOrder, setCartOrder] = useState<Order>();
-  const fetchCartOrder = async () => {
-    setCartOrder(undefined);
-    const order = await getCartOrder(user?.userId || " ");
-    setCartOrder(order);
-  };
-
-  useEffect(() => {
-    fetchCartOrder();
-  }, []);
-
-  const handleAddToCart = () => {
-    if (!cartOrder) return;
-    const newList: OrderItem[] = [];
-    console.log(cartOrder.Items);
-    cartOrder.Items.forEach((i) => {
-      return newList.push(i);
-    });
-    newList.push({ menuId: drink.menuItem.MenuId, quantity: 1, price: 0 });
-    return updateOrder(cartOrder.OrderId, newList, false, "CART");
-  };
 
   return (
     <>
@@ -85,7 +66,7 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddToCart}>Add To Cart</Button>
+          <Button onClick={onAddToCart}>Add To Cart</Button>
         </DialogActions>
       </Dialog>
     </>
