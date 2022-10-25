@@ -15,20 +15,20 @@ import { IngredientSelect } from "./IngredientSelect";
 
 interface DrinkCardProps {
   drink: Drink;
+  handleAddToCart: (drink: Drink) => void;
 }
 
 export const DrinkCard: FC<DrinkCardProps> = (props) => {
-  const { drink } = props;
+  const { drink, handleAddToCart } = props;
 
   const [open, setOpen] = useState(false);
 
+  const onAddToCart = () => {
+    handleAddToCart(drink);
+    setOpen(false);
+  };
   const handleClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const handleAddToCart = () => {
-    alert("This feature is not yet implemented");
-    handleClose();
-  };
 
   return (
     <>
@@ -66,7 +66,7 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddToCart}>Add To Cart</Button>
+          <Button onClick={onAddToCart}>Add To Cart</Button>
         </DialogActions>
       </Dialog>
     </>

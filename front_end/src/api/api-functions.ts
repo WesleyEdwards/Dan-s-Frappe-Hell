@@ -4,6 +4,8 @@ import {
   IngredientType,
   LoginResponse,
   MenuItem,
+  Order,
+  OrderItem,
   User,
 } from "./models";
 
@@ -59,3 +61,17 @@ export function getIngredientById(id: string): Promise<Ingredient> {
 }
 
 export type CreateIngredientType = Omit<Ingredient, "IngredientId">;
+
+
+export function getCartOrder(userId: string): Promise<Order> {
+  return makeGetRequest(`orders/user/${userId}/cart`).then((res) => res.order);
+}
+
+export function updateOrder(
+    orderId: number,
+    items: OrderItem[],
+    favorite: boolean,
+    status: string
+): Promise<unknown> {
+  return makePostRequest("orders/update", {orderId, items, favorite, status});
+}
