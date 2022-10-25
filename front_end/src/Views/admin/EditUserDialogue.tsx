@@ -27,7 +27,6 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
 
   const handleSubmit = () => {
     if (!user || !newPermission) return;
-    console.log(user.id, newPermission);
     submitUser(user.id.toString(), newPermission);
   };
 
