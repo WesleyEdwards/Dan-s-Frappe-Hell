@@ -95,3 +95,21 @@ export function getUserPermissionString(perms: string): string {
   }
   return "Unknown";
 }
+export function getUserPermissionInt(perms: string): string {
+  if (perms === "None") {
+    return "0";
+  }
+  if (perms === "Customer") {
+    return "1";
+  }
+  if (perms === "Worker") {
+    return "2";
+  }
+  if (perms === "Manager") {
+    return "3";
+  }
+  if (perms === "Admin") {
+    return "4";
+  }
+  return "Unknown";
+}

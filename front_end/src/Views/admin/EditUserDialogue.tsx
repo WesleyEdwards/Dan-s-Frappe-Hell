@@ -10,7 +10,8 @@ import {
   Select,
   Stack,
 } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { getUserPermissionInt } from "../../utils/helperFunctions";
 import { UserRow } from "./CustomerList";
 
 interface EditUserDialogueProps {
@@ -20,16 +21,19 @@ interface EditUserDialogueProps {
 }
 export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
   const { user, handleClose, submitUser } = props;
-  const [newPermission, setNewPermission] = useState<string | undefined>(
-    user?.status
-  );
+  const [newPermission, setNewPermission] = useState<string | undefined>();
 
   const handleSubmit = () => {
     if (!user || !newPermission) return;
     submitUser(user.id.toString(), newPermission);
   };
 
-  if (!user) return <></>;
+  useEffect(() => {
+    setNewPermission(getUserPermissionInt(user?.status ?? "0"));
+  }, [user]);
+
+  if (!newPermission || !user) return <></>;
+  console.log("newPermission", newPermission);
   return (
     <Dialog open={user !== undefined} onClose={handleClose} fullWidth={true}>
       <DialogContent>
@@ -70,7 +74,11 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
         <Button onClick={handleClose} variant="contained">
           Cancel
         </Button>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          disabled={getUserPermissionInt(user.status) === newPermission}
+          onClick={handleSubmit}
+        >
           Save
         </Button>
       </DialogActions>
