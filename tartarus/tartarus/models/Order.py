@@ -156,7 +156,6 @@ class Order:
         Also updates total price of order
         """
         if not items == self.__items:
-            print("gaming?")
             if self.getStatus().value > 1:
                 raise TartarusException("Cannot edit items after order has been placed")
             items = self.__validateItems(items)
@@ -214,7 +213,7 @@ class Order:
         """
         print(items)
         for item in items:
-            if not (item.get("price") and item.get("quantity") and item.get("menuId")):
+            if None in (item.get("price"), item.get("quantity"), item.get("menuId")):
                 raise TartarusException("Items list formatted incorrectly. See Tartarus api doc for proper format")
             itemObj = MenuItem.fromID(item.get("menuId"))
             item["price"] = itemObj.calculate_price(itemObj.getRecipe())
