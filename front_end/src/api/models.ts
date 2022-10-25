@@ -58,3 +58,19 @@ export enum Permission {
     error: string;
     user: User;
   }
+
+  export interface OrderItem {
+    menuId: number;
+    quantity: number;
+    price: number;
+  }
+
+  export interface Order{
+    OrderId: number;
+    UserId: number;
+    Favorite: boolean;
+    Items: OrderItem[];
+    OrderDate: number;
+    Status: string;
+    TotalPrice: number;
+  }
