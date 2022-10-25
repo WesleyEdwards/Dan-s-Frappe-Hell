@@ -77,8 +77,7 @@ export function mapMenuItemsToIngredients(
   });
 }
 
-export function getUserStatusString(perms: string): string {
-  console.log(perms);
+export function getUserPermissionString(perms: string): string {
   if (perms === "0") {
     return "None";
   }

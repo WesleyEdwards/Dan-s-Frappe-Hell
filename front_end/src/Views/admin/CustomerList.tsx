@@ -2,7 +2,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { FC, useEffect, useState } from "react";
 import { getAllUsers } from "../../api/api-functions";
 import { Loading } from "../../components/Loading";
-import { getUserStatusString } from "../../utils/helperFunctions";
+import { getUserPermissionString } from "../../utils/helperFunctions";
 
 interface CustomerListProps {
   refreshTrigger: boolean;
@@ -33,7 +33,7 @@ export const IngredientsEdit: FC<CustomerListProps> = (props) => {
               id: user.userId,
               name: `${user.firstName} ${user.lastName}`,
               email: user.email,
-              status: getUserStatusString(perms),
+              status: getUserPermissionString(perms),
             });
           }
           return newList;

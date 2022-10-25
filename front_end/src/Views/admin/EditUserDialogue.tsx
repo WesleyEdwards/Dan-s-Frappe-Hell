@@ -11,7 +11,6 @@ import {
   Stack,
 } from "@mui/material";
 import React, { FC, useState } from "react";
-import { Permission } from "../../api/models";
 import { UserRow } from "./CustomerList";
 
 interface EditUserDialogueProps {
@@ -43,16 +42,26 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
             <InputLabel style={{ paddingBottom: 20 }}>Permission</InputLabel>
             <Select
               value={newPermission}
-              label={"Kind"}
+              label={"Permission"}
               onChange={(e) => {
-                setNewPermission(e.target.value as string);
+                setNewPermission(e.target.value);
               }}
             >
-              {Object.values(Permission).map((permission) => (
-                <MenuItem key={permission} value={permission}>
-                  {permission}
-                </MenuItem>
-              ))}
+              <MenuItem key={"0"} value={"0"}>
+                None
+              </MenuItem>
+              <MenuItem key={"1"} value={"1"}>
+                Customer
+              </MenuItem>
+              <MenuItem key={"2"} value={"2"}>
+                Worker
+              </MenuItem>
+              <MenuItem key={"3"} value={"3"}>
+                Manager
+              </MenuItem>
+              <MenuItem key={"4"} value={"4"}>
+                Admin
+              </MenuItem>
             </Select>
           </FormControl>
         </Stack>
