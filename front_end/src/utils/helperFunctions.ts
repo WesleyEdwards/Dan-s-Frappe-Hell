@@ -76,3 +76,23 @@ export function mapMenuItemsToIngredients(
     return { menuItem, recipe };
   });
 }
+
+export function getUserStatusString(perms: string): string {
+  console.log(perms);
+  if (perms === "0") {
+    return "None";
+  }
+  if (perms === "1") {
+    return "Customer";
+  }
+  if (perms === "2") {
+    return "Worker";
+  }
+  if (perms === "3") {
+    return "Manager";
+  }
+  if (perms === "4") {
+    return "Admin";
+  }
+  return "Unknown";
+}

@@ -30,9 +30,7 @@ export function createIngredient(
 }
 
 export function getAllUsers(): Promise<User[]> {
-  return makeGetRequest("users/all").then((res) => {
-    return Promise.resolve([]);
-  });
+  return makeGetRequest("users/all").then((res) => res.users);
 }
 
 export function getIngredients(): Promise<Ingredient[]> {
