@@ -130,7 +130,7 @@ CREATE TABLE Orders(
     OrderDate DATETIME NOT NULL,
     Items TEXT NOT NULL, --json dictionary of menuids to quantities 
     TotalPrice NUMERIC NOT NULL,
-    Status BOOL NOT NULL,
+    Status INTEGER NOT NULL,
     Favorite BOOL NOT NULL,
     FOREIGN KEY(UserId) REFERENCES Users(UserId)
 );

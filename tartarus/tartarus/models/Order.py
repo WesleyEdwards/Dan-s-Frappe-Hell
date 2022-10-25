@@ -24,7 +24,7 @@ class Order:
     __status = Status.CART
     __favorite = False
 
-    def __init__(self, userId:int, orderDate:datetime, items:'dict|str', totalPrice:float, status:'int|str|Status', favorite=False, id=0):
+    def __init__(self, userId:int, orderDate:datetime, items:'list[dict]|str', totalPrice:float, status:'int|str|Status', favorite=False, id=0):
         self.__id = id
         self.__userId = userId
         self.__orderDate = orderDate
@@ -36,7 +36,7 @@ class Order:
         self.__favorite = favorite
 
     @classmethod
-    def fromID(cls, id):
+    def fromID(cls, id=0):
         """Returns the order corresponding to `id`"""
         db = get_db()
         order = db.execute('SELECT * FROM Orders where OrderId = ?',(int(id),)).fetchone()
@@ -60,7 +60,7 @@ class Order:
         if order == None:
             if getUserById(userId) == None:
                 raise TartarusException("Invalid user")
-            order = cls(userId, datetime.utcnow(), {}, 0, cls.Status.CART)
+            order = cls(userId, datetime.utcnow(), [], 0, cls.Status.CART)
             order.addToDatabase()
             return order
         return cls(order['UserId'],order['OrderDate'],order['Items'],order['TotalPrice'],order['Status'],order['Favorite'],order['OrderId'])
@@ -100,7 +100,7 @@ class Order:
     def addToDatabase(self):
         db = get_db()
         cur = db.cursor()
-        cur.execute(f"insert into Orders(userid, orderdate, items, totalprice, status, favorite) values ('{self.getUserId()}', '{self.getOrderDate()}', '{json.dumps(self.getItems())}','{self.getTotalPrice()}','{self.getStatus()}','{self.getFavorite()}')")
+        cur.execute(f"insert into Orders(userid, orderdate, items, totalprice, status, favorite) values ('{self.getUserId()}', '{self.getOrderDate()}', '{json.dumps(self.getItems())}','{self.getTotalPrice()}','{self.getStatus().value}','{self.getFavorite()}')")
         db.commit()
         self.__id = db.execute('SELECT * FROM Orders where orderdate = ?',(self.getOrderDate(),)).fetchone()['OrderId']
         
@@ -137,6 +137,8 @@ class Order:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE Orders SET userId = {id} WHERE OrderId = {self.getId()}")
+            cur.close()
+            db.commit()
     
     def setFavorite(self, favorite:bool):
         if not favorite == self.__favorite:
@@ -144,6 +146,8 @@ class Order:
             db = get_db()
             cur = db.cursor()
             cur.execute(f"UPDATE Orders SET favorite = {favorite} WHERE OrderId = {self.getId()}")
+            cur.close()
+            db.commit()
 
     def setItems(self, items:dict):
         """
@@ -152,6 +156,7 @@ class Order:
         Also updates total price of order
         """
         if not items == self.__items:
+            print("gaming?")
             if self.getStatus().value > 1:
                 raise TartarusException("Cannot edit items after order has been placed")
             items = self.__validateItems(items)
@@ -159,9 +164,11 @@ class Order:
             self.__totalPrice = self.__calculateTotalPrice()
             db = get_db()
             cur = db.cursor()
-            cur.execute(f"UPDATE Orders SET items = '{json.dumps(items)}' WHERE OrderId = {self.getId()}")
-            cur.execute(f"UPDATE Orders SET totalPrice = {self.__totalPrice} WHERE OrderId = {self.getId()}")
-
+            print(type(self.getId()))
+            res = cur.execute(f"UPDATE Orders SET items = ?, totalPrice = ?",(json.dumps(items),self.__totalPrice, )).fetchall()
+            item = cur.execute(f"SELECT * FROM Orders where OrderId = ?", (self.getId(),)).fetchone()
+            cur.close()
+            db.commit()
 
     def setStatus(self, status:'Status|str|int'):
         """
@@ -177,7 +184,7 @@ class Order:
             self.__status = status
             db = get_db()
             cur = db.cursor()
-            if status == self.Status.PLACED: # Lock in Price and orderDate
+            if status in (self.Status.PLACED, self.Status.CART): # Lock in Price and orderDate
                 self.__items = self.__validateItems(self.__items)
                 cur.execute(f"UPDATE Orders SET items = '{json.dumps(self.__items)}' WHERE OrderId = {self.getId()}")
                 self.__orderDate = datetime.utcnow()
@@ -185,6 +192,8 @@ class Order:
                 self.__totalPrice = self.__calculateTotalPrice()
                 cur.execute(f"UPDATE Orders SET totalPrice = {self.__totalPrice} WHERE OrderId = {self.getId()}")
             cur.execute(f"UPDATE Orders SET status = {status.value} WHERE OrderId = {self.getId()}")
+            cur.close()
+            db.commit()
 
     def __calculateTotalPrice(self):
         """Goes through and gets the price of each MenuItem in the order, and returns the total + tax"""
