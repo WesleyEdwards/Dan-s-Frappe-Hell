@@ -9,10 +9,10 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import { FC, useState } from "react";
-import { Drink } from "../api/models";
+import { FC, useState, useEffect } from "react";
+import { Drink, Order, OrderItem } from "../api/models";
 import { IngredientSelect } from "./IngredientSelect";
-import {Drink, getCartOrder, Order, updateOrder, OrderItem} from "../sdk";
+import { getCartOrder, updateOrder } from "../api/api-functions";
 import {useAuth} from "../utils/AuthContext";
 
 interface DrinkCardProps {
@@ -31,23 +31,23 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
   const [dynamicCartOrder, setDynamicCartOrder] = useState<Order>();
 
 
-  const fetchCartOrder = async () => {
+  const fetchCartOrder = () => {
+    if(!user) return;
     setStaticCartOrder(undefined);
     setDynamicCartOrder(undefined)
-    const order = await getCartOrder(user?.userId || "1");
-    setStaticCartOrder(order);
+    getCartOrder(user.userId).then((res)=>setStaticCartOrder(res))
   };
 
   useEffect(() => {
     fetchCartOrder();
-  }, []);
+  }, [user]);
 
   const handleAddToCart = async () => {
 
-    if (!staticCartOrder) return;
+    if (!staticCartOrder || !user) return;
     const newList: OrderItem[] = [];
     let duplicate = false;
-    await getCartOrder(staticCartOrder.OrderId.toString()).then((res)=>{
+    getCartOrder(user.userId).then((res)=>{
       res.Items.forEach((i)=>{
         if(i.menuId === drink.menuItem.MenuId){
           const q = i.quantity += 1

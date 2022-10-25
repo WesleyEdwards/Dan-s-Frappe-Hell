@@ -6,10 +6,10 @@ import {
   DialogContentText, FormControl,
   IconButton, Typography,
 } from "@mui/material";
-import Badge from "@mui/material/Badge";
 import React, { FC, useEffect, useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import {getCartOrder, Order, updateOrder, getMenuItemById, MenuItem} from "../sdk";
+import {Order, MenuItem} from "../api/models";
+import {getCartOrder, getMenuItemById, updateOrder } from "../api/api-functions"
 import {useAuth} from "../utils/AuthContext";
 import {Loading} from "./Loading";
 
@@ -19,16 +19,18 @@ export const ViewCart: FC = () => {
   const [open, setOpen] = useState(false);
 
   const handleCartClick = () => {
+    if(!user) return;
     const newList: MenuItem[]  = []
-    getCartOrder(user?.userId || "1").then((res)=>{
+    getCartOrder(user.userId).then((res)=>{
       setCartOrder(res)
       res.Items.map((i)=>{
         getMenuItemById(i.menuId.toString()).then((red)=>{
           newList.push(red)
+        }).then(()=>{
+          setMenuItems(newList)
+          setOpen(true)
         })
       })
-      setMenuItems(newList)
-      setOpen(true);
     })
 
   };
@@ -57,7 +59,19 @@ export const ViewCart: FC = () => {
 
   useEffect(()=>{
     fetchCartOrder()
-  }, [user]);
+  }, [user])
+  // useEffect(() => {
+  //   const newList: MenuItem[]  = []
+  //   getCartOrder(user?.userId || "1").then((res)=>{
+  //     setCartOrder(res)
+  //     res.Items.map((i)=>{
+  //       getMenuItemById(i.menuId.toString()).then((red)=>{
+  //         newList.push(red)
+  //       })
+  //     })
+  //   })
+  //   setMenuItems(newList)
+  // }, [user]);
 
 
   if (!user) return <></>;
@@ -82,7 +96,7 @@ export const ViewCart: FC = () => {
           <DialogContentText>Your Cart</DialogContentText>
           {cartOrder.Items.length == 0 && <Typography>You Have Nothing In Your Cart</Typography>}
           {!menuItems && <Loading/>}
-          {menuItems && menuItems.map((item) => {
+          {menuItems && menuItems.length == cartOrder.Items.length && menuItems.map((item) => {
             return (
                 <FormControl style={{ width: 400, paddingBottom: 35 }} error>
                   <Typography>{item.Name}</Typography>

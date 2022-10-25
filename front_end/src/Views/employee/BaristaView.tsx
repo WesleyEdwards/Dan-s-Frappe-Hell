@@ -1,8 +1,10 @@
 import {Button, Container, Grid, Stack, Typography} from "@mui/material";
 import React, {FC, useEffect, useState} from "react";
 import {DFHeader} from "../../components/DFHeader";
-import {getMenuItems, getOrdersByStatus, MenuItem, Order, updateOrder} from "../../sdk";
+import { MenuItem, Order } from "../../api/models";
 import {Loading} from "../../components/Loading";
+import { getMenuItems, getOrdersByStatus, updateOrder } from "../../api/api-functions"
+import BaristaCard from "../../components/BaristaCard";
 
 export const BaristaView: FC = () => {
 
@@ -31,16 +33,13 @@ export const BaristaView: FC = () => {
     return (
         <Container maxWidth="md">
             <Stack gap="2rem" justifyContent="center">
-                <DFHeader title="Barista Portal"/>
-                <Typography variant="h5" gutterBottom>Customer Orders</Typography>
-                <Grid container rowSpacing={4} columnSpacing={{md: 8}}>
-                    {placedOrders.map((order) => {
+                <DFHeader title="Welcome to Dan's Frappuccino Hell" />
+                <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
+                    {placedOrders.map((o) => {
                         return (
-                            <div>
-                                <Typography>Order {order.OrderId}</Typography>
-                                <Button onClick={()=>{completeOrder(order)}}>Mark as finished</Button>
-                            </div>
-
+                            <Grid item md={6}>
+                                <BaristaCard order={o} completeOrder={completeOrder} />
+                            </Grid>
                         );
                     })}
                 </Grid>

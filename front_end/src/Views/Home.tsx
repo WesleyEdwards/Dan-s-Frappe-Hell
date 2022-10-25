@@ -57,7 +57,8 @@ export const Home: FC = () => {
           {drinks.map((drink) => {
             return (
               <Grid item md={6}>
-                <DrinkCard drink={drink} handleAddToCart={handleAddToCart} />
+                <DrinkCard drink={drink}  />
+                {/* goes inside drink card > handleAddToCart={handleAddToCart}*/}
               </Grid>
             );
           })}
