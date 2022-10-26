@@ -48,7 +48,11 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
             setError("Invalid email or password.");
           }
         })
-        .then(() => setSubmitting(false));
+        .then(() => setSubmitting(false))
+        .catch((err) => {
+          setError("Invalid email or password.");
+          setSubmitting(false);
+        });
     },
   });
 

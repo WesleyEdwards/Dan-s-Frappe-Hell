@@ -79,3 +79,39 @@ export function mapMenuItemsToIngredients(
 
 
 
+export function getUserPermissionString(perms: string): string {
+  if (perms === "0") {
+    return "None";
+  }
+  if (perms === "1") {
+    return "Customer";
+  }
+  if (perms === "2") {
+    return "Worker";
+  }
+  if (perms === "3") {
+    return "Manager";
+  }
+  if (perms === "4") {
+    return "Admin";
+  }
+  return "Unknown";
+}
+export function getUserPermissionInt(perms: string): string {
+  if (perms === "None") {
+    return "0";
+  }
+  if (perms === "Customer") {
+    return "1";
+  }
+  if (perms === "Worker") {
+    return "2";
+  }
+  if (perms === "Manager") {
+    return "3";
+  }
+  if (perms === "Admin") {
+    return "4";
+  }
+  return "Unknown";
+}
