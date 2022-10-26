@@ -6,15 +6,16 @@ import {
   Select,
 } from "@mui/material";
 import React, { FC, useState } from "react";
-import { Ingredient } from "../api/models";
+import {Ingredient, MappingOfIngredientToQuantity} from "../api/models";
 
 interface IngredientSelectProps {
   ingredient: Ingredient;
   initialQuantity: number;
+  recipe: MappingOfIngredientToQuantity;
 }
 
 export const IngredientSelect: FC<IngredientSelectProps> = (props) => {
-  const { ingredient, initialQuantity } = props;
+  const { ingredient, initialQuantity, recipe } = props;
 
   const [error, setError] = useState<string | undefined>();
   const [selectedQuantity, setSelectedQuantity] =
@@ -29,8 +30,8 @@ export const IngredientSelect: FC<IngredientSelectProps> = (props) => {
     if (ingredient.Stock < selected) {
       setError("Sorry, there is not enough of this ingredient in stock");
     }
-
     setSelectedQuantity(selected);
+    recipe[ingredient.IngredientId] = selected;
   };
 
   return (

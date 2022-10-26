@@ -28,11 +28,11 @@ export const ViewCart: FC = () => {
           newList.push(red)
         }).then(()=>{
           setMenuItems(newList)
-          setOpen(true)
         })
       })
     })
 
+    setOpen(true)
   };
   const handleCartClose = () => {
     setOpen(false);
@@ -60,18 +60,7 @@ export const ViewCart: FC = () => {
   useEffect(()=>{
     fetchCartOrder()
   }, [user])
-  // useEffect(() => {
-  //   const newList: MenuItem[]  = []
-  //   getCartOrder(user?.userId || "1").then((res)=>{
-  //     setCartOrder(res)
-  //     res.Items.map((i)=>{
-  //       getMenuItemById(i.menuId.toString()).then((red)=>{
-  //         newList.push(red)
-  //       })
-  //     })
-  //   })
-  //   setMenuItems(newList)
-  // }, [user]);
+
 
 
   if (!user) return <></>;
@@ -80,36 +69,36 @@ export const ViewCart: FC = () => {
   }
 
   return (
-    <>
-      <IconButton
-        aria-label="cart"
-        onClick={handleCartClick}
-        sx={{ width: "4rem", height: "4rem" }}
-      >
-        {/*<Badge badgeContent={cartSize} color="secondary">*/}
+      <>
+        <IconButton
+            aria-label="cart"
+            onClick={handleCartClick}
+            sx={{ width: "4rem", height: "4rem" }}
+        >
+          {/*<Badge badgeContent={cartSize} color="secondary">*/}
           <ShoppingCartIcon />
-        {/*</Badge>*/}
-      </IconButton>
+          {/*</Badge>*/}
+        </IconButton>
 
-      <Dialog open={open} onClose={handleCartClose}>
-        <DialogContent style={{width:400}}>
-          <DialogContentText>Your Cart</DialogContentText>
-          {cartOrder.Items.length == 0 && <Typography>You Have Nothing In Your Cart</Typography>}
-          {!menuItems && <Loading/>}
-          {menuItems && menuItems.length == cartOrder.Items.length && menuItems.map((item) => {
-            return (
-                <FormControl style={{ width: 400, paddingBottom: 35 }} error>
-                  <Typography>{item.Name}</Typography>
-                </FormControl>
-            );
-          })}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCartClose}>Close Cart</Button>
-          {cartOrder.Items.length > 0 && <Button onClick={handleCheckOut}>Checkout</Button>}
-        </DialogActions>
-      </Dialog>
-    </>
+        <Dialog open={open} onClose={handleCartClose}>
+          <DialogContent style={{width:400}}>
+            <DialogContentText>Your Cart</DialogContentText>
+            {cartOrder.Items.length == 0 && <Typography>You Have Nothing In Your Cart</Typography>}
+            {!menuItems && <Loading/>}
+            {menuItems && menuItems.length == cartOrder.Items.length && menuItems.map((item) => {
+              return (
+                  <FormControl style={{ width: 400, paddingBottom: 35 }} error>
+                    <Typography>{item.Name}</Typography>
+                  </FormControl>
+              );
+            })}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCartClose}>Close Cart</Button>
+            {cartOrder.Items.length > 0 && <Button onClick={handleCheckOut}>Checkout</Button>}
+          </DialogActions>
+        </Dialog>
+      </>
   );
 };
 

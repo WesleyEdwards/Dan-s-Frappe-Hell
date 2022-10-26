@@ -37,10 +37,6 @@ export const RouterTabs = () => {
       path: "/cashier-view",
     },
     {
-      label: "Barista View",
-      path: "/barista-view",
-    },
-    {
       label: "Inventory",
       path: "/inventory",
     },

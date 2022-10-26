@@ -2,10 +2,10 @@ import { makePostRequest, makeGetRequest } from "../utils/apiUtils";
 import {
   Ingredient,
   IngredientType,
-  LoginResponse,
+  LoginResponse, MappingOfIngredientToQuantity,
   MenuItem,
   Order,
-  OrderItem,
+  OrderItem, RecipeItem,
   User,
 } from "./models";
 
@@ -66,6 +66,10 @@ export function getIngredientKinds(): Promise<IngredientType[]> {
 
 export function getIngredientById(id: string): Promise<Ingredient> {
   return makeGetRequest(`ingredients/${id}`).then((res) => res.ingredient);
+}
+
+export function getMenuItemByRecipe(recipe: MappingOfIngredientToQuantity): Promise<MenuItem>{
+  return makeGetRequest(`menuitems/recipe/${JSON.stringify(recipe)}`).then((res)=> res.menuitem)
 }
 
 export type CreateIngredientType = Omit<Ingredient, "IngredientId">;

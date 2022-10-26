@@ -44,6 +44,10 @@ export interface MappingOfIngredientToQuantity {
   [ingredientId: string]: number;
 }
 
+export interface MappingOfOrderIdToItems{
+  [orderId: string]: MenuItem[]
+}
+
 export interface MenuItem {
   MenuId: number;
   Name: string;

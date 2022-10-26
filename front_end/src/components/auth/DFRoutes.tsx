@@ -7,7 +7,6 @@ import { PrivateRoute } from "../../utils/PrivateRoute";
 import CustomerManagement from "../../Views/admin/CustomerManagement";
 import EmployeeManagement from "../../Views/admin/EmployeeManagement";
 import Inventory from "../../Views/admin/Inventory";
-import BaristaView from "../../Views/employee/BaristaView";
 import CashierView from "../../Views/employee/CashierView";
 import Home from "../../Views/Home";
 import Login from "../../Views/Login";
@@ -54,11 +53,7 @@ export const DFRoutes: FC = () => {
       element: <Inventory />,
       permissionRequired: Permission.WORKER,
     },
-    {
-      path: "/barista-view",
-      element: <BaristaView/>,
-      permissionRequired: Permission.WORKER,
-    },
+
   ];
   const adminRoutes = [
     ...workerRoutes,

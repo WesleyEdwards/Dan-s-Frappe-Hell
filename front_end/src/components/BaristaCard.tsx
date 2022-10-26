@@ -4,6 +4,7 @@ import {
 } from "@mui/material";
 import React, { FC, useState } from "react";
 import {Order} from "../api/models";
+import {getMenuItemById} from "../api/api-functions";
 
 interface BaristaCardProps {
     order: Order,
@@ -40,7 +41,13 @@ export const BaristaCard: FC<BaristaCardProps> = (props) => {
                         <DialogContentText variant="h4" style={{ paddingBottom: 40 }}>
                             Information for order {order.OrderId}
                         </DialogContentText>
-
+                        {order.Items.map((i)=>{
+                            getMenuItemById(i.menuId.toString()).then((res)=>{
+                                return(
+                                    <Typography>res.Name</Typography>
+                                )
+                            })
+                            })}
                     </>
                 </DialogContent>
                 <DialogActions>
