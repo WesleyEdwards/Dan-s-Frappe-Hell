@@ -1,12 +1,5 @@
-import { OrderStatus } from "./api-functions";
+import { OrderStatus, PermissionString } from "./api-functions";
 
-export enum Permission {
-  NONE = "0",
-  CUSTOMER = "1",
-  WORKER = "2",
-  MANAGER = "3",
-  ADMIN = "4",
-}
 export enum IngredientType {
   MILK = "MILK",
   FLAVOR = "FLAVOR",
@@ -16,11 +9,20 @@ export enum IngredientType {
   COFFEE = "COFFEE",
   SHOT = "SHOT",
 }
+
+export interface RawUser {
+  email: string;
+  firstName: string;
+  lastName: string;
+  permissions: 0 | 1 | 2 | 3 | 4;
+  userId: string;
+}
+
 export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  permissions: Permission;
+  permissions: PermissionString;
   userId: string;
 }
 export interface Ingredient {

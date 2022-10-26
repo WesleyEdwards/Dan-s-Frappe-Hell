@@ -11,17 +11,21 @@ import {
   Stack,
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import { getUserPermissionInt } from "../../utils/helperFunctions";
+import { PermissionString } from "../../api/api-functions";
+import {
+  getPermissionString,
+  isPermissionString,
+} from "../../utils/helperFunctions";
 import { UserRow } from "./CustomerList";
 
 interface EditUserDialogueProps {
   user: UserRow | undefined;
   handleClose: () => void;
-  submitUser: (userId: string, newPerm: string) => void;
+  submitUser: (userId: string, newPerm: PermissionString) => void;
 }
 export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
   const { user, handleClose, submitUser } = props;
-  const [newPermission, setNewPermission] = useState<string | undefined>();
+  const [newPermission, setNewPermission] = useState<PermissionString>();
 
   const handleSubmit = () => {
     if (!user || !newPermission) return;
@@ -29,7 +33,7 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
   };
 
   useEffect(() => {
-    setNewPermission(getUserPermissionInt(user?.status ?? "0"));
+    setNewPermission(getPermissionString(user?.permission));
   }, [user]);
 
   if (!newPermission || !user) return <></>;
@@ -48,22 +52,24 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
               value={newPermission}
               label={"Permission"}
               onChange={(e) => {
-                setNewPermission(e.target.value);
+                setNewPermission(
+                  isPermissionString(e.target.value) ? e.target.value : "None"
+                );
               }}
             >
-              <MenuItem key={"0"} value={"0"}>
+              <MenuItem key={"0"} value={"None"}>
                 None
               </MenuItem>
-              <MenuItem key={"1"} value={"1"}>
+              <MenuItem key={"1"} value={"Customer"}>
                 Customer
               </MenuItem>
-              <MenuItem key={"2"} value={"2"}>
-                Worker
+              <MenuItem key={"2"} value={"Employee"}>
+                Employee
               </MenuItem>
-              <MenuItem key={"3"} value={"3"}>
+              <MenuItem key={"3"} value={"Manager"}>
                 Manager
               </MenuItem>
-              <MenuItem key={"4"} value={"4"}>
+              <MenuItem key={"4"} value={"Admin"}>
                 Admin
               </MenuItem>
             </Select>
@@ -76,7 +82,7 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
         </Button>
         <Button
           variant="contained"
-          disabled={getUserPermissionInt(user.status) === newPermission}
+          disabled={getPermissionString(user.permission) === newPermission}
           onClick={handleSubmit}
         >
           Save

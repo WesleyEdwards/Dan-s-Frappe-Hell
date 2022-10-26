@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { loginUser } from "../api/api-functions";
 import { User } from "../api/models";
+import { formatRawUser } from "./helperFunctions";
 
 interface Context {
   user: User | null | undefined;
@@ -60,13 +61,13 @@ export const AuthProvider: FC<AuthProps> = (props) => {
 
   const login = (email: string, password: string) => {
     return loginUser(email, password).then((res) => {
-      if (res.user !== null && res.user !== undefined) {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("userObject", JSON.stringify(res.user));
-        setCurrentUser(res.user);
-        return "success";
-      }
-      return undefined;
+      if (!res.user) return undefined;
+
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("userObject", JSON.stringify(res.user));
+
+      setCurrentUser(formatRawUser(res.user));
+      return "success";
     });
   };
 
@@ -79,7 +80,6 @@ export const AuthProvider: FC<AuthProps> = (props) => {
   };
 
   useEffect(() => {
-    console.log("refreshing user");
     setCurrentUser(undefined);
     if (localStorage.getItem("userObject")) {
       setCurrentUser(JSON.parse(localStorage.getItem("userObject") || ""));

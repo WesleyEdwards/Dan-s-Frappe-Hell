@@ -41,7 +41,7 @@ export function getAllUsers(): Promise<User[]> {
 
 export function modifyUserPermission(
   userId: string,
-  newPerm: string
+  newPerm: PermissionString
 ): Promise<User[]> {
   return makePostRequest("users/permissions", { userId, newPerm }).then(
     (res) => res.users
@@ -87,3 +87,9 @@ export function updateOrder(
 
 export type CreateIngredientType = Omit<Ingredient, "IngredientId">;
 export type OrderStatus = "CART" | "PLACED" | "FULFILLED" | "FINISHED";
+export type PermissionString =
+  | "None"
+  | "Customer"
+  | "Employee"
+  | "Manager"
+  | "Admin";

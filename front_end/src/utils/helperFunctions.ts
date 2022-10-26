@@ -1,10 +1,10 @@
 import { TextFieldProps } from "@mui/material";
 import { FormikValues, useFormik } from "formik";
 import { matchPath, useLocation } from "react-router";
+import { PermissionString } from "../api/api-functions";
 import {
   Ingredient,
   MenuItem,
-  Permission,
   RecipeItem,
   Drink,
   Order,
@@ -54,10 +54,23 @@ export function formikTextFieldNumberProps<T extends FormikValues>(
 }
 
 export function hasPermission(
-  userPermission: Permission,
-  requiredPermission: Permission
+  userPermission: PermissionString,
+  requiredPermission: PermissionString
 ): boolean {
-  return userPermission >= requiredPermission;
+  const none = 0;
+  const customer = 1;
+  const employee = 2;
+  const manager = 3;
+  const admin = 4;
+  const permissionMap: Record<PermissionString, number> = {
+    None: none,
+    Customer: customer,
+    Employee: employee,
+    Manager: manager,
+    Admin: admin,
+  };
+
+  return permissionMap[userPermission] >= permissionMap[requiredPermission];
 }
 
 export function mapMenuItemsToIngredients(
@@ -102,39 +115,37 @@ export function createDisplayOrderFromOrder(
     totalPrice: order.TotalPrice,
   };
 }
-export function getUserPermissionString(perms: string): string {
-  if (perms === "0") {
-    return "None";
-  }
-  if (perms === "1") {
-    return "Customer";
-  }
-  if (perms === "2") {
-    return "Worker";
-  }
-  if (perms === "3") {
-    return "Manager";
-  }
-  if (perms === "4") {
-    return "Admin";
-  }
-  return "Unknown";
+
+export function isPermissionString(
+  permission: string
+): permission is PermissionString {
+  return (
+    permission === "Customer" ||
+    permission === "Employee" ||
+    permission === "Manager" ||
+    permission === "Admin" ||
+    permission === "None"
+  );
 }
-export function getUserPermissionInt(perms: string): string {
-  if (perms === "None") {
-    return "0";
+
+export function getPermissionString(
+  permission: string | undefined
+): PermissionString {
+  if (!permission) return "None";
+
+  if (isPermissionString(permission)) {
+    return permission;
   }
-  if (perms === "Customer") {
-    return "1";
-  }
-  if (perms === "Worker") {
-    return "2";
-  }
-  if (perms === "Manager") {
-    return "3";
-  }
-  if (perms === "Admin") {
-    return "4";
-  }
-  return "Unknown";
+  return "None";
+}
+
+export function formatRawUser(user: RawUser): User {
+  return {
+    UserId: user.UserId,
+    Username: user.Username,
+    FirstName: user.FirstName,
+    LastName: user.LastName,
+    Email: user.Email,
+    Permission: getPermissionString(user.Permission),
+  };
 }
