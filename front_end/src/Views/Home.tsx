@@ -15,7 +15,7 @@ import { useAuth } from "../utils/AuthContext";
 
 export const Home: FC = () => {
   const [drinks, setDrinks] = useState<Drink[]>();
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [cartOrder, setCartOrder] = useState<Order>();
 
   const fetchDrinks = async () => {
@@ -35,7 +35,9 @@ export const Home: FC = () => {
     if (!cartOrder) return Promise.resolve();
     const newList: OrderItem[] = cartOrder.Items;
     newList.push(menuItem);
-    return updateOrder(cartOrder.OrderId, newList, false, "CART")
+    return updateOrder(cartOrder.OrderId, newList, false, "CART").then(
+      refreshUser
+    );
   };
 
   useEffect(() => {

@@ -1,3 +1,5 @@
+import { OrderStatus } from "./api-functions";
+
 export enum Permission {
   NONE = "0",
   CUSTOMER = "1",
@@ -30,18 +32,9 @@ export interface Ingredient {
   Upcharge: number;
 }
 
-export interface Drink {
-  menuItem: MenuItem;
-  recipe: RecipeItem[];
-}
-
 export interface RecipeItem {
   ingredient: Ingredient;
   quantity: number;
-}
-
-export interface MappingOfIngredientToQuantity {
-  [ingredientId: string]: number;
 }
 
 export interface MenuItem {
@@ -71,6 +64,30 @@ export interface Order {
   Favorite: boolean;
   Items: OrderItem[];
   OrderDate: number;
-  Status: string;
+  Status: OrderStatus;
   TotalPrice: number;
+}
+
+// These Models are not used by the API.
+// They are for the convenience of the front end.
+
+export interface Drink {
+  menuItem: MenuItem;
+  recipe: RecipeItem[];
+}
+
+export interface MappingOfIngredientToQuantity {
+  [ingredientId: string]: number;
+}
+
+export interface DisplayOrderItem {
+  drinkName: string;
+  quantity: number;
+  price: number;
+}
+export interface DisplayOrder {
+  orderId: number;
+  orderItems: DisplayOrderItem[];
+  status: OrderStatus;
+  totalPrice: number;
 }

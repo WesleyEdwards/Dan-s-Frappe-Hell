@@ -32,7 +32,7 @@ export const AppHeader: FC = () => {
     <Stack direction="row" justifyContent="right" gap="3rem">
       <RouterTabs />
 
-      {user && <ViewCart userId={user.userId} />}
+      {user && <ViewCart />}
 
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="large">
         <AccountCircleIcon fontSize="large" />

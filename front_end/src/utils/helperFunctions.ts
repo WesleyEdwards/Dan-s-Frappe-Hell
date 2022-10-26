@@ -7,6 +7,9 @@ import {
   Permission,
   RecipeItem,
   Drink,
+  Order,
+  DisplayOrder,
+  DisplayOrderItem,
 } from "../api/models";
 
 export function useRouteMatch(patterns: string[]) {
@@ -77,6 +80,28 @@ export function mapMenuItemsToIngredients(
   });
 }
 
+export function createDisplayOrderFromOrder(
+  order: Order,
+  menuItems: MenuItem[]
+): DisplayOrder {
+  const displayItems: DisplayOrderItem[] = [];
+  order.Items.map((item) => {
+    const menuItem = menuItems.find((menuItem) => {
+      return menuItem.MenuId === item.menuId;
+    });
+    return displayItems.push({
+      drinkName: menuItem?.Name ?? "Error",
+      quantity: item.quantity,
+      price: item.price,
+    });
+  });
+  return {
+    orderId: order.OrderId,
+    orderItems: displayItems,
+    status: order.Status,
+    totalPrice: order.TotalPrice,
+  };
+}
 export function getUserPermissionString(perms: string): string {
   if (perms === "0") {
     return "None";

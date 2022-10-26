@@ -19,6 +19,7 @@ interface Context {
   ) => Promise<void>;
   login: (email: string, password: string) => Promise<string | undefined>;
   logout: () => void;
+  refreshUser: () => void;
 }
 
 const AuthContext = createContext<Context>({
@@ -31,6 +32,7 @@ const AuthContext = createContext<Context>({
   ) => Promise<void>,
   login: {} as (email: string, password: string) => Promise<string | undefined>,
   logout: {} as () => void,
+  refreshUser: {} as () => void,
 });
 
 export function useAuth() {
@@ -44,6 +46,7 @@ type AuthProps = {
 export const AuthProvider: FC<AuthProps> = (props) => {
   const { children } = props;
   const [currentUser, setCurrentUser] = useState<User | null>();
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
   //   const [loading, setLoading] = useState(false);
 
   const createAccount = (
@@ -71,18 +74,24 @@ export const AuthProvider: FC<AuthProps> = (props) => {
     setCurrentUser(null);
     localStorage.clear();
   };
+  const refreshUser = () => {
+    setRefreshTrigger(!refreshTrigger);
+  };
 
   useEffect(() => {
+    console.log("refreshing user");
+    setCurrentUser(undefined);
     if (localStorage.getItem("userObject")) {
       setCurrentUser(JSON.parse(localStorage.getItem("userObject") || ""));
     }
-  }, []);
+  }, [refreshTrigger]);
 
   const contextValue: Context = {
     user: currentUser,
     createAccount: createAccount,
     login,
     logout,
+    refreshUser,
   };
 
   return (

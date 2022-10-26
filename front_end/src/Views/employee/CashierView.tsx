@@ -9,8 +9,10 @@ import {
 } from "../../api/api-functions";
 import { MenuItem, Order } from "../../api/models";
 import CashierCreateOrder from "../../components/CashierCreateOrder";
+import { useAuth } from "../../utils/AuthContext";
 
 export const CashierView: FC = () => {
+  const { refreshUser } = useAuth();
   const [menuitems, setMenuItems] = useState<MenuItem[]>();
   const [finishedOrders, setFinishedOrders] = useState<Order[]>();
 
@@ -24,13 +26,13 @@ export const CashierView: FC = () => {
   if (!menuitems) return <Loading />;
 
   const completeOrder = (order: Order) => {
-    updateOrder(order.OrderId, order.Items, order.Favorite, "FULFILLED").then(
-      (res) => {
+    updateOrder(order.OrderId, order.Items, order.Favorite, "FULFILLED")
+      .then((res) => {
         getOrdersByStatus("FINISHED").then((red) => {
           setFinishedOrders(red);
         });
-      }
-    );
+      })
+      .then(refreshUser);
   };
 
   if (!finishedOrders || !menuitems) return <Loading />;
@@ -49,6 +51,7 @@ export const CashierView: FC = () => {
               <div key={order.OrderId}>
                 <Typography>Order {order.OrderId}</Typography>
                 <Button
+                  variant="contained"
                   onClick={() => {
                     completeOrder(order);
                   }}

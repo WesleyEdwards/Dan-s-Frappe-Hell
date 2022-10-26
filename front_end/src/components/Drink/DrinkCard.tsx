@@ -30,7 +30,7 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
       menuId: drink.menuItem.MenuId,
       quantity: quantity,
       price: price,
-    });
+    }).then(handleClose);
   };
 
   useEffect(() => {
