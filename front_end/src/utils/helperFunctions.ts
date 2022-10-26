@@ -113,5 +113,3 @@ export function getUserPermissionInt(perms: string): string {
   }
   return "Unknown";
 }
-
-

@@ -9,26 +9,70 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import { FC, useState } from "react";
-import { Drink } from "../api/models";
+import { FC, useState, useEffect } from "react";
+import { Drink, Order, OrderItem } from "../api/models";
 import { IngredientSelect } from "./IngredientSelect";
+import { getCartOrder, updateOrder } from "../api/api-functions";
+import {useAuth} from "../utils/AuthContext";
 
 interface DrinkCardProps {
   drink: Drink;
-  handleAddToCart: (drink: Drink) => void;
 }
 
 export const DrinkCard: FC<DrinkCardProps> = (props) => {
-  const { drink, handleAddToCart } = props;
+  const { drink } = props;
 
   const [open, setOpen] = useState(false);
 
-  const onAddToCart = () => {
-    handleAddToCart(drink);
-    setOpen(false);
-  };
   const handleClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { user } = useAuth();
+  const [staticCartOrder, setStaticCartOrder] = useState<Order>();
+  const [dynamicCartOrder, setDynamicCartOrder] = useState<Order>();
+
+
+  const fetchCartOrder = () => {
+    if(!user) return;
+    setStaticCartOrder(undefined);
+    setDynamicCartOrder(undefined)
+    getCartOrder(user.userId).then((res)=>setStaticCartOrder(res))
+  };
+
+  useEffect(() => {
+    fetchCartOrder();
+  }, [user]);
+
+  const handleAddToCart = async () => {
+
+    if (!staticCartOrder || !user) return;
+    const newList: OrderItem[] = [];
+    let duplicate = false;
+    getCartOrder(user.userId).then((res)=>{
+      res.Items.forEach((i)=>{
+        if(i.menuId === drink.menuItem.MenuId){
+          const q = i.quantity += 1
+          duplicate = true
+          return newList.push({menuId: drink.menuItem.MenuId, quantity:q, price:0})
+        }else{
+          return newList.push(i)
+        }
+      })
+      if(!duplicate) {
+        newList.push({menuId: drink.menuItem.MenuId, quantity: 1, price: 0})
+      }
+      console.log("New List: " + newList)
+      updateOrder(staticCartOrder.OrderId, newList, false, "CART").then((res) =>{
+        console.log("Updated Return: " + res.Items)
+        setDynamicCartOrder(res)
+      })
+    });
+    // cartOrder.Items.forEach((i) => {
+    //   return newList.push(i);
+    // });
+    setOpen(false)
+
+  };
+
 
   return (
     <>
@@ -66,7 +110,7 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={onAddToCart}>Add To Cart</Button>
+          <Button onClick={handleAddToCart}>Add To Cart</Button>
         </DialogActions>
       </Dialog>
     </>

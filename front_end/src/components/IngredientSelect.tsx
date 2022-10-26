@@ -41,6 +41,7 @@ export const IngredientSelect: FC<IngredientSelectProps> = (props) => {
         label={ingredient.Name}
         onChange={(e) => handleChange(e.target.value)}
       >
+        <MenuItem value={0}>0</MenuItem>
         <MenuItem value={1}>1</MenuItem>
         <MenuItem value={2}>2</MenuItem>
         <MenuItem value={3}>3</MenuItem>

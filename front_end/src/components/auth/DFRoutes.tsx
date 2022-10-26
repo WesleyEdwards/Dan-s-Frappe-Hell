@@ -12,6 +12,7 @@ import CashierView from "../../Views/employee/CashierView";
 import Home from "../../Views/Home";
 import Login from "../../Views/Login";
 import Profile from "../../Views/Profile";
+import BaristaView from "../../Views/employee/BaristaView";
 
 export const DFRoutes: FC = () => {
   const { user } = useAuth();
@@ -51,6 +52,11 @@ export const DFRoutes: FC = () => {
     {
       path: "/inventory",
       element: <Inventory />,
+      permissionRequired: Permission.WORKER,
+    },
+    {
+      path: "/barista-view",
+      element: <BaristaView/>,
       permissionRequired: Permission.WORKER,
     },
   ];

@@ -33,7 +33,7 @@ export const RouterTabs = () => {
   ];
   const workerTabs = [
     {
-      label: "Cashier View",
+      label: "Cashier",
       path: "/cashier-view",
     },
     {
@@ -43,6 +43,10 @@ export const RouterTabs = () => {
     {
       label: "Inventory",
       path: "/inventory",
+    },
+    {
+      label: "Barista",
+      path: "/barista-view",
     },
     ...customerTabs,
   ];
