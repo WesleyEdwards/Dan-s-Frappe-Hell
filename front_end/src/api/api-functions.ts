@@ -4,6 +4,8 @@ import {
   IngredientType,
   LoginResponse,
   MenuItem,
+  Order,
+  OrderItem,
   User,
 } from "./models";
 
@@ -21,6 +23,10 @@ export function createAccount(
   email: string
 ): Promise<unknown> {
   return makePostRequest("users/new", { password, email, firstName, lastName });
+}
+
+export function getOrdersByStatus(status: string): Promise<Order[]> {
+  return makeGetRequest(`orders/status/${status}`).then((res) => res.orders);
 }
 
 export function createIngredient(
@@ -45,6 +51,9 @@ export function modifyUserPermission(
 export function getIngredients(): Promise<Ingredient[]> {
   return makeGetRequest("ingredients/").then((res) => res.ingredients);
 }
+export function getMenuItemById(id: string): Promise<MenuItem> {
+  return makeGetRequest(`menuitems/${id}`).then((res) => res.menuitem);
+}
 
 export function getMenuItems(): Promise<MenuItem[]> {
   return makeGetRequest("menuitems/").then((res) => res.menuitems);
@@ -58,4 +67,23 @@ export function getIngredientById(id: string): Promise<Ingredient> {
   return makeGetRequest(`ingredients/${id}`).then((res) => res.ingredient);
 }
 
+export function getCartOrder(userId: string): Promise<Order> {
+  return makeGetRequest(`orders/user/${userId}/cart`).then((res) => res.order);
+}
+
+export function updateOrder(
+  OrderId: number,
+  Items: OrderItem[],
+  Favorite: boolean,
+  Status: OrderStatus
+): Promise<Order> {
+  return makePostRequest("orders/update", {
+    OrderId,
+    Items,
+    Favorite,
+    Status,
+  }).then((res) => res.order);
+}
+
 export type CreateIngredientType = Omit<Ingredient, "IngredientId">;
+export type OrderStatus = "CART" | "PLACED" | "FULFILLED" | "FINISHED";

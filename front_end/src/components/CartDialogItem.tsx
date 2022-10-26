@@ -6,29 +6,20 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  FormControl,
   Typography,
 } from "@mui/material";
-import { FC, useState } from "react";
-import { Drink } from "../api/models";
-import { IngredientSelect } from "./IngredientSelect";
+import React, { FC, useState } from "react";
+import { Order } from "../api/models";
 
-interface DrinkCardProps {
-  drink: Drink;
+interface CartDialogItemProps {
+  order: Order;
 }
 
-export const DrinkCard: FC<DrinkCardProps> = (props) => {
-  const { drink } = props;
-
+export const CartDialogItem: FC<CartDialogItemProps> = (props) => {
+  const { order } = props;
   const [open, setOpen] = useState(false);
-
   const handleClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const handleAddToCart = () => {
-    alert("This feature is not yet implemented");
-    handleClose();
-  };
 
   return (
     <>
@@ -42,7 +33,7 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
       >
         <CardContent style={{ justifyContent: "center" }}>
           <Typography variant="h5" gutterBottom>
-            {drink.menuItem.Name}
+            {order.OrderId}
           </Typography>
         </CardContent>
       </Card>
@@ -50,27 +41,19 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
         <DialogContent style={{ width: 500 }}>
           <>
             <DialogContentText variant="h4" style={{ paddingBottom: 40 }}>
-              Customize your {drink.menuItem.Name}
+              Information for order {order.OrderId}
             </DialogContentText>
-            {drink.recipe.map((recipeItem) => {
-              return (
-                <FormControl style={{ width: 400, paddingBottom: 35 }} error>
-                  <IngredientSelect
-                    ingredient={recipeItem.ingredient}
-                    initialQuantity={recipeItem.quantity}
-                  />
-                </FormControl>
-              );
-            })}
           </>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddToCart}>Add To Cart</Button>
+          <Button onClick={handleClose} variant="contained">
+            Complete Order
+          </Button>
         </DialogActions>
       </Dialog>
     </>
   );
 };
 
-export default DrinkCard;
+export default CartDialogItem;

@@ -44,13 +44,13 @@ export const DFRoutes: FC = () => {
       permissionRequired: Permission.WORKER,
     },
     {
-      path: "/barista-view",
-      element: <BaristaView />,
+      path: "/inventory",
+      element: <Inventory />,
       permissionRequired: Permission.WORKER,
     },
     {
-      path: "/inventory",
-      element: <Inventory />,
+      path: "/barista-view",
+      element: <BaristaView />,
       permissionRequired: Permission.WORKER,
     },
   ];
@@ -82,10 +82,11 @@ export const DFRoutes: FC = () => {
 
   return (
     <Routes>
-      {userRoutes.map((route) => (
+      {userRoutes.map((route, i) => (
         <>
           {route.permissionRequired ? (
             <Route
+              key={i}
               path={route.path}
               element={
                 <PrivateRoute
@@ -96,7 +97,7 @@ export const DFRoutes: FC = () => {
               }
             />
           ) : (
-            <Route path={route.path} element={route.element} />
+            <Route key={i} path={route.path} element={route.element} />
           )}
         </>
       ))}

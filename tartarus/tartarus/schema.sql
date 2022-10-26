@@ -121,6 +121,8 @@ INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
 Values ('Tortured Soul', '{"5":1,"3":2,"6":1,"4":2}',0.0,TRUE,'');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
 Values ('Pain and Suffering', '{"2":3,"3":1,"4":2,"5":4}',0.0,TRUE,'');
+INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
+Values ('Create Your Own', '{"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}',0.0,TRUE,'');
 
 DROP TABLE IF EXISTS Orders;
 

@@ -34,13 +34,14 @@ export const IngredientSelect: FC<IngredientSelectProps> = (props) => {
   };
 
   return (
-    <FormControl style={{ width: 400, paddingBottom: 20 }} error={!!error}>
-      <InputLabel style={{ paddingBottom: 20 }}>{ingredient.Name}</InputLabel>
+    <FormControl error={!!error}>
+      <InputLabel>{ingredient.Name}</InputLabel>
       <Select
         value={selectedQuantity.toString()}
         label={ingredient.Name}
         onChange={(e) => handleChange(e.target.value)}
       >
+        <MenuItem value={0}>0</MenuItem>
         <MenuItem value={1}>1</MenuItem>
         <MenuItem value={2}>2</MenuItem>
         <MenuItem value={3}>3</MenuItem>

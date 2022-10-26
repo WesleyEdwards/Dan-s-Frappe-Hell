@@ -1,14 +1,22 @@
 import { Container, Grid, Stack } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../components/DFHeader";
-import { DrinkCard } from "../components/DrinkCard";
+import { DrinkCard } from "../components/Drink/DrinkCard";
 import { Loading } from "../components/Loading";
-import { getIngredients, getMenuItems } from "../api/api-functions";
+import {
+  getCartOrder,
+  getIngredients,
+  getMenuItems,
+  updateOrder,
+} from "../api/api-functions";
 import { mapMenuItemsToIngredients } from "../utils/helperFunctions";
-import { Drink } from "../api/models";
+import { Drink, Order, OrderItem } from "../api/models";
+import { useAuth } from "../utils/AuthContext";
 
 export const Home: FC = () => {
   const [drinks, setDrinks] = useState<Drink[]>();
+  const { user, refreshUser } = useAuth();
+  const [cartOrder, setCartOrder] = useState<Order>();
 
   const fetchDrinks = async () => {
     setDrinks(undefined);
@@ -17,10 +25,25 @@ export const Home: FC = () => {
     const newDrinks = mapMenuItemsToIngredients(menuItems, ingredients);
     setDrinks(newDrinks);
   };
+  const fetchCartOrder = () => {
+    if (!user) return;
+    setCartOrder(undefined);
+    getCartOrder(user.userId).then(setCartOrder);
+  };
+
+  const handleAddToCart = (menuItem: OrderItem) => {
+    if (!cartOrder) return Promise.resolve();
+    const newList: OrderItem[] = cartOrder.Items;
+    newList.push(menuItem);
+    return updateOrder(cartOrder.OrderId, newList, false, "CART").then(
+      refreshUser
+    );
+  };
 
   useEffect(() => {
     fetchDrinks();
-  }, []);
+    fetchCartOrder();
+  }, [user]);
 
   if (drinks === undefined) return <Loading />;
 
@@ -29,10 +52,10 @@ export const Home: FC = () => {
       <Stack gap="2rem" justifyContent="center">
         <DFHeader title="Welcome to Dan's Frappuccino Hell" />
         <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
-          {drinks.map((drink) => {
+          {drinks.map((drink, i) => {
             return (
-              <Grid item md={6}>
-                <DrinkCard drink={drink} />
+              <Grid item key={i} md={6}>
+                <DrinkCard drink={drink} handleAddToCart={handleAddToCart} />
               </Grid>
             );
           })}
