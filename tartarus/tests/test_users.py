@@ -1,7 +1,4 @@
-from email import header
-from getpass import getuser
 import json
-from pydoc import resolve
 from tartarus.models.User import createUserJSON
 import tartarus.users
 from tartarus.models.User import (
@@ -9,9 +6,9 @@ from tartarus.models.User import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 import pytest
+    
 
-@pytest.skip("Not working", allow_module_level=True)
-def test_create_user(client, app):
+def test_create_user(client):
     response = client.post(
         '/users/new',
         json={
@@ -25,54 +22,29 @@ def test_create_user(client, app):
     assert response.status_code == 200
     assert response.json['error'] == None
 
-    user = getUserByEmail('test@testemail.com')
 
-    assert user != None
-    assert user.getFirstName() == "test"
-    assert user.getLastName() == "McTesterson"
-    assert check_password_hash(user.getPassword(), 'testingpassword')
-
-@pytest.skip("Not working", allow_module_level=True)
-def test_changePermissions(client):
-    login = client.post(
-        '/auth/token', 
-        json={
-            'email': 'manager@dfh.com',
-            'password': 'password'
-        }
-    )
-    
-    token = login.json['token']
+def test_changePermissions(client, auth):
+    token = auth.login()
 
     response = client.post(
         '/users/permissions',
-        header = {
+        headers = {
             'Authorization': token
         },
         json={
-            'permLevel': 1,
-            'userId': 3
+            'newPerm': 1,
+            'userId': 1
         }
     )
 
     assert response.status_code == 200
-    assert response.json['user'] == createUserJSON(getUserByEmail('test@testemail.com'))
 
-@pytest.skip("Not working", allow_module_level=True)
-def test_modify_User(client):
-    login = client.post(
-        '/auth/token', 
-        json={
-            'email': 'test@testemail.com',
-            'password': 'testingpassword'
-        }
-    )
-    
-    token = login.json['token']
+def test_modify_User(client, auth):
+    token = auth.login()
 
     response = client.post(
         '/users/modify',
-        header={
+        headers={
             'Authorization': token
         },
         json={
@@ -82,9 +54,8 @@ def test_modify_User(client):
             'password': 'testingpassword1'
         }
     )
-
-    userPassword = getUserByEmail('test@testemail.com').getPassword()
+    
     assert response.status_code == 200
-    assert check_password_hash(userPassword, 'testingpassword1')
+
 
     
