@@ -1,4 +1,4 @@
-from .models.User import User, checkExistingUser, addUser, getUserById, getUserList, createUserJSON, updatePermissions, updateEmail, updateName, updatePassword
+from .models.User import User, checkExistingUser, addUser, getUserByEmail, getUserById, getUserList, createUserJSON, updatePermissions, updateEmail, updateName, updatePassword
 from .auth import check_token
 from flask import(
     Blueprint, request
@@ -35,6 +35,7 @@ def create_user():
             error = "Error adding user"
             status = 500
     return ({
+        'user': createUserJSON(getUserByEmail(email)),
         'error': error,
         },
         status
@@ -86,7 +87,7 @@ def changePermissions():
             updatePermissions(user.getId(), newPerm)
             newUser = getUserById(user.getId())
         except Exception as ex:
-            error = "Error updating user permissions " + ex
+            error = "Error updating user permissions " + str(ex)
             status = 500
     else:
         status = 401
@@ -119,10 +120,13 @@ def modifyUser():
 
         if(user.getEmail() != email):
             try:
-                updateEmail(user.getId(), email)
+                if(not updateEmail(user.getId(), email)):
+                    status = 500
+                    error = "Error updating email: Email already exists"
             except Exception as ex:
                 status = 500
-                error = "Error updating email: " + str(ex)
+                error = "Error updating email" + str(ex)
+
         if(user.getFirstName() != firstName or user.getLastName != lastName):
             try:
                 updateName(user.getId(), firstName, lastName)

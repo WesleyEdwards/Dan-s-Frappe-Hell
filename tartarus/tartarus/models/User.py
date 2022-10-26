@@ -87,8 +87,12 @@ def updatePermissions(id, permission):
 def updateEmail(id, email):
     db = get_db()
     cur = db.cursor()
-    cur.execute(f"update users set email = '{email}' where userId = {id}")
-    db.commit()
+    if(checkExistingUser(email)):
+        return False
+    else:
+        cur.execute(f"update users set email = '{email}' where userId = {id}")
+        db.commit()
+        return True
 
 def updateName(id, firstName, lastName):
     db = get_db()
