@@ -1,112 +1,115 @@
 import {
+  Badge,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText, FormControl,
-  IconButton, Typography,
+  IconButton,
+  Typography,
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import {Order, MenuItem} from "../api/models";
-import {getCartOrder, getMenuItemById, updateOrder } from "../api/api-functions"
-import {useAuth} from "../utils/AuthContext";
-import {Loading} from "./Loading";
+import { Order, MenuItem } from "../api/models";
+import { getCartOrder, getMenuItems, updateOrder } from "../api/api-functions";
+import { useAuth } from "../utils/AuthContext";
+import { Loading } from "./Loading";
 
+export interface ViewCartProps {
+  userId: string;
+}
+export const ViewCart: FC<ViewCartProps> = (props) => {
+  const { userId } = props;
 
-export const ViewCart: FC = () => {
-  const { user } = useAuth();
   const [open, setOpen] = useState(false);
-
-  const handleCartClick = () => {
-    if(!user) return;
-    const newList: MenuItem[]  = []
-    getCartOrder(user.userId).then((res)=>{
-      setCartOrder(res)
-      res.Items.map((i)=>{
-        getMenuItemById(i.menuId.toString()).then((red)=>{
-          newList.push(red)
-        }).then(()=>{
-          setMenuItems(newList)
-          setOpen(true)
-        })
-      })
-    })
-
-  };
-  const handleCartClose = () => {
-    setOpen(false);
-  };
-
-  const handleCheckOut = () => {
-    if(!cartOrder) return;
-    updateOrder(cartOrder.OrderId, cartOrder.Items, cartOrder.Favorite, "PLACED")
-    alert("Need to implement subtracting of user balance")
-    fetchCartOrder()
-    setOpen(false);
-  };
+  const [mappedMenuItems, setMappedMenuItems] = useState<MenuItem[]>();
 
   const [cartOrder, setCartOrder] = useState<Order>();
-  const [menuItems, setMenuItems] = useState<MenuItem[]>();
 
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
 
-  const fetchCartOrder = async () => {
-    if(!user?.userId) return;
-    getCartOrder(user.userId).then((red)=>{
-      setCartOrder(red)
+  const handleCheckOut = () => {
+    if (!cartOrder) return;
+    updateOrder(
+      cartOrder.OrderId,
+      cartOrder.Items,
+      cartOrder.Favorite,
+      "PLACED"
+    ).then(() => {
+      fetchCartOrder();
+      handleClose();
     });
   };
 
-  useEffect(()=>{
-    fetchCartOrder()
-  }, [user])
-  // useEffect(() => {
-  //   const newList: MenuItem[]  = []
-  //   getCartOrder(user?.userId || "1").then((res)=>{
-  //     setCartOrder(res)
-  //     res.Items.map((i)=>{
-  //       getMenuItemById(i.menuId.toString()).then((red)=>{
-  //         newList.push(red)
-  //       })
-  //     })
-  //   })
-  //   setMenuItems(newList)
-  // }, [user]);
+  const fetchCartOrder = async () => {
+    getCartOrder(userId).then(setCartOrder);
+    const newList: MenuItem[] = [];
+    const cartOrder = await getCartOrder(userId);
+    const menuItems = await getMenuItems();
 
+    cartOrder.Items.map((item) => {
+      return menuItems.find((menuItem) => {
+        if (menuItem.MenuId === item.menuId) {
+          return newList.push(menuItem);
+        }
+        return null;
+      });
+    });
+    setMappedMenuItems(newList);
+  };
 
-  if (!user) return <></>;
-  if (cartOrder === undefined) {
-    return <Loading />;
-  }
+  useEffect(() => {
+    fetchCartOrder();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
+  if (!cartOrder) return <Loading />;
 
   return (
     <>
       <IconButton
         aria-label="cart"
-        onClick={handleCartClick}
+        onClick={handleOpen}
         sx={{ width: "4rem", height: "4rem" }}
       >
-        {/*<Badge badgeContent={cartSize} color="secondary">*/}
-          <ShoppingCartIcon />
-        {/*</Badge>*/}
+        {cartOrder.Items.length > 0 ? (
+          <Badge variant="dot" color="secondary">
+            <ShoppingCartIcon fontSize="medium" />
+          </Badge>
+        ) : (
+          <ShoppingCartIcon fontSize="medium" />
+        )}
       </IconButton>
 
-      <Dialog open={open} onClose={handleCartClose}>
-        <DialogContent style={{width:400}}>
-          <DialogContentText>Your Cart</DialogContentText>
-          {cartOrder.Items.length == 0 && <Typography>You Have Nothing In Your Cart</Typography>}
-          {!menuItems && <Loading/>}
-          {menuItems && menuItems.length == cartOrder.Items.length && menuItems.map((item) => {
-            return (
-                <FormControl style={{ width: 400, paddingBottom: 35 }} error>
-                  <Typography>{item.Name}</Typography>
-                </FormControl>
-            );
-          })}
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent style={{ width: 400 }}>
+          <ShoppingCartIcon fontSize="large" />
+          {cartOrder.Items.length === 0 ? (
+            <Typography align="center">
+              You Have Nothing In Your Cart
+            </Typography>
+          ) : (
+            <>
+              <Typography align="center">
+                You Have Something In Your Cart
+              </Typography>
+              {/* {mappedMenuItems.map((item) => {
+                return (
+                  <FormControl style={{ width: 400, paddingBottom: 35 }} error>
+                    <Typography>{item.Name}</Typography>
+                  </FormControl>
+                );
+              })} */}
+            </>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCartClose}>Close Cart</Button>
-          {cartOrder.Items.length > 0 && <Button onClick={handleCheckOut}>Checkout</Button>}
+          <Button onClick={handleClose}>Close</Button>
+          {cartOrder.Items.length > 0 && (
+            <Button variant="contained" onClick={handleCheckOut}>
+              Checkout
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </>

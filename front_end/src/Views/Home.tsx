@@ -1,7 +1,7 @@
 import { Container, Grid, Stack } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../components/DFHeader";
-import { DrinkCard } from "../components/DrinkCard";
+import { DrinkCard } from "../components/Drink/DrinkCard";
 import { Loading } from "../components/Loading";
 import {
   getCartOrder,
@@ -26,20 +26,16 @@ export const Home: FC = () => {
     setDrinks(newDrinks);
   };
   const fetchCartOrder = () => {
-    if (!user || !cartOrder) return;
+    if (!user) return;
     setCartOrder(undefined);
     getCartOrder(user.userId).then(setCartOrder);
   };
 
-  const handleAddToCart = (drink: Drink) => {
-    if (!cartOrder) return;
-    const newList: OrderItem[] = [];
-    console.log(cartOrder.Items);
-    cartOrder.Items.forEach((i) => {
-      return newList.push(i);
-    });
-    newList.push({ menuId: drink.menuItem.MenuId, quantity: 1, price: 0 });
-    return updateOrder(cartOrder.OrderId, newList, false, "CART");
+  const handleAddToCart = (menuItem: OrderItem) => {
+    if (!cartOrder) return Promise.resolve();
+    const newList: OrderItem[] = cartOrder.Items;
+    newList.push(menuItem);
+    return updateOrder(cartOrder.OrderId, newList, false, "CART")
   };
 
   useEffect(() => {
@@ -54,11 +50,10 @@ export const Home: FC = () => {
       <Stack gap="2rem" justifyContent="center">
         <DFHeader title="Welcome to Dan's Frappuccino Hell" />
         <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
-          {drinks.map((drink) => {
+          {drinks.map((drink, i) => {
             return (
-              <Grid item md={6}>
-                <DrinkCard drink={drink}  />
-                {/* goes inside drink card > handleAddToCart={handleAddToCart}*/}
+              <Grid item key={i} md={6}>
+                <DrinkCard drink={drink} handleAddToCart={handleAddToCart} />
               </Grid>
             );
           })}

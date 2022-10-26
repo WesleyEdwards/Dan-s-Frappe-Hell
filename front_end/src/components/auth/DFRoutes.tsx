@@ -12,7 +12,6 @@ import CashierView from "../../Views/employee/CashierView";
 import Home from "../../Views/Home";
 import Login from "../../Views/Login";
 import Profile from "../../Views/Profile";
-import BaristaView from "../../Views/employee/BaristaView";
 
 export const DFRoutes: FC = () => {
   const { user } = useAuth();
@@ -45,18 +44,13 @@ export const DFRoutes: FC = () => {
       permissionRequired: Permission.WORKER,
     },
     {
-      path: "/barista-view",
-      element: <BaristaView />,
-      permissionRequired: Permission.WORKER,
-    },
-    {
       path: "/inventory",
       element: <Inventory />,
       permissionRequired: Permission.WORKER,
     },
     {
       path: "/barista-view",
-      element: <BaristaView/>,
+      element: <BaristaView />,
       permissionRequired: Permission.WORKER,
     },
   ];
@@ -88,10 +82,11 @@ export const DFRoutes: FC = () => {
 
   return (
     <Routes>
-      {userRoutes.map((route) => (
+      {userRoutes.map((route, i) => (
         <>
           {route.permissionRequired ? (
             <Route
+              key={i}
               path={route.path}
               element={
                 <PrivateRoute
@@ -102,7 +97,7 @@ export const DFRoutes: FC = () => {
               }
             />
           ) : (
-            <Route path={route.path} element={route.element} />
+            <Route key={i} path={route.path} element={route.element} />
           )}
         </>
       ))}

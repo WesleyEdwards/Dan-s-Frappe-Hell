@@ -32,26 +32,23 @@ export const RouterTabs = () => {
     },
   ];
   const workerTabs = [
+    ...customerTabs,
     {
       label: "Cashier",
       path: "/cashier-view",
     },
     {
-      label: "Barista View",
+      label: "Barista",
       path: "/barista-view",
     },
     {
       label: "Inventory",
       path: "/inventory",
     },
-    {
-      label: "Barista",
-      path: "/barista-view",
-    },
-    ...customerTabs,
   ];
 
   const adminTabs = [
+    ...workerTabs,
     {
       label: "Customer Management",
       path: "/customer-management",
@@ -60,7 +57,6 @@ export const RouterTabs = () => {
       label: "Employee Management",
       path: "/employee-management",
     },
-    ...workerTabs,
   ];
   const getTabOptions = (() => {
     if (!user) {

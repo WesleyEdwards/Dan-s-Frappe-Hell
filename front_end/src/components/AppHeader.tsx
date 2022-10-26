@@ -1,8 +1,9 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Button, IconButton, Popover } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getCartOrder } from "../api/api-functions";
 import { useAuth } from "../utils/AuthContext";
 import { RouterTabs } from "./RouterTabs";
 import ViewCart from "./ViewCart";
@@ -19,15 +20,19 @@ export const AppHeader: FC = () => {
   const handleLogout = () => {
     setAnchorEl(null);
     logout();
-    navigate("/home");
+    navigate("/login");
   };
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
+  useEffect(() => {
+    if (!user) return;
+    getCartOrder(user.userId);
+  }, [user]);
   return (
     <Stack direction="row" justifyContent="right" gap="3rem">
       <RouterTabs />
 
-      <ViewCart />
+      {user && <ViewCart userId={user.userId} />}
 
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="large">
         <AccountCircleIcon fontSize="large" />

@@ -1,4 +1,4 @@
-import { Button, Container, Grid, Stack, Typography } from "@mui/material";
+import { Container, Grid, Stack } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../../components/DFHeader";
 import { MenuItem, Order } from "../../api/models";
@@ -26,10 +26,8 @@ export const BaristaView: FC = () => {
 
   const completeOrder = (order: Order) => {
     updateOrder(order.OrderId, order.Items, order.Favorite, "FINISHED").then(
-      (res) => {
-        getOrdersByStatus("PLACED").then((red) => {
-          setPlacedOrders(red);
-        });
+      () => {
+        getOrdersByStatus("PLACED").then(setPlacedOrders);
       }
     );
   };
