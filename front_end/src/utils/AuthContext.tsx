@@ -12,12 +12,6 @@ import { formatRawUser } from "./helperFunctions";
 
 interface Context {
   user: User | null | undefined;
-  createAccount: (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string
-  ) => Promise<void>;
   login: (email: string, password: string) => Promise<string | undefined>;
   logout: () => void;
   refreshUser: () => void;
@@ -25,12 +19,6 @@ interface Context {
 
 const AuthContext = createContext<Context>({
   user: undefined,
-  createAccount: {} as (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string
-  ) => Promise<void>,
   login: {} as (email: string, password: string) => Promise<string | undefined>,
   logout: {} as () => void,
   refreshUser: {} as () => void,
@@ -46,30 +34,24 @@ type AuthProps = {
 
 export const AuthProvider: FC<AuthProps> = (props) => {
   const { children } = props;
-  const [currentUser, setCurrentUser] = useState<User | null>();
+  const [user, setCurrentUser] = useState<User | null>();
   const [refreshTrigger, setRefreshTrigger] = useState(false);
-  //   const [loading, setLoading] = useState(false);
 
-  const createAccount = (
+  function login(
     email: string,
-    password: string,
-    firstName: string,
-    lastName: string
-  ) => {
-    return Promise.resolve();
-  };
-
-  const login = (email: string, password: string) => {
+    password: string
+  ): Promise<"success" | undefined> {
     return loginUser(email, password).then((res) => {
       if (!res.user) return undefined;
+      const formattedUser = formatRawUser(res.user);
 
       localStorage.setItem("token", res.token);
-      localStorage.setItem("userObject", JSON.stringify(res.user));
+      localStorage.setItem("userObject", JSON.stringify(formattedUser));
 
-      setCurrentUser(formatRawUser(res.user));
+      setCurrentUser(formattedUser);
       return "success";
     });
-  };
+  }
 
   const logout = () => {
     setCurrentUser(null);
@@ -87,8 +69,7 @@ export const AuthProvider: FC<AuthProps> = (props) => {
   }, [refreshTrigger]);
 
   const contextValue: Context = {
-    user: currentUser,
-    createAccount: createAccount,
+    user,
     login,
     logout,
     refreshUser,

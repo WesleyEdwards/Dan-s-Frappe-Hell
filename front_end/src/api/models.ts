@@ -1,5 +1,3 @@
-import { OrderStatus, PermissionString } from "./api-functions";
-
 export enum IngredientType {
   MILK = "MILK",
   FLAVOR = "FLAVOR",
@@ -18,13 +16,6 @@ export interface RawUser {
   userId: string;
 }
 
-export interface User {
-  email: string;
-  firstName: string;
-  lastName: string;
-  permissions: PermissionString;
-  userId: string;
-}
 export interface Ingredient {
   IngredientId: string;
   Kind: IngredientType;
@@ -48,12 +39,6 @@ export interface MenuItem {
   ImagePath: string;
 }
 
-export interface LoginResponse {
-  token: string;
-  error: string;
-  user: User;
-}
-
 export interface OrderItem {
   menuId: number;
   quantity: number;
@@ -73,6 +58,13 @@ export interface Order {
 // These Models are not used by the API.
 // They are for the convenience of the front end.
 
+export interface User {
+  email: string;
+  firstName: string;
+  lastName: string;
+  permissions: Permission;
+  userId: string;
+}
 export interface Drink {
   menuItem: MenuItem;
   recipe: RecipeItem[];
@@ -93,3 +85,7 @@ export interface DisplayOrder {
   status: OrderStatus;
   totalPrice: number;
 }
+
+export type CreateIngredientType = Omit<Ingredient, "IngredientId">;
+export type OrderStatus = "CART" | "PLACED" | "FULFILLED" | "FINISHED";
+export type Permission = "None" | "Customer" | "Employee" | "Manager" | "Admin";

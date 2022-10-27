@@ -1,6 +1,7 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { FC, useEffect, useState } from "react";
-import { getAllUsers, PermissionString } from "../../api/api-functions";
+import { getAllUsers } from "../../api/api-functions";
+import { Permission } from "../../api/models";
 import { Loading } from "../../components/Loading";
 import { getPermissionString } from "../../utils/helperFunctions";
 
@@ -14,7 +15,7 @@ export interface UserRow {
   id: string;
   name: string;
   email: string;
-  permission: PermissionString;
+  permission: Permission;
 }
 
 export const IngredientsEdit: FC<CustomerListProps> = (props) => {

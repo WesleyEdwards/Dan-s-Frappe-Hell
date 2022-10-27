@@ -1,6 +1,7 @@
 import { Container, Stack } from "@mui/material";
 import React, { FC, useState } from "react";
-import { modifyUserPermission, PermissionString } from "../../api/api-functions";
+import { modifyUserPermission } from "../../api/api-functions";
+import { Permission } from "../../api/models";
 import { DFHeader } from "../../components/DFHeader";
 import CustomerList, { UserRow } from "./CustomerList";
 import EditUserDialogue from "./EditUserDialogue";
@@ -13,7 +14,7 @@ export const EmployeeManagement: FC = () => {
     setSelectedUser(undefined);
   };
 
-  const changePermissionLevel = (userId: string, newPerm: PermissionString) => {
+  const changePermissionLevel = (userId: string, newPerm: Permission) => {
     modifyUserPermission(userId, newPerm).then(() => {
       setRefreshTrigger(!refreshTrigger);
       handleClose();

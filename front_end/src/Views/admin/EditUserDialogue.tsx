@@ -11,7 +11,7 @@ import {
   Stack,
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import { PermissionString } from "../../api/api-functions";
+import { Permission } from "../../api/models";
 import {
   getPermissionString,
   isPermissionString,
@@ -21,11 +21,11 @@ import { UserRow } from "./CustomerList";
 interface EditUserDialogueProps {
   user: UserRow | undefined;
   handleClose: () => void;
-  submitUser: (userId: string, newPerm: PermissionString) => void;
+  submitUser: (userId: string, newPerm: Permission) => void;
 }
 export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
   const { user, handleClose, submitUser } = props;
-  const [newPermission, setNewPermission] = useState<PermissionString>();
+  const [newPermission, setNewPermission] = useState<Permission>();
 
   const handleSubmit = () => {
     if (!user || !newPermission) return;
@@ -37,7 +37,7 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
   }, [user]);
 
   if (!newPermission || !user) return <></>;
-  console.log("newPermission", newPermission);
+
   return (
     <Dialog open={user !== undefined} onClose={handleClose} fullWidth={true}>
       <DialogContent>

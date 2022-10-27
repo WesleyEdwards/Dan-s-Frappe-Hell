@@ -1,7 +1,6 @@
 import { TextFieldProps } from "@mui/material";
 import { FormikValues, useFormik } from "formik";
 import { matchPath, useLocation } from "react-router";
-import { PermissionString } from "../api/api-functions";
 import {
   Ingredient,
   MenuItem,
@@ -10,6 +9,9 @@ import {
   Order,
   DisplayOrder,
   DisplayOrderItem,
+  Permission,
+  RawUser,
+  User,
 } from "../api/models";
 
 export function useRouteMatch(patterns: string[]) {
@@ -54,23 +56,12 @@ export function formikTextFieldNumberProps<T extends FormikValues>(
 }
 
 export function hasPermission(
-  userPermission: PermissionString,
-  requiredPermission: PermissionString
+  userPermission: Permission,
+  requiredPermission: Permission
 ): boolean {
-  const none = 0;
-  const customer = 1;
-  const employee = 2;
-  const manager = 3;
-  const admin = 4;
-  const permissionMap: Record<PermissionString, number> = {
-    None: none,
-    Customer: customer,
-    Employee: employee,
-    Manager: manager,
-    Admin: admin,
-  };
-
-  return permissionMap[userPermission] >= permissionMap[requiredPermission];
+  return (
+    getPermissionInt(userPermission) >= getPermissionInt(requiredPermission)
+  );
 }
 
 export function mapMenuItemsToIngredients(
@@ -118,7 +109,7 @@ export function createDisplayOrderFromOrder(
 
 export function isPermissionString(
   permission: string
-): permission is PermissionString {
+): permission is Permission {
   return (
     permission === "Customer" ||
     permission === "Employee" ||
@@ -130,7 +121,7 @@ export function isPermissionString(
 
 export function getPermissionString(
   permission: string | undefined
-): PermissionString {
+): Permission {
   if (!permission) return "None";
 
   if (isPermissionString(permission)) {
@@ -139,13 +130,28 @@ export function getPermissionString(
   return "None";
 }
 
+export function getPermissionInt(permission: Permission): number {
+  if (!isPermissionString(permission)) return 0;
+  const permissionToIntMap: Record<Permission, number> = {
+    None: 0,
+    Customer: 1,
+    Employee: 2,
+    Manager: 3,
+    Admin: 4,
+  };
+  return permissionToIntMap[permission];
+}
+
 export function formatRawUser(user: RawUser): User {
   return {
-    UserId: user.UserId,
-    Username: user.Username,
-    FirstName: user.FirstName,
-    LastName: user.LastName,
-    Email: user.Email,
-    Permission: getPermissionString(user.Permission),
+    email: user.email,
+    userId: user.userId,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    permissions: getPermissionString(user.permissions.toString()),
   };
+}
+
+export function formatRawUsers(users: RawUser[]): User[] {
+  return users.map((user) => formatRawUser(user));
 }

@@ -43,7 +43,7 @@ export const CashierView: FC = () => {
         <DFHeader title="Cashier Portal" />
         <CashierCreateOrder />
         <Typography variant="h5" gutterBottom>
-          Customer Pickup
+          Customer Pickup,
         </Typography>
         <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
           {finishedOrders.map((order) => {

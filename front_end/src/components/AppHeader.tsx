@@ -28,6 +28,7 @@ export const AppHeader: FC = () => {
     if (!user) return;
     getCartOrder(user.userId);
   }, [user]);
+
   return (
     <Stack direction="row" justifyContent="right" gap="3rem">
       <RouterTabs />

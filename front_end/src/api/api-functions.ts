@@ -1,13 +1,23 @@
 import { makePostRequest, makeGetRequest } from "../utils/apiUtils";
+import { formatRawUsers } from "../utils/helperFunctions";
 import {
+  CreateIngredientType,
   Ingredient,
   IngredientType,
-  LoginResponse,
   MenuItem,
   Order,
   OrderItem,
+  OrderStatus,
+  Permission,
+  RawUser,
   User,
 } from "./models";
+
+export interface LoginResponse {
+  token: string;
+  error: string;
+  user: RawUser;
+}
 
 export function loginUser(
   password: string,
@@ -36,12 +46,12 @@ export function createIngredient(
 }
 
 export function getAllUsers(): Promise<User[]> {
-  return makeGetRequest("users/all").then((res) => res.users);
+  return makeGetRequest("users/all").then((res) => formatRawUsers(res.users));
 }
 
 export function modifyUserPermission(
   userId: string,
-  newPerm: PermissionString
+  newPerm: Permission
 ): Promise<User[]> {
   return makePostRequest("users/permissions", { userId, newPerm }).then(
     (res) => res.users
@@ -84,12 +94,3 @@ export function updateOrder(
     Status,
   }).then((res) => res.order);
 }
-
-export type CreateIngredientType = Omit<Ingredient, "IngredientId">;
-export type OrderStatus = "CART" | "PLACED" | "FULFILLED" | "FINISHED";
-export type PermissionString =
-  | "None"
-  | "Customer"
-  | "Employee"
-  | "Manager"
-  | "Admin";
