@@ -29,7 +29,7 @@ export const CustomerManagement: FC = () => {
           <CustomerList
             refreshTrigger={refreshTrigger}
             setSelectedUser={setSelectedUser}
-            permissionLevels={["0", "1"]}
+            permissionLevels={["None", "Customer"]}
           />
         </Stack>
       </Container>

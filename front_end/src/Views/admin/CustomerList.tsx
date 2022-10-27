@@ -8,7 +8,7 @@ import { getPermissionString } from "../../utils/helperFunctions";
 interface CustomerListProps {
   refreshTrigger: boolean;
   setSelectedUser: (user: UserRow | undefined) => void;
-  permissionLevels: string[];
+  permissionLevels: Permission[];
 }
 
 export interface UserRow {
@@ -18,7 +18,7 @@ export interface UserRow {
   permission: Permission;
 }
 
-export const IngredientsEdit: FC<CustomerListProps> = (props) => {
+export const CustomerList: FC<CustomerListProps> = (props) => {
   const [currentUsers, setCurrentUsers] = useState<UserRow[] | undefined>();
   const { refreshTrigger, setSelectedUser, permissionLevels } = props;
 
@@ -28,13 +28,12 @@ export const IngredientsEdit: FC<CustomerListProps> = (props) => {
     getAllUsers()
       .then((res) => {
         res.map((user) => {
-          const perms = user.permissions.toString();
-          if (permissionLevels.includes(perms)) {
+          if (permissionLevels.includes(user.permissions)) {
             return newList.push({
               id: user.userId,
               name: `${user.firstName} ${user.lastName}`,
               email: user.email,
-              permission: getPermissionString(perms),
+              permission: user.permissions,
             });
           }
           return newList;
@@ -87,4 +86,4 @@ export const IngredientsEdit: FC<CustomerListProps> = (props) => {
   );
 };
 
-export default IngredientsEdit;
+export default CustomerList;

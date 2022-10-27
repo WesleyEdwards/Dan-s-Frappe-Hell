@@ -59,9 +59,10 @@ export function hasPermission(
   userPermission: Permission,
   requiredPermission: Permission
 ): boolean {
-  return (
-    getPermissionInt(userPermission) >= getPermissionInt(requiredPermission)
-  );
+  const perm = getPermissionInt(userPermission);
+  const permRequired = getPermissionInt(requiredPermission);
+  console.log(perm, permRequired);
+  return perm >= permRequired;
 }
 
 export function mapMenuItemsToIngredients(
@@ -123,10 +124,12 @@ export function getPermissionString(
   permission: string | undefined
 ): Permission {
   if (!permission) return "None";
+  if (permission === "0") return "None";
+  if (permission === "1") return "Customer";
+  if (permission === "2") return "Employee";
+  if (permission === "3") return "Manager";
+  if (permission === "4") return "Admin";
 
-  if (isPermissionString(permission)) {
-    return permission;
-  }
   return "None";
 }
 
@@ -143,6 +146,14 @@ export function getPermissionInt(permission: Permission): number {
 }
 
 export function formatRawUser(user: RawUser): User {
+  console.log(user.permissions.toString());
+  console.log({
+    email: user.email,
+    userId: user.userId,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    permissions: getPermissionString(user.permissions.toString()),
+  });
   return {
     email: user.email,
     userId: user.userId,

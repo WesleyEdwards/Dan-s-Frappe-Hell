@@ -1,5 +1,5 @@
 import { makePostRequest, makeGetRequest } from "../utils/apiUtils";
-import { formatRawUsers } from "../utils/helperFunctions";
+import { formatRawUsers, getPermissionInt } from "../utils/helperFunctions";
 import {
   CreateIngredientType,
   Ingredient,
@@ -53,9 +53,10 @@ export function modifyUserPermission(
   userId: string,
   newPerm: Permission
 ): Promise<User[]> {
-  return makePostRequest("users/permissions", { userId, newPerm }).then(
-    (res) => res.users
-  );
+  return makePostRequest("users/permissions", {
+    userId,
+    newPerm: getPermissionInt(newPerm),
+  }).then((res) => res.users);
 }
 
 export function getIngredients(): Promise<Ingredient[]> {
