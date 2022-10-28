@@ -1,4 +1,4 @@
-from .models.User import User, checkExistingUser, addUser, getUserById, getUserList, createUserJSON, updatePermissions, updateEmail, updateName, updatePassword
+from .models.User import User, checkExistingUser, addUser, getUserByEmail, getUserById, getUserList, createUserJSON, updatePermissions, updateEmail, updateName, updatePassword
 from .auth import check_token
 from flask import(
     Blueprint, request
@@ -10,65 +10,46 @@ bp = Blueprint('users', __name__, url_prefix='/users')
 @bp.route('/new', methods=(['POST']))
 def create_user():
     result = request.get_json()
-    error = None
-    status = 200
-
-    firstName = result['firstName']
-    lastName = result['lastName']
     email = result['email']
-    password = generate_password_hash(result['password'])
 
     if(checkExistingUser(email)):
-        error = "User already exists"
-        status = 400
-    else:
-        try:
-            addUser(User(
-                firstName,
-                lastName,
-                email,
-                password,
-                1
-            ))
-        except Exception as e:
-            print(e)
-            error = "Error adding user"
-            status = 500
-    return ({
-        'error': error,
-        },
-        status
-        )
+        return ({'error': 'User already exists'}, 400)
+
+    try:
+        addUser(User(
+            result['firstName'],
+            result['lastName'],
+            email,
+            generate_password_hash(result['password']),
+            1
+        ))
+    except Exception as e:
+        print(e)
+        return ({'error': 'Error creating user'}, 500)
+
+    
+    return ({'user': createUserJSON(getUserByEmail(email))}, 200)
 
 #TODO: figure out how to append data to a dictionary
 @bp.route('/all', methods=(['GET']))
 def getAllUsers():
     users = []
-    error = None
-    status = 200
     token = request.headers.get('Authorization').split(" ")[-1]
     print(token)
     requester, authorized = check_token(token, 2)
+
     if requester == None:
-        error = "Invalid Token"
-        status = 401
-    elif not authorized:
-        error = "Incorrect Permissions"
-        status = 403
-    else:
-        i = 1
-        for element in getUserList():
-           user = User(element[2], element[3], element[1], element[4], element[5])
-           user.setId(element[0])
-           users.append(createUserJSON(user))
-           i += 1
-    return (
-        {
-            'users': users,
-            'error': error,
-        },
-        status
-    )
+        return ({'error': 'Invalid token'}, 401)
+
+    if not authorized:
+        return ({'error': 'Insufficient permissions'}, 403)
+
+    for element in getUserList():
+        user = User(element[2], element[3], element[1], element[4], element[5])
+        user.setId(element[0])
+        users.append(createUserJSON(user))
+
+    return ({'users': users}, 200)
 
 @bp.route('/permissions', methods=(['POST']))
 def changePermissions():

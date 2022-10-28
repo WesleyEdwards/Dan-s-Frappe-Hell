@@ -1,5 +1,9 @@
 import { makePostRequest, makeGetRequest } from "../utils/apiUtils";
-import { formatRawUsers, getPermissionInt } from "../utils/helperFunctions";
+import {
+  formatRawUsers,
+  getPermissionInt,
+  stashAndFormatUser,
+} from "../utils/userHelperFunctions";
 import {
   CreateIngredientType,
   Ingredient,
@@ -19,20 +23,28 @@ export interface LoginResponse {
   user: RawUser;
 }
 
+export interface NewUserProps {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 export function loginUser(
   password: string,
   email: string
-): Promise<LoginResponse> {
-  return makePostRequest("auth/token", { password, email });
+): Promise<User | null> {
+  return makePostRequest("auth/token", { password, email }).then(
+    stashAndFormatUser
+  );
 }
 
-export function createAccount(
-  firstName: string,
-  lastName: string,
-  password: string,
-  email: string
-): Promise<unknown> {
-  return makePostRequest("users/new", { password, email, firstName, lastName });
+export function createUser(
+  createAccountProps: NewUserProps
+): Promise<User | null> {
+  return makePostRequest("users/new", { ...createAccountProps }).then((res) =>
+    loginUser(createAccountProps.password, res.user.email)
+  );
 }
 
 export function getOrdersByStatus(status: string): Promise<Order[]> {
@@ -80,6 +92,9 @@ export function getIngredientById(id: string): Promise<Ingredient> {
 
 export function getCartOrder(userId: string): Promise<Order> {
   return makeGetRequest(`orders/user/${userId}/cart`).then((res) => res.order);
+}
+export function getOrdersByUser(userId: string): Promise<Order[]> {
+  return makeGetRequest(`orders/user/${userId}`).then((res) => res.orders);
 }
 
 export function updateOrder(

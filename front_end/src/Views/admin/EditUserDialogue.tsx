@@ -12,10 +12,7 @@ import {
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { Permission } from "../../api/models";
-import {
-  getPermissionString,
-  isPermissionString,
-} from "../../utils/helperFunctions";
+import { isPermissionString } from "../../utils/userHelperFunctions";
 import { UserRow } from "./CustomerList";
 
 interface EditUserDialogueProps {
@@ -25,7 +22,9 @@ interface EditUserDialogueProps {
 }
 export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
   const { user, handleClose, submitUser } = props;
-  const [newPermission, setNewPermission] = useState<Permission>();
+  const [newPermission, setNewPermission] = useState<Permission>(
+    user?.permission ?? "None"
+  );
 
   const handleSubmit = () => {
     if (!user || !newPermission) return;
@@ -33,7 +32,8 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
   };
 
   useEffect(() => {
-    setNewPermission(getPermissionString(user?.permission));
+    if (!user) return;
+    setNewPermission(user.permission);
   }, [user]);
 
   if (!newPermission || !user) return <></>;
@@ -57,19 +57,19 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
                 );
               }}
             >
-              <MenuItem key={"0"} value={"None"}>
+              <MenuItem key={"None"} value={"None"}>
                 None
               </MenuItem>
-              <MenuItem key={"1"} value={"Customer"}>
+              <MenuItem key={"Customer"} value={"Customer"}>
                 Customer
               </MenuItem>
-              <MenuItem key={"2"} value={"Employee"}>
+              <MenuItem key={"Employee"} value={"Employee"}>
                 Employee
               </MenuItem>
-              <MenuItem key={"3"} value={"Manager"}>
+              <MenuItem key={"Manager"} value={"Manager"}>
                 Manager
               </MenuItem>
-              <MenuItem key={"4"} value={"Admin"}>
+              <MenuItem key={"Admin"} value={"Admin"}>
                 Admin
               </MenuItem>
             </Select>
@@ -82,7 +82,7 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
         </Button>
         <Button
           variant="contained"
-          disabled={getPermissionString(user.permission) === newPermission}
+          disabled={user.permission === newPermission}
           onClick={handleSubmit}
         >
           Save

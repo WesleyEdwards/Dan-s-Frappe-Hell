@@ -1,6 +1,7 @@
 import { TextFieldProps } from "@mui/material";
 import { FormikValues, useFormik } from "formik";
 import { matchPath, useLocation } from "react-router";
+import { LoginResponse } from "../api/api-functions";
 import {
   Ingredient,
   MenuItem,
@@ -13,6 +14,7 @@ import {
   RawUser,
   User,
 } from "../api/models";
+import { permissionToIntMap } from "./constants";
 
 export function useRouteMatch(patterns: string[]) {
   const { pathname } = useLocation();
@@ -55,15 +57,6 @@ export function formikTextFieldNumberProps<T extends FormikValues>(
   };
 }
 
-export function hasPermission(
-  userPermission: Permission,
-  requiredPermission: Permission
-): boolean {
-  const perm = getPermissionInt(userPermission);
-  const permRequired = getPermissionInt(requiredPermission);
-  console.log(perm, permRequired);
-  return perm >= permRequired;
-}
 
 export function mapMenuItemsToIngredients(
   menuItems: MenuItem[],
@@ -106,63 +99,4 @@ export function createDisplayOrderFromOrder(
     status: order.Status,
     totalPrice: order.TotalPrice,
   };
-}
-
-export function isPermissionString(
-  permission: string
-): permission is Permission {
-  return (
-    permission === "Customer" ||
-    permission === "Employee" ||
-    permission === "Manager" ||
-    permission === "Admin" ||
-    permission === "None"
-  );
-}
-
-export function getPermissionString(
-  permission: string | undefined
-): Permission {
-  if (!permission) return "None";
-  if (permission === "0") return "None";
-  if (permission === "1") return "Customer";
-  if (permission === "2") return "Employee";
-  if (permission === "3") return "Manager";
-  if (permission === "4") return "Admin";
-
-  return "None";
-}
-
-export function getPermissionInt(permission: Permission): number {
-  if (!isPermissionString(permission)) return 0;
-  const permissionToIntMap: Record<Permission, number> = {
-    None: 0,
-    Customer: 1,
-    Employee: 2,
-    Manager: 3,
-    Admin: 4,
-  };
-  return permissionToIntMap[permission];
-}
-
-export function formatRawUser(user: RawUser): User {
-  console.log(user.permissions.toString());
-  console.log({
-    email: user.email,
-    userId: user.userId,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    permissions: getPermissionString(user.permissions.toString()),
-  });
-  return {
-    email: user.email,
-    userId: user.userId,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    permissions: getPermissionString(user.permissions.toString()),
-  };
-}
-
-export function formatRawUsers(users: RawUser[]): User[] {
-  return users.map((user) => formatRawUser(user));
 }

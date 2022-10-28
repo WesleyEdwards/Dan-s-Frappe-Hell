@@ -6,20 +6,21 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { loginUser } from "../api/api-functions";
+import { createUser, loginUser, NewUserProps } from "../api/api-functions";
 import { User } from "../api/models";
-import { formatRawUser } from "./helperFunctions";
 
 interface Context {
   user: User | null | undefined;
-  login: (email: string, password: string) => Promise<string | undefined>;
+  createAccount: (newUserProps: NewUserProps) => Promise<User | null>;
+  login: (email: string, password: string) => Promise<User | null>;
   logout: () => void;
   refreshUser: () => void;
 }
 
 const AuthContext = createContext<Context>({
   user: undefined,
-  login: {} as (email: string, password: string) => Promise<string | undefined>,
+  createAccount: {} as (newUserProps: NewUserProps) => Promise<User | null>,
+  login: {} as (email: string, password: string) => Promise<User | null>,
   logout: {} as () => void,
   refreshUser: {} as () => void,
 });
@@ -34,27 +35,23 @@ type AuthProps = {
 
 export const AuthProvider: FC<AuthProps> = (props) => {
   const { children } = props;
-  const [user, setCurrentUser] = useState<User | null>();
+  const [user, setUser] = useState<User | null>();
   const [refreshTrigger, setRefreshTrigger] = useState(false);
+  //   const [loading, setLoading] = useState(false);
 
-  function login(
-    email: string,
-    password: string
-  ): Promise<"success" | undefined> {
-    return loginUser(email, password).then((res) => {
-      if (!res.user) return undefined;
-      const formattedUser = formatRawUser(res.user);
+  const createAccount = (newUserProps: NewUserProps) => {
+    return createUser(newUserProps);
+  };
 
-      localStorage.setItem("token", res.token);
-      localStorage.setItem("userObject", JSON.stringify(formattedUser));
-
-      setCurrentUser(formattedUser);
-      return "success";
+  const login = (email: string, password: string) => {
+    return loginUser(email, password).then((user) => {
+      setUser(user);
+      return user;
     });
-  }
+  };
 
   const logout = () => {
-    setCurrentUser(null);
+    setUser(null);
     localStorage.clear();
   };
   const refreshUser = () => {
@@ -62,9 +59,9 @@ export const AuthProvider: FC<AuthProps> = (props) => {
   };
 
   useEffect(() => {
-    setCurrentUser(undefined);
+    setUser(undefined);
     if (localStorage.getItem("userObject")) {
-      setCurrentUser(JSON.parse(localStorage.getItem("userObject") || ""));
+      setUser(JSON.parse(localStorage.getItem("userObject") || ""));
     }
   }, [refreshTrigger]);
 
@@ -72,6 +69,7 @@ export const AuthProvider: FC<AuthProps> = (props) => {
     user,
     login,
     logout,
+    createAccount,
     refreshUser,
   };
 

@@ -3,7 +3,6 @@ import React, { FC, useEffect, useState } from "react";
 import { getAllUsers } from "../../api/api-functions";
 import { Permission } from "../../api/models";
 import { Loading } from "../../components/Loading";
-import { getPermissionString } from "../../utils/helperFunctions";
 
 interface CustomerListProps {
   refreshTrigger: boolean;

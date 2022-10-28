@@ -14,7 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import { FC, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Drink } from "../../api/models";
+import { useAuth } from "../../utils/AuthContext";
 
 export interface OrderDrinkProps {
   drink: Drink;
@@ -37,11 +39,14 @@ export const OrderDrink: FC<OrderDrinkProps> = (props) => {
     price,
   } = props;
 
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [error, setError] = useState<string | undefined>();
+
+  const navigateToLogin = () => navigate("/login");
 
   const onSubmit = async () => {
     setError(undefined);
-
     handleSubmit().catch(() => setError("Failed to add to cart"));
   };
 
@@ -99,9 +104,15 @@ export const OrderDrink: FC<OrderDrinkProps> = (props) => {
       </Stack>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button variant="contained" onClick={onSubmit}>
-          Add To Cart
-        </Button>
+        {user ? (
+          <Button variant="contained" onClick={onSubmit}>
+            Add To Cart
+          </Button>
+        ) : (
+          <Button variant="contained" onClick={navigateToLogin}>
+            Sign In
+          </Button>
+        )}
       </DialogActions>
     </>
   );

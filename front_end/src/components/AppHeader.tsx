@@ -18,9 +18,8 @@ export const AppHeader: FC = () => {
   };
 
   const handleLogout = () => {
-    setAnchorEl(null);
     logout();
-    navigate("/login");
+    navigateToLogin();
   };
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -33,7 +32,7 @@ export const AppHeader: FC = () => {
     <Stack direction="row" justifyContent="right" gap="3rem">
       <RouterTabs />
 
-      {user && <ViewCart />}
+      <ViewCart />
 
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="large">
         <AccountCircleIcon fontSize="large" />

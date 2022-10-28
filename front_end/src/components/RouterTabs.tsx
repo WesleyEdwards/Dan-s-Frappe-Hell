@@ -1,8 +1,9 @@
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { Link } from "react-router-dom";
-import { hasPermission, useRouteMatch } from "../utils/helperFunctions";
+import { useRouteMatch } from "../utils/helperFunctions";
 import { useAuth } from "../utils/AuthContext";
+import { hasPermission } from "../utils/userHelperFunctions";
 
 export const RouterTabs = () => {
   const routeMatch = useRouteMatch([
@@ -61,10 +62,10 @@ export const RouterTabs = () => {
     if (!user) {
       return unAuthTabs;
     }
-    if (hasPermission(user.permissions, "Manager")) {
+    if (hasPermission(user, "Manager")) {
       return managerTabs;
     }
-    if (hasPermission(user.permissions, "Employee")) {
+    if (hasPermission(user, "Employee")) {
       return employeeTabs;
     }
     return customerTabs;

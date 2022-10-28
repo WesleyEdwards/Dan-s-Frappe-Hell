@@ -4,7 +4,6 @@ import { Alert, IconButton, Stack, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import React, { FC, useState } from "react";
 import * as yup from "yup";
-import { createAccount } from "../../api/api-functions";
 import { useAuth } from "../../utils/AuthContext";
 import { formikTextFieldProps } from "../../utils/helperFunctions";
 
@@ -15,7 +14,7 @@ interface CreateAccountProps {
 
 export const CreateAccount: FC<CreateAccountProps> = (props) => {
   const { switchToLogin, navigateToHome } = props;
-  const { login } = useAuth();
+  const { createAccount } = useAuth();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -43,24 +42,17 @@ export const CreateAccount: FC<CreateAccountProps> = (props) => {
     onSubmit: (values, { setSubmitting }) => {
       setError(null);
       setSubmitting(true);
-      createAccount(
-        values.firstName,
-        values.lastName,
-        values.password,
-        values.email
-      )
-        .then(() => {
-          login(values.password, values.email)
-            .then((res) => {
-              if (res === "success") {
-                navigateToHome();
-              } else {
-                setError("Invalid email or password.");
-              }
-            })
-            .then(() => setSubmitting(false));
+      createAccount({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+      })
+        .then((user) => {
+          if (user) navigateToHome();
+          else setError("Error creating account");
         })
-        .then(navigateToHome);
+        .then(() => setSubmitting(false));
     },
   });
 

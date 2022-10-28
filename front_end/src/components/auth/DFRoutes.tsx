@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Permission } from "../../api/models";
 import { useAuth } from "../../utils/AuthContext";
-import { hasPermission } from "../../utils/helperFunctions";
+import { hasPermission } from "../../utils/userHelperFunctions";
 import { PrivateRoute } from "../../utils/PrivateRoute";
 import CustomerManagement from "../../Views/admin/CustomerManagement";
 import EmployeeManagement from "../../Views/admin/EmployeeManagement";
@@ -77,10 +77,10 @@ export const DFRoutes: FC = () => {
     if (!user) {
       return unAuthRoutes;
     }
-    if (hasPermission(user.permissions, "Manager")) {
+    if (hasPermission(user, "Manager")) {
       return adminRoutes;
     }
-    if (hasPermission(user.permissions, "Employee")) {
+    if (hasPermission(user, "Employee")) {
       return workerRoutes;
     }
     return customerRoutes;
