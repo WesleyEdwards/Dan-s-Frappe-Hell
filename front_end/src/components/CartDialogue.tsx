@@ -37,7 +37,7 @@ export const CartDialogue: FC<CartDialogueProps> = (props) => {
   };
 
   const processingOrder = myOrders?.find(
-    (order) => order.Status !== "CART" && order.Status !== "FINISHED"
+    (order) => order.Status !== "CART" && order.Status !== "FULFILLED"
   );
 
   return (

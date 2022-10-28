@@ -87,5 +87,5 @@ export interface DisplayOrder {
 }
 
 export type CreateIngredientType = Omit<Ingredient, "IngredientId">;
-export type OrderStatus = "CART" | "PLACED" | "FULFILLED" | "FINISHED";
+export type OrderStatus = "CART" | "PLACED" | "FINISHED" | "FULFILLED";
 export type Permission = "None" | "Customer" | "Employee" | "Manager" | "Admin";
