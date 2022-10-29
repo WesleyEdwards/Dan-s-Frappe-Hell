@@ -10,9 +10,9 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { FC } from "react";
+import { FC, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Drink } from "../../api/models";
+import { Drink, RecipeItem } from "../../api/models";
 import { IngredientSelect } from "../IngredientSelect";
 
 export interface CustomOrderDrinkProps {
@@ -35,6 +35,13 @@ export const CustomOrderDrink: FC<CustomOrderDrinkProps> = (props) => {
     setQuantity,
     price,
   } = props;
+
+  const [ingredients, setIngredients] = useState<RecipeItem[]>(drink.recipe);
+
+  const handleIngredientChange = (recipeItem: RecipeItem) => {
+    console.log("recipeItem", recipeItem);
+  };
+
   return (
     <>
       <Stack padding="4rem" justifyContent="center" gap="2rem">
@@ -46,12 +53,12 @@ export const CustomOrderDrink: FC<CustomOrderDrinkProps> = (props) => {
             {drink.menuItem.Name}
           </DialogContentText>
         </Stack>
-        {drink.recipe.map((recipeItem) => {
+        {ingredients.map((recipeItem) => {
           return (
             <FormControl style={{ width: 400 }} error>
               <IngredientSelect
-                ingredient={recipeItem.ingredient}
-                initialQuantity={recipeItem.quantity}
+                recipeItem={recipeItem}
+                handleIngredientChange={handleIngredientChange}
               />
             </FormControl>
           );

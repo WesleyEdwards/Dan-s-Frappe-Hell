@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../../components/DFHeader";
 import { DisplayOrder, MenuItem, Order } from "../../api/models";
 import {
-  getMenuItems,
+  getAllMenuItems,
   getOrdersByStatus,
   updateOrder,
 } from "../../api/api-functions";
@@ -19,8 +19,7 @@ export const BaristaView: FC = () => {
   const fetchPlacedOrders = async () => {
     setDisplayOrders(undefined);
     const orders = await getOrdersByStatus("PLACED");
-    const menuItems: MenuItem[] = await getMenuItems();
-    console.log(orders);
+    const menuItems: MenuItem[] = await getAllMenuItems();
     const displayOrders = createDisplayOrders(orders, menuItems);
     setDisplayOrders(displayOrders);
   };

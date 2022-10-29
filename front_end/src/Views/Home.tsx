@@ -6,7 +6,7 @@ import { Loading } from "../components/Loading";
 import {
   getCartOrder,
   getIngredients,
-  getMenuItems,
+  getActiveMenuItems,
   updateOrder,
 } from "../api/api-functions";
 import { mapMenuItemsToIngredients } from "../utils/helperFunctions";
@@ -20,7 +20,7 @@ export const Home: FC = () => {
 
   const fetchDrinks = async () => {
     setDrinks(undefined);
-    const menuItems = await getMenuItems();
+    const menuItems = await getActiveMenuItems();
     const ingredients = await getIngredients();
     const newDrinks = mapMenuItemsToIngredients(menuItems, ingredients);
     setDrinks(newDrinks);
