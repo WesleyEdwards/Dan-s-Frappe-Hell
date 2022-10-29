@@ -57,7 +57,6 @@ export function formikTextFieldNumberProps<T extends FormikValues>(
   };
 }
 
-
 export function mapMenuItemsToIngredients(
   menuItems: MenuItem[],
   ingredients: Ingredient[]
@@ -99,4 +98,13 @@ export function createDisplayOrderFromOrder(
     status: order.Status,
     totalPrice: order.TotalPrice,
   };
+}
+
+export function createDisplayOrders(
+  order: Order[],
+  menuItems: MenuItem[]
+): DisplayOrder[] {
+  return order.map((order) => {
+    return createDisplayOrderFromOrder(order, menuItems);
+  });
 }

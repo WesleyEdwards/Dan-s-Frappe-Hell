@@ -36,9 +36,16 @@ export const CartDialogue: FC<CartDialogueProps> = (props) => {
     navigate("/login");
   };
 
-  const processingOrder = myOrders?.find(
-    (order) => order.Status !== "CART" && order.Status !== "FULFILLED"
-  );
+  const processingOrder = (() => {
+    const has = myOrders?.filter(
+      (order) => order.Status === "PLACED" || order.Status === "FINISHED"
+    );
+    const cart = myOrders?.filter(
+      (order) => order.Status === "CART" && order.Items.length === 0
+    );
+    if (!cart || !has) return false;
+    return cart.length > 0 && has.length > 0;
+  })();
 
   return (
     <Dialog open={open} onClose={handleClose}>

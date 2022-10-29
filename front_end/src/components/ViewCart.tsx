@@ -27,11 +27,14 @@ export const ViewCart: FC = () => {
 
   const handleCheckOut = () => {
     if (!myCart) return;
-    updateOrder(myCart.OrderId, myCart.Items, myCart.Favorite, "PLACED").then(
-      () => {
-        fetchCartOrder();
-      }
-    );
+    updateOrder({
+      OrderId: myCart.OrderId,
+      Items: myCart.Items,
+      Favorite: myCart.Favorite,
+      Status: "PLACED",
+    }).then(() => {
+      fetchCartOrder();
+    });
   };
 
   const fetchCartOrder = async () => {

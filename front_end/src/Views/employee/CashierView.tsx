@@ -26,7 +26,12 @@ export const CashierView: FC = () => {
   if (!menuitems) return <Loading />;
 
   const completeOrder = (order: Order) => {
-    updateOrder(order.OrderId, order.Items, order.Favorite, "FULFILLED")
+    updateOrder({
+      OrderId: order.OrderId,
+      Items: order.Items,
+      Favorite: order.Favorite,
+      Status: "FULFILLED",
+    })
       .then((res) => {
         getOrdersByStatus("FINISHED").then((red) => {
           setFinishedOrders(red);

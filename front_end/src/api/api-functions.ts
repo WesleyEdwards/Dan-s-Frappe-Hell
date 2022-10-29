@@ -10,7 +10,6 @@ import {
   IngredientType,
   MenuItem,
   Order,
-  OrderItem,
   OrderStatus,
   Permission,
   RawUser,
@@ -30,6 +29,8 @@ export interface NewUserProps {
   password: string;
 }
 
+export type UpdateOrder = Omit<Order, "UserId" | "TotalPrice" | "OrderDate">;
+
 export function loginUser(
   password: string,
   email: string
@@ -47,7 +48,7 @@ export function createUser(
   );
 }
 
-export function getOrdersByStatus(status: string): Promise<Order[]> {
+export function getOrdersByStatus(status: OrderStatus): Promise<Order[]> {
   return makeGetRequest(`orders/status/${status}`).then((res) => res.orders);
 }
 
@@ -97,16 +98,6 @@ export function getOrdersByUser(userId: string): Promise<Order[]> {
   return makeGetRequest(`orders/user/${userId}`).then((res) => res.orders);
 }
 
-export function updateOrder(
-  OrderId: number,
-  Items: OrderItem[],
-  Favorite: boolean,
-  Status: OrderStatus
-): Promise<Order> {
-  return makePostRequest("orders/update", {
-    OrderId,
-    Items,
-    Favorite,
-    Status,
-  }).then((res) => res.order);
+export function updateOrder(order: UpdateOrder): Promise<Order> {
+  return makePostRequest("orders/update", order).then((res) => res.order);
 }
