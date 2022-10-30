@@ -9,6 +9,7 @@ import {
   Order,
   DisplayOrder,
   DisplayOrderItem,
+  MappingOfIngredientToQuantity,
 } from "../api/models";
 
 export function useRouteMatch(patterns: string[]) {
@@ -21,6 +22,10 @@ export function useRouteMatch(patterns: string[]) {
     }
   }
   return null;
+}
+
+export function roundToTwoDecimals(number: number): number {
+  return Math.round((number + Number.EPSILON) * 100) / 100;
 }
 
 export function formikTextFieldProps<T extends FormikValues>(
@@ -102,4 +107,15 @@ export function createDisplayOrders(
   return order.map((order) => {
     return createDisplayOrderFromOrder(order, menuItems);
   });
+}
+
+export function recipeItemsToRawRecipeItems(
+  recipeItem: RecipeItem[]
+): MappingOfIngredientToQuantity {
+  const rawRecipeItems: MappingOfIngredientToQuantity = {};
+  recipeItem.map((item) => {
+    return (rawRecipeItems[item.ingredient.IngredientId.toString()] =
+      item.quantity);
+  });
+  return rawRecipeItems;
 }

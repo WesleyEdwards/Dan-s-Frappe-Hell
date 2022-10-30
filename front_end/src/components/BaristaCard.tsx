@@ -5,15 +5,16 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  Alert,
   DialogContentText,
   Typography,
 } from "@mui/material";
 import React, { FC, useState } from "react";
-import { DisplayOrder, Order } from "../api/models";
+import { DisplayOrder } from "../api/models";
 
 interface BaristaCardProps {
   order: DisplayOrder;
-  completeOrder: (o: Order) => void;
+  completeOrder: (orderId: number) => Promise<unknown>;
 }
 
 export const BaristaCard: FC<BaristaCardProps> = (props) => {
@@ -21,6 +22,8 @@ export const BaristaCard: FC<BaristaCardProps> = (props) => {
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const [error, setError] = useState<string | undefined>();
 
   return (
     <>
@@ -48,11 +51,16 @@ export const BaristaCard: FC<BaristaCardProps> = (props) => {
             </DialogContentText>
           </>
         </DialogContent>
+        {error && <Alert severity="error">{error}</Alert>}
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button
             variant="contained"
-            onClick={() => completeOrder({} as Order)}
+            onClick={() =>
+              completeOrder(order.orderId).catch(() =>
+                setError("Error completing order")
+              )
+            }
           >
             Mark As Completed
           </Button>

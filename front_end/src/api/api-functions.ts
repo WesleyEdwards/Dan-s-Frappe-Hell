@@ -88,7 +88,7 @@ export function getActiveMenuItems(): Promise<MenuItem[]> {
 export function createMenuItem(
   recipe: MappingOfIngredientToQuantity
 ): Promise<MenuItem> {
-  return makePostRequest(`menuitems/recipe/${JSON.stringify(recipe)}`).then(
+  return makeGetRequest(`menuitems/recipe/${JSON.stringify(recipe)}`).then(
     (res) => res.menuitem
   );
 }

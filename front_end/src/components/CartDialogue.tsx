@@ -48,8 +48,8 @@ export const CartDialogue: FC<CartDialogueProps> = (props) => {
   })();
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogContent style={{ width: 400 }}>
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <DialogContent>
         <ShoppingCartIcon fontSize="large" />
         <>
           {(() => {
@@ -76,7 +76,8 @@ export const CartDialogue: FC<CartDialogueProps> = (props) => {
             if (myCart.Items.length === 0) {
               return (
                 <Typography align="center" sx={{ my: "4rem" }}>
-                  You Have Nothing In Your Cart.
+                  Your cart is empty. Pick a drink and start
+                  ordering!
                 </Typography>
               );
             }
