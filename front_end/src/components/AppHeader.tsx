@@ -29,7 +29,12 @@ export const AppHeader: FC = () => {
   }, [user]);
 
   return (
-    <Stack direction="row" justifyContent="right" gap="3rem">
+    <Stack
+      direction="row"
+      justifyContent="right"
+      gap="3rem"
+      sx={{ borderBottom: 1, borderColor: "divider" }}
+    >
       <RouterTabs />
 
       <ViewCart />
