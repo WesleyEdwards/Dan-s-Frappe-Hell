@@ -206,7 +206,7 @@ def update_order():
         error = "Insufficient Privileges"
     if status == 200:
         try:
-            order.setFavorite(data["Favorite"])
+            order.setFavorite(bool(data["Favorite"]))
             order.setItems(data["Items"])
             order.setStatus(data["Status"])
         except TartarusException as t:
