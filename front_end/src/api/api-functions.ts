@@ -1,31 +1,54 @@
 import { makePostRequest, makeGetRequest } from "../utils/apiUtils";
 import {
+  formatRawUsers,
+  getPermissionInt,
+  stashAndFormatUser,
+} from "../utils/userHelperFunctions";
+import {
+  CreateIngredientType,
   Ingredient,
   IngredientType,
-  LoginResponse,
   MenuItem,
   Order,
-  OrderItem,
+  OrderStatus,
+  Permission,
+  RawUser,
   User,
 } from "./models";
+
+export interface LoginResponse {
+  token: string;
+  error: string;
+  user: RawUser;
+}
+
+export interface NewUserProps {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export type UpdateOrder = Omit<Order, "UserId" | "TotalPrice" | "OrderDate">;
 
 export function loginUser(
   password: string,
   email: string
-): Promise<LoginResponse> {
-  return makePostRequest("auth/token", { password, email });
+): Promise<User | null> {
+  return makePostRequest("auth/token", { password, email }).then(
+    stashAndFormatUser
+  );
 }
 
-export function createAccount(
-  firstName: string,
-  lastName: string,
-  password: string,
-  email: string
-): Promise<unknown> {
-  return makePostRequest("users/new", { password, email, firstName, lastName });
+export function createUser(
+  createAccountProps: NewUserProps
+): Promise<User | null> {
+  return makePostRequest("users/new", { ...createAccountProps }).then((res) =>
+    loginUser(createAccountProps.password, res.user.email)
+  );
 }
 
-export function getOrdersByStatus(status: string): Promise<Order[]> {
+export function getOrdersByStatus(status: OrderStatus): Promise<Order[]> {
   return makeGetRequest(`orders/status/${status}`).then((res) => res.orders);
 }
 
@@ -36,16 +59,17 @@ export function createIngredient(
 }
 
 export function getAllUsers(): Promise<User[]> {
-  return makeGetRequest("users/all").then((res) => res.users);
+  return makeGetRequest("users/all").then((res) => formatRawUsers(res.users));
 }
 
 export function modifyUserPermission(
   userId: string,
-  newPerm: string
+  newPerm: Permission
 ): Promise<User[]> {
-  return makePostRequest("users/permissions", { userId, newPerm }).then(
-    (res) => res.users
-  );
+  return makePostRequest("users/permissions", {
+    userId,
+    newPerm: getPermissionInt(newPerm),
+  }).then((res) => res.users);
 }
 
 export function getIngredients(): Promise<Ingredient[]> {
@@ -70,20 +94,10 @@ export function getIngredientById(id: string): Promise<Ingredient> {
 export function getCartOrder(userId: string): Promise<Order> {
   return makeGetRequest(`orders/user/${userId}/cart`).then((res) => res.order);
 }
-
-export function updateOrder(
-  OrderId: number,
-  Items: OrderItem[],
-  Favorite: boolean,
-  Status: OrderStatus
-): Promise<Order> {
-  return makePostRequest("orders/update", {
-    OrderId,
-    Items,
-    Favorite,
-    Status,
-  }).then((res) => res.order);
+export function getOrdersByUser(userId: string): Promise<Order[]> {
+  return makeGetRequest(`orders/user/${userId}`).then((res) => res.orders);
 }
 
-export type CreateIngredientType = Omit<Ingredient, "IngredientId">;
-export type OrderStatus = "CART" | "PLACED" | "FULFILLED" | "FINISHED";
+export function updateOrder(order: UpdateOrder): Promise<Order> {
+  return makePostRequest("orders/update", order).then((res) => res.order);
+}

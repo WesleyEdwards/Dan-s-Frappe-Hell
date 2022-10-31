@@ -1,9 +1,9 @@
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { Link } from "react-router-dom";
-import { hasPermission, useRouteMatch } from "../utils/helperFunctions";
+import { useRouteMatch } from "../utils/helperFunctions";
 import { useAuth } from "../utils/AuthContext";
-import { Permission } from "../api/models";
+import { hasPermission } from "../utils/userHelperFunctions";
 
 export const RouterTabs = () => {
   const routeMatch = useRouteMatch([
@@ -31,7 +31,7 @@ export const RouterTabs = () => {
       path: "/profile",
     },
   ];
-  const workerTabs = [
+  const employeeTabs = [
     ...customerTabs,
     {
       label: "Cashier",
@@ -47,8 +47,8 @@ export const RouterTabs = () => {
     },
   ];
 
-  const adminTabs = [
-    ...workerTabs,
+  const managerTabs = [
+    ...employeeTabs,
     {
       label: "Customer Management",
       path: "/customer-management",
@@ -62,17 +62,17 @@ export const RouterTabs = () => {
     if (!user) {
       return unAuthTabs;
     }
-    if (hasPermission(user.permissions, Permission.ADMIN)) {
-      return adminTabs;
+    if (hasPermission(user, "Manager")) {
+      return managerTabs;
     }
-    if (hasPermission(user.permissions, Permission.WORKER)) {
-      return workerTabs;
+    if (hasPermission(user, "Employee")) {
+      return employeeTabs;
     }
     return customerTabs;
   })();
 
   return (
-    <Tabs value={currentTab}>
+    <Tabs value={currentTab ?? "/home"}>
       {getTabOptions.map((tab) => (
         <Tab
           label={tab.label}

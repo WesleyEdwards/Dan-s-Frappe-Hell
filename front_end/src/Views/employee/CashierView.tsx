@@ -26,7 +26,12 @@ export const CashierView: FC = () => {
   if (!menuitems) return <Loading />;
 
   const completeOrder = (order: Order) => {
-    updateOrder(order.OrderId, order.Items, order.Favorite, "FULFILLED")
+    updateOrder({
+      OrderId: order.OrderId,
+      Items: order.Items,
+      Favorite: order.Favorite,
+      Status: "FULFILLED",
+    })
       .then((res) => {
         getOrdersByStatus("FINISHED").then((red) => {
           setFinishedOrders(red);
@@ -43,7 +48,7 @@ export const CashierView: FC = () => {
         <DFHeader title="Cashier Portal" />
         <CashierCreateOrder />
         <Typography variant="h5" gutterBottom>
-          Customer Pickup
+          Customer Pickup,
         </Typography>
         <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
           {finishedOrders.map((order) => {

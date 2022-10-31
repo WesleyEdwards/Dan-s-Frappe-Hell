@@ -9,10 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import React, { FC, useState } from "react";
-import { Order } from "../api/models";
+import { DisplayOrder, Order } from "../api/models";
 
 interface BaristaCardProps {
-  order: Order;
+  order: DisplayOrder;
   completeOrder: (o: Order) => void;
 }
 
@@ -33,22 +33,27 @@ export const BaristaCard: FC<BaristaCardProps> = (props) => {
         }}
       >
         <CardContent style={{ justifyContent: "center" }}>
-          <Typography variant="h5" gutterBottom>
-            {order.OrderId}
-          </Typography>
+          {order.orderItems.map((item, i) => (
+            <Typography key={i} variant="h5" gutterBottom>
+              {item.drinkName}
+            </Typography>
+          ))}
         </CardContent>
       </Card>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent style={{ width: 500 }}>
           <>
             <DialogContentText variant="h4" style={{ paddingBottom: 40 }}>
-              Information for order {order.OrderId}
+              Information for order {order.orderId}
             </DialogContentText>
           </>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" onClick={() => completeOrder(order)}>
+          <Button
+            variant="contained"
+            onClick={() => completeOrder({} as Order)}
+          >
             Mark As Completed
           </Button>
         </DialogActions>
