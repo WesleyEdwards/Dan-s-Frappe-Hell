@@ -3,7 +3,7 @@ import { Loading } from "../../components/Loading";
 import { Button, Container, Grid, Stack, Typography } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import {
-  getMenuItems,
+  getAllMenuItems,
   getOrdersByStatus,
   updateOrder,
 } from "../../api/api-functions";
@@ -17,7 +17,7 @@ export const CashierView: FC = () => {
   const [finishedOrders, setFinishedOrders] = useState<Order[]>();
 
   useEffect(() => {
-    getMenuItems().then(setMenuItems);
+    getAllMenuItems().then(setMenuItems);
     getOrdersByStatus("FINISHED").then((red) => {
       setFinishedOrders(red);
     });

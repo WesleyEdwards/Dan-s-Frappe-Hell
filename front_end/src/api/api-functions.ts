@@ -8,6 +8,7 @@ import {
   CreateIngredientType,
   Ingredient,
   IngredientType,
+  MappingOfIngredientToQuantity,
   MenuItem,
   Order,
   OrderStatus,
@@ -75,12 +76,25 @@ export function modifyUserPermission(
 export function getIngredients(): Promise<Ingredient[]> {
   return makeGetRequest("ingredients/").then((res) => res.ingredients);
 }
-export function getMenuItemById(id: string): Promise<MenuItem> {
-  return makeGetRequest(`menuitems/${id}`).then((res) => res.menuitem);
+
+export function getAllMenuItems(): Promise<MenuItem[]> {
+  return makeGetRequest("menuitems/").then((res) => res.menuitems);
 }
 
-export function getMenuItems(): Promise<MenuItem[]> {
-  return makeGetRequest("menuitems/").then((res) => res.menuitems);
+export function getActiveMenuItems(): Promise<MenuItem[]> {
+  return makeGetRequest("menuitems/active").then((res) => res.menuitems);
+}
+
+export function createMenuItem(
+  recipe: MappingOfIngredientToQuantity
+): Promise<MenuItem> {
+  return makeGetRequest(`menuitems/recipe/${JSON.stringify(recipe)}`).then(
+    (res) => res.menuitem
+  );
+}
+
+export function getMenuItemById(id: string): Promise<MenuItem> {
+  return makeGetRequest(`menuitems/${id}`).then((res) => res.menuitem);
 }
 
 export function getIngredientKinds(): Promise<IngredientType[]> {

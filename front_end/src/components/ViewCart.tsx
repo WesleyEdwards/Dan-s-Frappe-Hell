@@ -4,7 +4,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { DisplayOrder, MenuItem, Order } from "../api/models";
 import {
   getCartOrder,
-  getMenuItems,
+  getAllMenuItems,
   getOrdersByUser,
   updateOrder,
 } from "../api/api-functions";
@@ -40,7 +40,7 @@ export const ViewCart: FC = () => {
   const fetchCartOrder = async () => {
     if (!user) return;
     const myCart: Order = await getCartOrder(user.userId);
-    const menuItems: MenuItem[] = await getMenuItems();
+    const menuItems: MenuItem[] = await getAllMenuItems();
     setMyCart(myCart);
     const displayOrder: DisplayOrder = createDisplayOrderFromOrder(
       myCart,

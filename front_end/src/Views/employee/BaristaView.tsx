@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../../components/DFHeader";
 import { DisplayOrder, MenuItem, Order } from "../../api/models";
 import {
-  getMenuItems,
+  getAllMenuItems,
   getOrdersByStatus,
   updateOrder,
 } from "../../api/api-functions";
@@ -15,13 +15,16 @@ export const BaristaView: FC = () => {
     DisplayOrder[] | undefined | null
   >();
   const [refreshTrigger, setRefreshTrigger] = useState(false);
+  const [placedOrders, setPlacedOrders] = useState<
+    Order[] | undefined | null
+  >();
 
   const fetchPlacedOrders = async () => {
     setDisplayOrders(undefined);
-    const orders = await getOrdersByStatus("PLACED");
-    const menuItems: MenuItem[] = await getMenuItems();
-    console.log(orders);
+    const orders: Order[] = await getOrdersByStatus("PLACED");
+    const menuItems: MenuItem[] = await getAllMenuItems();
     const displayOrders = createDisplayOrders(orders, menuItems);
+    setPlacedOrders(orders);
     setDisplayOrders(displayOrders);
   };
 
@@ -29,11 +32,15 @@ export const BaristaView: FC = () => {
     fetchPlacedOrders();
   }, [refreshTrigger]);
 
-  const completeOrder = (order: Order) => {
-    updateOrder({
-      OrderId: order.OrderId,
-      Items: order.Items,
-      Favorite: order.Favorite,
+  const completeOrder = (orderId: number) => {
+    const updatedOrder: Order | undefined = (() => {
+      return placedOrders?.find((o) => o.OrderId === orderId);
+    })();
+    if (!updatedOrder) {
+      return Promise.reject("Error completing order");
+    }
+    return updateOrder({
+      ...updatedOrder,
       Status: "FINISHED",
     }).then(() => {
       getOrdersByStatus("PLACED").then(() =>
