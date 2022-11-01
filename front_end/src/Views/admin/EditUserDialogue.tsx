@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   FormControl,
   InputLabel,
   MenuItem,
@@ -12,6 +11,7 @@ import {
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { Permission } from "../../api/models";
+import DialogHeader from "../../components/DialogHeader";
 import { isPermissionString } from "../../utils/userHelperFunctions";
 import { UserRow } from "./CustomerList";
 
@@ -42,15 +42,12 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
     <Dialog open={user !== undefined} onClose={handleClose} fullWidth={true}>
       <DialogContent>
         <Stack gap="2rem">
-          <DialogContentText variant="h4" style={{ paddingBottom: 40 }}>
-            {user.name}
-          </DialogContentText>
-
+          <DialogHeader title={user.name} />
           <FormControl>
-            <InputLabel style={{ paddingBottom: 20 }}>Permission</InputLabel>
+            <InputLabel style={{ paddingBottom: 20 }}>Status</InputLabel>
             <Select
               value={newPermission}
-              label={"Permission"}
+              label={"Status"}
               onChange={(e) => {
                 setNewPermission(
                   isPermissionString(e.target.value) ? e.target.value : "None"
@@ -77,9 +74,7 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} variant="contained">
-          Cancel
-        </Button>
+        <Button onClick={handleClose}>Cancel</Button>
         <Button
           variant="contained"
           disabled={user.permission === newPermission}

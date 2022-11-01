@@ -2,10 +2,10 @@ import { Container, Stack, Typography } from "@mui/material";
 import React, { FC, useState } from "react";
 import CreateIngredient from "../../components/CreateIngredient";
 import { DFHeader } from "../../components/DFHeader";
-import { EditIngredientDialogue } from "../../components/EditIngredientDialogue";
 import IngredientsEdit, {
   IngredientRow,
 } from "../../components/IngredientsEdit";
+import ViewIngredientDialogue from "../../components/ViewIngredientDialogue";
 
 export const Inventory: FC = () => {
   const [selectedIngredient, setSelectedIngredient] = useState<
@@ -41,11 +41,13 @@ export const Inventory: FC = () => {
           />
         </Stack>
       </Container>
-      <EditIngredientDialogue
-        ingredient={selectedIngredient}
-        handleClose={handleClose}
-        submitIngredient={saveChangedIngredient}
-      />
+      {selectedIngredient && (
+        <ViewIngredientDialogue
+          ingredient={selectedIngredient}
+          handleClose={handleClose}
+          submitIngredient={saveChangedIngredient}
+        />
+      )}
     </>
   );
 };
