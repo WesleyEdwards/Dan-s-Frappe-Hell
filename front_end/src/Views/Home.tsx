@@ -6,7 +6,7 @@ import { Loading } from "../components/Loading";
 import {
   getCartOrder,
   getIngredients,
-  getMenuItems,
+  getActiveMenuItems,
   updateOrder,
 } from "../api/api-functions";
 import { mapMenuItemsToIngredients } from "../utils/helperFunctions";
@@ -20,7 +20,7 @@ export const Home: FC = () => {
 
   const fetchDrinks = async () => {
     setDrinks(undefined);
-    const menuItems = await getMenuItems();
+    const menuItems = await getActiveMenuItems();
     const ingredients = await getIngredients();
     const newDrinks = mapMenuItemsToIngredients(menuItems, ingredients);
     setDrinks(newDrinks);
@@ -35,9 +35,12 @@ export const Home: FC = () => {
     if (!cartOrder) return Promise.resolve();
     const newList: OrderItem[] = cartOrder.Items;
     newList.push(menuItem);
-    return updateOrder(cartOrder.OrderId, newList, false, "CART").then(
-      refreshUser
-    );
+    return updateOrder({
+      OrderId: cartOrder.OrderId,
+      Items: newList,
+      Favorite: cartOrder.Favorite,
+      Status: "CART",
+    }).then(refreshUser);
   };
 
   useEffect(() => {

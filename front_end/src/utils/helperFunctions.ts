@@ -4,12 +4,12 @@ import { matchPath, useLocation } from "react-router";
 import {
   Ingredient,
   MenuItem,
-  Permission,
   RecipeItem,
   Drink,
   Order,
   DisplayOrder,
   DisplayOrderItem,
+  MappingOfIngredientToQuantity,
 } from "../api/models";
 
 export function useRouteMatch(patterns: string[]) {
@@ -22,6 +22,10 @@ export function useRouteMatch(patterns: string[]) {
     }
   }
   return null;
+}
+
+export function roundToTwoDecimals(number: number): number {
+  return Math.round((number + Number.EPSILON) * 100) / 100;
 }
 
 export function formikTextFieldProps<T extends FormikValues>(
@@ -51,13 +55,6 @@ export function formikTextFieldNumberProps<T extends FormikValues>(
     onChange: formik.handleChange,
     error: formik.touched[field] && !!formik.errors[field],
   };
-}
-
-export function hasPermission(
-  userPermission: Permission,
-  requiredPermission: Permission
-): boolean {
-  return userPermission >= requiredPermission;
 }
 
 export function mapMenuItemsToIngredients(
@@ -102,39 +99,23 @@ export function createDisplayOrderFromOrder(
     totalPrice: order.TotalPrice,
   };
 }
-export function getUserPermissionString(perms: string): string {
-  if (perms === "0") {
-    return "None";
-  }
-  if (perms === "1") {
-    return "Customer";
-  }
-  if (perms === "2") {
-    return "Worker";
-  }
-  if (perms === "3") {
-    return "Manager";
-  }
-  if (perms === "4") {
-    return "Admin";
-  }
-  return "Unknown";
+
+export function createDisplayOrders(
+  order: Order[],
+  menuItems: MenuItem[]
+): DisplayOrder[] {
+  return order.map((order) => {
+    return createDisplayOrderFromOrder(order, menuItems);
+  });
 }
-export function getUserPermissionInt(perms: string): string {
-  if (perms === "None") {
-    return "0";
-  }
-  if (perms === "Customer") {
-    return "1";
-  }
-  if (perms === "Worker") {
-    return "2";
-  }
-  if (perms === "Manager") {
-    return "3";
-  }
-  if (perms === "Admin") {
-    return "4";
-  }
-  return "Unknown";
+
+export function recipeItemsToRawRecipeItems(
+  recipeItem: RecipeItem[]
+): MappingOfIngredientToQuantity {
+  const rawRecipeItems: MappingOfIngredientToQuantity = {};
+  recipeItem.map((item) => {
+    return (rawRecipeItems[item.ingredient.IngredientId.toString()] =
+      item.quantity);
+  });
+  return rawRecipeItems;
 }

@@ -25,7 +25,6 @@ def get_token():
         error = None
         status = 200
         user = getUserByEmail(email)
-        print(user.getPassword())
         if user is None:
             error = 'Incorrect email.'
             userJson = None

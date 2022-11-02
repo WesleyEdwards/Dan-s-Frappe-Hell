@@ -6,40 +6,41 @@ import {
   Select,
 } from "@mui/material";
 import React, { FC, useState } from "react";
-import { Ingredient } from "../api/models";
+import { RecipeItem } from "../api/models";
 
 interface IngredientSelectProps {
-  ingredient: Ingredient;
-  initialQuantity: number;
+  recipeItem: RecipeItem;
+  handleIngredientChange: (ingredient: RecipeItem) => void;
 }
 
 export const IngredientSelect: FC<IngredientSelectProps> = (props) => {
-  const { ingredient, initialQuantity } = props;
+  const { recipeItem, handleIngredientChange } = props;
 
   const [error, setError] = useState<string | undefined>();
-  const [selectedQuantity, setSelectedQuantity] =
-    useState<number>(initialQuantity);
 
   const handleChange = (newQuantity: string) => {
     setError(undefined);
     const selected = parseInt(newQuantity) ?? 0;
-    if (ingredient.Stock === undefined || ingredient.Stock === null) {
+    if (
+      recipeItem.ingredient.Stock === undefined ||
+      recipeItem.ingredient.Stock === null
+    ) {
       return;
     }
-    if (ingredient.Stock < selected) {
+    if (recipeItem.ingredient.Stock < selected) {
       setError("Sorry, there is not enough of this ingredient in stock");
     }
 
-    setSelectedQuantity(selected);
+    handleIngredientChange({ ...recipeItem, quantity: selected });
   };
 
   return (
     <FormControl error={!!error}>
-      <InputLabel>{ingredient.Name}</InputLabel>
+      <InputLabel>{recipeItem.ingredient.Name}</InputLabel>
       <Select
-        value={selectedQuantity.toString()}
-        label={ingredient.Name}
-        onChange={(e) => handleChange(e.target.value)}
+        value={recipeItem.quantity}
+        label={recipeItem.ingredient.Name}
+        onChange={(e) => handleChange(e.target.value.toString())}
       >
         <MenuItem value={0}>0</MenuItem>
         <MenuItem value={1}>1</MenuItem>
@@ -47,11 +48,6 @@ export const IngredientSelect: FC<IngredientSelectProps> = (props) => {
         <MenuItem value={3}>3</MenuItem>
         <MenuItem value={4}>4</MenuItem>
         <MenuItem value={5}>5</MenuItem>
-        <MenuItem value={6}>6</MenuItem>
-        <MenuItem value={7}>7</MenuItem>
-        <MenuItem value={8}>8</MenuItem>
-        <MenuItem value={9}>9</MenuItem>
-        <MenuItem value={10}>10</MenuItem>
       </Select>
       {error && <FormHelperText>{error}</FormHelperText>}
     </FormControl>

@@ -33,7 +33,7 @@ class Order:
         self.__items = items
         self.__totalPrice = totalPrice
         self.__status = self.convert_status(status)
-        self.__favorite = favorite
+        self.__favorite = favorite == True
 
     @classmethod
     def fromID(cls, id=0):
@@ -141,7 +141,9 @@ class Order:
             db.commit()
     
     def setFavorite(self, favorite:bool):
-        if not favorite == self.__favorite:
+        print("Setting Favorite",favorite, self.__favorite)
+        if not favorite is self.__favorite:
+            print("Not equal, setting")
             self.__favorite = favorite
             db = get_db()
             cur = db.cursor()
@@ -164,7 +166,7 @@ class Order:
             db = get_db()
             cur = db.cursor()
             print(type(self.getId()))
-            res = cur.execute(f"UPDATE Orders SET items = ?, totalPrice = ?",(json.dumps(items),self.__totalPrice, )).fetchall()
+            res = cur.execute(f"UPDATE Orders SET items = ?, totalPrice = ? WHERE OrderId = ?",(json.dumps(items),self.__totalPrice, self.getId())).fetchall()
             item = cur.execute(f"SELECT * FROM Orders where OrderId = ?", (self.getId(),)).fetchone()
             cur.close()
             db.commit()

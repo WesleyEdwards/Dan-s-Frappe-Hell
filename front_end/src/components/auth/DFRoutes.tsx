@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Permission } from "../../api/models";
 import { useAuth } from "../../utils/AuthContext";
-import { hasPermission } from "../../utils/helperFunctions";
+import { hasPermission } from "../../utils/userHelperFunctions";
 import { PrivateRoute } from "../../utils/PrivateRoute";
 import CustomerManagement from "../../Views/admin/CustomerManagement";
 import EmployeeManagement from "../../Views/admin/EmployeeManagement";
@@ -13,68 +13,74 @@ import Home from "../../Views/Home";
 import Login from "../../Views/Login";
 import Profile from "../../Views/Profile";
 
+interface RouteOption {
+  path: string;
+  element: JSX.Element;
+  permission: Permission | undefined;
+}
+
 export const DFRoutes: FC = () => {
   const { user } = useAuth();
 
-  const unAuthRoutes = [
+  const unAuthRoutes: RouteOption[] = [
     {
       path: "/login",
       element: <Login />,
-      permissionRequired: undefined,
+      permission: undefined,
     },
     {
       path: "/home",
       element: <Home />,
-      permissionRequired: undefined,
+      permission: undefined,
     },
   ];
-  const customerRoutes = [
+  const customerRoutes: RouteOption[] = [
     ...unAuthRoutes,
     {
       path: "/profile",
       element: <Profile />,
-      permissionRequired: Permission.CUSTOMER,
+      permission: "Customer",
     },
   ];
-  const workerRoutes = [
+  const workerRoutes: RouteOption[] = [
     ...customerRoutes,
     {
       path: "/cashier-view",
       element: <CashierView />,
-      permissionRequired: Permission.WORKER,
+      permission: "Employee",
     },
     {
       path: "/inventory",
       element: <Inventory />,
-      permissionRequired: Permission.WORKER,
+      permission: "Employee",
     },
     {
       path: "/barista-view",
       element: <BaristaView />,
-      permissionRequired: Permission.WORKER,
+      permission: "Employee",
     },
   ];
-  const adminRoutes = [
+  const adminRoutes: RouteOption[] = [
     ...workerRoutes,
     {
       path: "/customer-management",
       element: <CustomerManagement />,
-      permissionRequired: Permission.ADMIN,
+      permission: "Manager",
     },
     {
       path: "/employee-management",
       element: <EmployeeManagement />,
-      permissionRequired: Permission.ADMIN,
+      permission: "Manager",
     },
   ];
   const userRoutes = (() => {
     if (!user) {
       return unAuthRoutes;
     }
-    if (hasPermission(user.permissions, Permission.ADMIN)) {
+    if (hasPermission(user, "Manager")) {
       return adminRoutes;
     }
-    if (hasPermission(user.permissions, Permission.WORKER)) {
+    if (hasPermission(user, "Employee")) {
       return workerRoutes;
     }
     return customerRoutes;
@@ -84,14 +90,14 @@ export const DFRoutes: FC = () => {
     <Routes>
       {userRoutes.map((route, i) => (
         <>
-          {route.permissionRequired ? (
+          {route.permission ? (
             <Route
               key={i}
               path={route.path}
               element={
                 <PrivateRoute
                   path="/"
-                  permissionRequired={route.permissionRequired}
+                  permissionRequired={"None"}
                   element={route.element}
                 />
               }

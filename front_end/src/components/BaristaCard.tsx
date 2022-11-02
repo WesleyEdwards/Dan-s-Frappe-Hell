@@ -5,15 +5,21 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  Alert,
   DialogContentText,
-  Typography,
+  ListItemText,
+  ListItem,
+  List,
+  Divider,
+  CardActions,
+  DialogTitle,
 } from "@mui/material";
 import React, { FC, useState } from "react";
-import { Order } from "../api/models";
+import { DisplayOrder } from "../api/models";
 
 interface BaristaCardProps {
-  order: Order;
-  completeOrder: (o: Order) => void;
+  order: DisplayOrder;
+  completeOrder: (orderId: number) => Promise<unknown>;
 }
 
 export const BaristaCard: FC<BaristaCardProps> = (props) => {
@@ -22,34 +28,44 @@ export const BaristaCard: FC<BaristaCardProps> = (props) => {
   const handleClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [error, setError] = useState<string | undefined>();
+
   return (
     <>
-      <Card
-        onClick={handleClick}
-        style={{
-          cursor: "pointer",
-          minWidth: "200px",
-          minHeight: "200px",
-        }}
-      >
-        <CardContent style={{ justifyContent: "center" }}>
-          <Typography variant="h5" gutterBottom>
-            {order.OrderId}
-          </Typography>
+      <Card>
+        <CardContent>
+          <List>
+            {order.orderItems.map((item, i) => (
+              <ListItem key={i}>
+                <ListItemText
+                  primary={`(${item.quantity}) - ${item.drinkName}`}
+                />
+                <Divider />
+                {i <= order.orderItems.length && <Divider />}
+              </ListItem>
+            ))}
+          </List>
         </CardContent>
+        <CardActions>
+          <Button onClick={handleClick} variant="contained">
+            Complete
+          </Button>
+        </CardActions>
       </Card>
       <Dialog open={open} onClose={handleClose}>
-        <DialogContent style={{ width: 500 }}>
-          <>
-            <DialogContentText variant="h4" style={{ paddingBottom: 40 }}>
-              Information for order {order.OrderId}
-            </DialogContentText>
-          </>
-        </DialogContent>
+        <DialogTitle sx={{ p: "4rem" }}>Confirm Order Completion</DialogTitle>
+        {error && <Alert severity="error">{error}</Alert>}
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" onClick={() => completeOrder(order)}>
-            Mark As Completed
+          <Button
+            variant="contained"
+            onClick={() =>
+              completeOrder(order.orderId).catch(() =>
+                setError("Error completing order")
+              )
+            }
+          >
+            Complete
           </Button>
         </DialogActions>
       </Dialog>

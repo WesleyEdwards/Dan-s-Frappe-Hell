@@ -1,23 +1,23 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { FC, useEffect, useState } from "react";
 import { getAllUsers } from "../../api/api-functions";
+import { Permission } from "../../api/models";
 import { Loading } from "../../components/Loading";
-import { getUserPermissionString } from "../../utils/helperFunctions";
 
 interface CustomerListProps {
   refreshTrigger: boolean;
   setSelectedUser: (user: UserRow | undefined) => void;
-  permissionLevels: string[];
+  permissionLevels: Permission[];
 }
 
 export interface UserRow {
   id: string;
   name: string;
   email: string;
-  status: string;
+  permission: Permission;
 }
 
-export const IngredientsEdit: FC<CustomerListProps> = (props) => {
+export const CustomerList: FC<CustomerListProps> = (props) => {
   const [currentUsers, setCurrentUsers] = useState<UserRow[] | undefined>();
   const { refreshTrigger, setSelectedUser, permissionLevels } = props;
 
@@ -27,13 +27,12 @@ export const IngredientsEdit: FC<CustomerListProps> = (props) => {
     getAllUsers()
       .then((res) => {
         res.map((user) => {
-          const perms = user.permissions.toString();
-          if (permissionLevels.includes(perms)) {
+          if (permissionLevels.includes(user.permissions)) {
             return newList.push({
               id: user.userId,
               name: `${user.firstName} ${user.lastName}`,
               email: user.email,
-              status: getUserPermissionString(perms),
+              permission: user.permissions,
             });
           }
           return newList;
@@ -59,7 +58,7 @@ export const IngredientsEdit: FC<CustomerListProps> = (props) => {
       width: 150,
     },
     {
-      field: "status",
+      field: "permission",
       headerName: "Status",
       sortable: true,
       width: 150,
@@ -86,4 +85,4 @@ export const IngredientsEdit: FC<CustomerListProps> = (props) => {
   );
 };
 
-export default IngredientsEdit;
+export default CustomerList;

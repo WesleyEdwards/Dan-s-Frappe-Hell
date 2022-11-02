@@ -1,102 +1,142 @@
 import {
   Button,
-  Card,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
   DialogContentText,
   FormControl,
+  List,
+  ListItem,
+  ListItemText,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
-  Typography,
 } from "@mui/material";
-import { FC } from "react";
+import { FC, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Drink } from "../../api/models";
+import {
+  Drink,
+  RecipeItem,
+  MappingOfIngredientToQuantity,
+} from "../../api/models";
 import { IngredientSelect } from "../IngredientSelect";
+import { createMenuItem } from "../../api/api-functions";
+import {
+  recipeItemsToRawRecipeItems,
+  roundToTwoDecimals,
+} from "../../utils/helperFunctions";
+import { CustomOrderActions } from "./CustomOrderActions";
 
 export interface CustomOrderDrinkProps {
   drink: Drink;
+  customizeDrink: boolean;
+  setCustomDrink: (bool: boolean) => void;
   handleClose: () => void;
-  handleSubmit: () => Promise<unknown>;
-  standardDrink: () => void;
-  quantity: number;
-  setQuantity: (quantity: number) => void;
-  price: number;
+  handleSubmit: (
+    menuId: number,
+    quantity: number,
+    price: number
+  ) => Promise<unknown>;
 }
 
 export const CustomOrderDrink: FC<CustomOrderDrinkProps> = (props) => {
-  const {
-    drink,
-    handleClose,
-    handleSubmit,
-    standardDrink,
-    quantity,
-    setQuantity,
-    price,
-  } = props;
+  const { customizeDrink, drink, handleClose, handleSubmit, setCustomDrink } =
+    props;
+
+  const [error, setError] = useState<string | undefined>();
+  const [ingredients, setIngredients] = useState<RecipeItem[]>(drink.recipe);
+  const [price, setPrice] = useState(drink.menuItem.Price);
+  const [quantity, setQuantity] = useState(1);
+
+  const handleSubmitOrder = () => {
+    setError(undefined);
+    const newRecipe: MappingOfIngredientToQuantity =
+      recipeItemsToRawRecipeItems(ingredients);
+    createMenuItem(newRecipe)
+      .then((menu) => handleSubmit(menu.MenuId, quantity, price))
+      .catch(() => setError("Failed to add to cart"));
+  };
+
+  const handleIngredientChange = (recipeItem: RecipeItem) => {
+    ingredients.forEach((currentIngredient) => {
+      const currentIngredients = ingredients;
+      if (
+        currentIngredient.ingredient.IngredientId ===
+        recipeItem.ingredient.IngredientId
+      ) {
+        const changedQuantity: number =
+          recipeItem.quantity - currentIngredient.quantity;
+        const changedPrice: number =
+          changedQuantity * (recipeItem.ingredient.Upcharge ?? 0) * quantity;
+        const newPrice = roundToTwoDecimals(price + changedPrice);
+        setPrice(newPrice);
+        currentIngredients.splice(
+          currentIngredients.indexOf(currentIngredient),
+          1,
+          recipeItem
+        );
+        setIngredients([...currentIngredients]);
+      }
+    });
+  };
+
   return (
-    <>
-      <Stack padding="4rem" justifyContent="center" gap="2rem">
-        <Stack direction="row" gap="2rem" marginBottom="2rem">
-          <IconButton>
-            <ArrowBackIcon onClick={standardDrink} />
-          </IconButton>
-          <DialogContentText variant="h4" sx={{ flex: 1 }}>
-            {drink.menuItem.Name}
-          </DialogContentText>
-        </Stack>
-        {drink.recipe.map((recipeItem) => {
-          return (
-            <FormControl style={{ width: 400 }} error>
-              <IngredientSelect
-                ingredient={recipeItem.ingredient}
-                initialQuantity={recipeItem.quantity}
-              />
-            </FormControl>
-          );
-        })}
-        <Stack
-          direction="row"
-          gap="4rem"
-          justifyContent="left"
-          marginTop="2rem"
-          alignItems="center"
-        >
-          <FormControl sx={{ width: "8rem" }}>
-            <InputLabel>Quantity</InputLabel>
-            <Select
-              value={quantity.toString()}
-              label={"Quantity"}
-              onChange={(e) => setQuantity(parseInt(e.target.value) ?? 1)}
+    <Stack padding="4rem" justifyContent="center" gap="2rem">
+      {customizeDrink ? (
+        <>
+          <Stack direction="row" gap="2rem" marginBottom="2rem">
+            <IconButton>
+              <ArrowBackIcon onClick={() => setCustomDrink(false)} />
+            </IconButton>
+            <DialogContentText variant="h4" sx={{ flex: 1 }}>
+              {drink.menuItem.Name}
+            </DialogContentText>
+          </Stack>
+          {ingredients.map((recipeItem) => {
+            return (
+              <FormControl style={{ width: 400 }} error>
+                <IngredientSelect
+                  recipeItem={recipeItem}
+                  handleIngredientChange={handleIngredientChange}
+                />
+              </FormControl>
+            );
+          })}
+        </>
+      ) : (
+        <>
+          <Stack gap="2rem" marginBottom="2rem">
+            <DialogContentText variant="h4" sx={{ flex: 1 }}>
+              {drink.menuItem.Name}
+            </DialogContentText>
+            <Button
+              variant="contained"
+              sx={{ alignSelf: "flex-start" }}
+              onClick={() => setCustomDrink(true)}
             >
-              <MenuItem value={0}>0</MenuItem>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={4}>4</MenuItem>
-              <MenuItem value={5}>5</MenuItem>
-            </Select>
-          </FormControl>
-          <Typography variant="h5">{`$${price}`}</Typography>
-        </Stack>
-      </Stack>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button
-          onClick={() => {
-            alert("This feature is not yet implemented.");
-          }}
-          variant="contained"
-        >
-          Add To Cart
-        </Button>
-      </DialogActions>
-    </>
+              Customize
+            </Button>
+          </Stack>
+          <List>
+            {ingredients.map((recipeItem) => {
+              return (
+                <ListItem key={recipeItem.ingredient.IngredientId}>
+                  <ListItemText
+                    primary={`${recipeItem.ingredient.Name} - ${recipeItem.quantity}`}
+                  />
+                </ListItem>
+              );
+            })}
+          </List>
+        </>
+      )}
+
+      <CustomOrderActions
+        error={error}
+        handleSubmitOrder={handleSubmitOrder}
+        handleClose={handleClose}
+        price={price}
+        setPrice={setPrice}
+        quantity={quantity}
+        setQuantity={setQuantity}
+      />
+    </Stack>
   );
 };
 
