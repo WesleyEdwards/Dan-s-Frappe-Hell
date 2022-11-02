@@ -40,6 +40,7 @@ class Balance:
                 balance['BalanceId']
             )
         else:
+            # TODO: Should verify the user exists before creating a new balance.
             balance = cls(userId)
             balance.addToDatabase()
             return balance
