@@ -7,9 +7,9 @@ class Balance:
     __current_balance = 0
 
     def __init__(self, user_id, balance=0, id=0):
-        self.__id = id
-        self.__user_id = user_id
-        self.__current_balance = balance
+        self.__id = int(id)
+        self.__user_id = int(user_id)
+        self.__current_balance = float(balance)
 
     @classmethod
     def fromID(cls, id):

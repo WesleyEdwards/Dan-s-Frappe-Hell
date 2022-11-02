@@ -16,11 +16,11 @@ def get_id(id):
     error = None
     status = 200
     balancePayload = {}
+    balance = Balance.fromID(id)
     if not requester:
         status = 401
         error = "Invalid Token"
-    balance = Balance.fromID(id)
-    if balance == None:
+    elif balance == None:
         status = 404
         error = "No such balance"
     elif requester.getPermissions() < 1 and balance.getUserID() != requester.getId():
@@ -44,15 +44,14 @@ def get_user(id):
     error = None
     status = 200
     balancePayload = {}
-
+    balance = Balance.fromUserID(id)
     if not requester:
         status = 401
         error = "Invalid Token"
-    balance = Balance.fromUserID(id)
-    if balance == None:
+    elif balance == None:
         status = 404
         error = "No such user"
-    elif requester.getPermissions < 1 and balance.getUserID() != requester.getId():
+    elif requester.getPermissions() < 1 and balance.getUserID() != requester.getId():
         status = 403
         error = "Insufficient Privileges"
     if not error:
@@ -99,11 +98,11 @@ def increment(id, amt):
     error = None
     status = 200
     balancePayload = {}
+    balance = Balance.fromID(id)
     if not requester:
         status = 401
         error = "Invalid Token"
-    balance = Balance.fromID(id)
-    if balance == None:
+    elif balance == None:
         status = 404
         error = "No such balance"
     elif requester.getPermissions() < 1 and balance.getUserID() != requester.getId():
