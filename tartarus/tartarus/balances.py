@@ -65,6 +65,32 @@ def get_user(id):
         status
     )
 
+@bp.route('/store', method=(['GET']))
+def get_store():
+    """Gets the balance of the store"""
+    token = request.headers['Authorization'].split(' ')[-1]
+    requester,elevated = check_token(token,2)
+    error = None
+    status = 200
+    balancePayload = {}
+
+    if not requester:
+        status = 401
+        error = "Invalid Token"
+    elif not elevated:
+        status = 403
+        error = "Insufficient Privileges"
+    if not error:
+            balance = Balance.getStoreBalance()
+            balancePayload = balance.getJSON()
+    return (
+        {
+            'error':error,
+            'balance':balancePayload
+        },
+        status
+    )
+
 @bp.route('/<id>/increment/<amt>', method=(['GET']))
 def increment(id, amt):
     """Increments the balance at `id` by `amt`"""
