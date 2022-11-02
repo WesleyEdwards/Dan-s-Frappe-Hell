@@ -1,8 +1,4 @@
-import sqlite3
-from webbrowser import get
 from tartarus.db import get_db
-
-from colorama import Cursor
 
 class User:
     __id = 0

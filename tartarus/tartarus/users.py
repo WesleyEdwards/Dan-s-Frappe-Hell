@@ -1,5 +1,6 @@
 from .models.User import User, checkExistingUser, addUser, getUserByEmail, getUserById, getUserList, createUserJSON, updatePermissions, updateEmail, updateName, updatePassword
 from .auth import check_token
+from .employee import newEmployee
 from flask import(
     Blueprint, request
 )
@@ -57,12 +58,10 @@ def getAllUsers():
         error = "Incorrect Permissions"
         status = 403
     else:
-        i = 1
         for element in getUserList():
            user = User(element[2], element[3], element[1], element[4], element[5])
            user.setId(element[0])
            users.append(createUserJSON(user))
-           i += 1
     return (
         {
             'users': users,
@@ -82,8 +81,12 @@ def changePermissions():
     form = request.get_json()
     user = getUserById(form['userId'])
     newPerm = form['newPerm']
+    payRate = form['payRate']
+
     if(auth[1]):
         try:
+            if user.getPermissions() == 0 and newPerm > 0:
+                newEmployee(user.getId(), payRate)
             updatePermissions(user.getId(), newPerm)
             newUser = getUserById(user.getId())
         except Exception as ex:
