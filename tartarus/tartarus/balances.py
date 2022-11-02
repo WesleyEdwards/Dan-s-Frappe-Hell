@@ -36,7 +36,7 @@ def get_id(id):
         status
     )
 
-@bp.route('/user/<id>',method=(['GET']))
+@bp.route('/user/<id>',methods=(['GET']))
 def get_user(id):
     """Returns balance of user"""
     token = request.headers['Authorization'].split(' ')[-1]
@@ -65,7 +65,7 @@ def get_user(id):
         status
     )
 
-@bp.route('/store', method=(['GET']))
+@bp.route('/store', methods=(['GET']))
 def get_store():
     """Gets the balance of the store"""
     token = request.headers['Authorization'].split(' ')[-1]
@@ -91,7 +91,7 @@ def get_store():
         status
     )
 
-@bp.route('/<id>/increment/<amt>', method=(['GET']))
+@bp.route('/<id>/increment/<amt>', methods=(['GET']))
 def increment(id, amt):
     """Increments the balance at `id` by `amt`"""
     token = request.headers['Authorization'].split(' ')[-1]

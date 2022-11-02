@@ -60,6 +60,6 @@ def create_app(test_config=None):
 
     # Register Balance Endpoints
     from . import balances
-    app.register_blueprint(orders.bp)
+    app.register_blueprint(balances.bp)
 
     return app
