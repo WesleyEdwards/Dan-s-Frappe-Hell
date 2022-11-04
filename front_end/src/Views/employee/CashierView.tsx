@@ -11,21 +11,22 @@ export const CashierView: FC = () => {
   };
 
   return (
-    <Container maxWidth="lg">
-      <Stack direction="row" sx={{ height: "60rem" }}>
-        <Tabs
-          orientation="vertical"
-          value={tabValue}
-          onChange={handleChange}
-          sx={{ borderRight: 1, borderColor: "divider" }}
-        >
-          <Tab label="Pick-up" />
-          <Tab label="Place Order" />
-        </Tabs>
-
-        {tabValue === 0 ? <Pickup /> : <CashierCreateOrder />}
-      </Stack>
-    </Container>
+    <Stack direction="row">
+      <Tabs
+        orientation="vertical"
+        value={tabValue}
+        onChange={handleChange}
+        sx={{ borderRight: 1, borderColor: "divider", minWidth: "14rem" }}
+      >
+        <Tab label="Pick-up" />
+        <Tab label="Place Order" />
+      </Tabs>
+      <Container maxWidth="lg">
+        <Stack direction="row">
+          {tabValue === 0 ? <Pickup /> : <CashierCreateOrder />}
+        </Stack>
+      </Container>
+    </Stack>
   );
 };
 
