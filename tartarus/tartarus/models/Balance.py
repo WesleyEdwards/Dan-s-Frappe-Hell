@@ -75,7 +75,7 @@ class Balance:
         }
 
     def increment_balance(self, amt: float):
-        self.__current_balance += amt
+        self.__current_balance += abs(amt)
         db = get_db()
         cur = db.cursor()
         cur.execute(f"UPDATE Balances SET CurrentBalance = {self.getBalance()} WHERE BalanceId = {self.getId()}")
@@ -85,7 +85,7 @@ class Balance:
     def decrement_balance(self, amt: float):
         if amt > 0:
             amt = -amt
-        if self.getBalance + amt < 0:
+        if self.getBalance() + amt < 0:
             raise TartarusException("Balance cannot go below 0")
         self.__current_balance += amt
         db = get_db()

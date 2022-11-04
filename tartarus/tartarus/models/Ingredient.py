@@ -1,4 +1,6 @@
 from tartarus.db import get_db
+from tartarus.models.TartarusException import TartarusException
+from .Balance import Balance
 from enum import Enum
 class Ingredient:
     __id = 0
@@ -123,8 +125,18 @@ class Ingredient:
             cur.close()
             db.commit()
 
-    def setStock(self, stock:int):
+    def setStock(self, stock:int, Purchasing=True):
+        """Sets the stock, deducts from store balance if Purchasing == True"""
         if self.__stock != stock:
+            if stock < 0:
+                raise TartarusException("Cannot reduce Quantity Below 0")
+            change = stock - self.__stock
+            balance = Balance.getStoreBalance()
+            if Purchasing:
+                if change > 0:
+                    balance.decrement_balance(change * self.getPrice())
+                else:
+                    balance.increment_balance(abs(change * self.setPrice()))
             self.__stock = stock
             db = get_db()
             cur = db.cursor()
@@ -140,6 +152,16 @@ class Ingredient:
             cur.execute(f"UPDATE Ingredients SET upcharge = {upcharge} WHERE IngredientId = {self.getId()}")
             cur.close()
             db.commit()
+
+    def canFulfill(self, qty:int) -> bool:
+        """Checks to see if there is enough stock of an ingredient to meet the demand"""
+        return self.getStock() >= abs(qty)
+    
+    def subtractQuantity(self, qty:int) -> bool:
+        """Subtracts the quantity of the ingredient from the store"""            
+        self.setStock(self.getStock() - abs(qty), Purchasing=False)
+        return True
+
 
     @staticmethod
     def convert_kind( kind: 'str|int|Kind') -> Kind:
