@@ -59,7 +59,7 @@ export const EditStockDialogue: FC<EditStockDialogueProps> = (props) => {
           </Stack>
           {addStock > 0 && (
             <Alert severity="info">
-              This will deduct {stockCost} from the store balance
+              This will deduct ${stockCost} from the store balance
             </Alert>
           )}
         </Stack>
