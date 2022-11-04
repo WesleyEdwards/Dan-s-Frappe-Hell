@@ -133,6 +133,21 @@ class MenuItem:
     def getImagePath(self):
         return self.__imagepath
 
+    def canFulfill(self, qty) -> bool:
+        """Returns true if has enough stock to fulfill the amount of drinks"""
+        for k in self.getRecipe():
+            ing = Ingredient.fromID(k)
+            if not ing.canFulfill(self.getRecipe()[k]*abs(qty)):
+                return False
+        return True
+    
+    def subtractQuantity(self, qty) -> bool:
+        """Subtracts the qty of each ingredient from store and returns true"""
+        for k in self.getRecipe():
+            ing = Ingredient.fromID(k)
+            ing.subtractQuantity(self.getRecipe()[k]*abs(qty))
+        return True
+
     def getJson(self):
         """Returns dictionary representation of MenuItem"""
         return {
