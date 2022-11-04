@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { FC, useState } from "react";
+import { roundToTwoDecimals } from "../utils/helperFunctions";
 import DialogHeader from "./DialogHeader";
 import { IngredientRow } from "./IngredientsEdit";
 
@@ -27,17 +28,19 @@ export const EditStockDialogue: FC<EditStockDialogueProps> = (props) => {
     if (!ingredient) return;
     submitIngredient({
       ...ingredient,
-      stock: addStock,
+      stock: addStock + ingredient.stock,
     });
     handleClose();
   };
+
+  const stockCost = roundToTwoDecimals(addStock * ingredient.price);
 
   return (
     <>
       <DialogContent>
         <Stack gap="2rem">
           <DialogHeader title={ingredient.name} onEdit={editIngredient} />
-          <Typography>Current Stock: TODO</Typography>
+          <Typography>Current Stock: {ingredient.stock}</Typography>
           <Divider />
           <Stack
             direction="row"
@@ -56,7 +59,7 @@ export const EditStockDialogue: FC<EditStockDialogueProps> = (props) => {
           </Stack>
           {addStock > 0 && (
             <Alert severity="info">
-              This will deduct TODO from the store balance
+              This will deduct {stockCost} from the store balance
             </Alert>
           )}
         </Stack>

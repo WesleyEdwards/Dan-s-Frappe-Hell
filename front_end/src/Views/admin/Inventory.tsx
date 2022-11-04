@@ -1,5 +1,7 @@
 import { Container, Stack, Typography } from "@mui/material";
 import React, { FC, useState } from "react";
+import { editIngredient } from "../../api/api-functions";
+import { Ingredient } from "../../api/models";
 import CreateIngredient from "../../components/CreateIngredient";
 import { DFHeader } from "../../components/DFHeader";
 import IngredientsEdit, {
@@ -15,7 +17,15 @@ export const Inventory: FC = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false);
 
   const saveChangedIngredient = (ingredient: IngredientRow) => {
-    alert("Edit ingredient is not implemented yet");
+    const editedIngredient: Ingredient = {
+      IngredientId: ingredient.id,
+      Name: ingredient.name,
+      Kind: ingredient.kind,
+      Price: ingredient.price,
+      Stock: ingredient.stock,
+      Upcharge: ingredient.upCharge,
+    };
+    editIngredient(editedIngredient);
     setRefreshTrigger(!refreshTrigger);
     handleClose();
   };

@@ -31,14 +31,12 @@ export const ViewIngredientDialogue: FC<EditIngredientDialogueProps> = (
           handleBack={() => setEditIngredient(false)}
         />
       ) : (
-        <>
-          <EditStockDialogue
-            ingredient={ingredient}
-            handleClose={handleClose}
-            submitIngredient={submitIngredient}
-            editIngredient={() => setEditIngredient(true)}
-          />
-        </>
+        <EditStockDialogue
+          ingredient={ingredient}
+          handleClose={handleClose}
+          submitIngredient={submitIngredient}
+          editIngredient={() => setEditIngredient(true)}
+        />
       )}
     </Dialog>
   );
