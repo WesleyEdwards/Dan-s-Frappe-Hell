@@ -80,10 +80,14 @@ def changePermissions():
 
     form = request.get_json()
     user = getUserById(form['userId'])
+    if user == None:
+        print("No User Found")
     newPerm = form['newPerm']
     payRate = form['payRate']
-
-    if(auth[1]):
+    if auth[0] is None:
+        error = "No User Found"
+        status = 403
+    elif(auth[1]):
         try:
             if user.getPermissions() == 0 and newPerm > 0:
                 newEmployee(user.getId(), payRate)
