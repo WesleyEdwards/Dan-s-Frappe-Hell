@@ -2,6 +2,8 @@ import functools
 import time
 import jwt
 import json
+
+from tartarus.models.TartarusException import TartarusException
 from .models.User import User
 from .models.Ingredient import Ingredient
 from .auth import check_token
@@ -92,11 +94,19 @@ def update_ingredient():
     if status == 200:
         data = request.get_json()
         ingredient = Ingredient.fromID(data['IngredientId'])
-        ingredient.setName(data['Name'])
-        ingredient.setKind(data['Kind'])
-        ingredient.setPrice(data['Price'])
-        ingredient.setStock(data['Stock'])
-        ingredient.setUpcharge(data['Upcharge'])
+        try:
+            ingredient.setName(data['Name'])
+            ingredient.setKind(data['Kind'])
+            ingredient.setPrice(data['Price'])
+            ingredient.setUpcharge(data['Upcharge'])
+            ingredient.setStock(data['Stock'])
+        except TartarusException as t:
+            error = str(t)
+            status = 400
+        except Exception as e:
+            error = "Invalid Operation"
+            status = 400
+
         ingredientPayload = ingredient.getJson()
     return (
         {

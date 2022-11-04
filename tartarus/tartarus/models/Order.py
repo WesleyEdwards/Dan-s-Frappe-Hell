@@ -2,8 +2,10 @@ from datetime import datetime
 import json
 from tartarus.db import get_db
 from enum import Enum
+from tartarus.models.Ingredient import Ingredient
 
 from tartarus.models.MenuItem import MenuItem
+from tartarus.models.Balance import Balance
 from tartarus.models.TartarusException import TartarusException
 from tartarus.models.User import User, getUserById
 class Order:
@@ -33,7 +35,7 @@ class Order:
         self.__items = items
         self.__totalPrice = totalPrice
         self.__status = self.convert_status(status)
-        self.__favorite = favorite
+        self.__favorite = favorite == True
 
     @classmethod
     def fromID(cls, id=0):
@@ -141,7 +143,9 @@ class Order:
             db.commit()
     
     def setFavorite(self, favorite:bool):
-        if not favorite == self.__favorite:
+        print("Setting Favorite",favorite, self.__favorite)
+        if not favorite is self.__favorite:
+            print("Not equal, setting")
             self.__favorite = favorite
             db = get_db()
             cur = db.cursor()
@@ -164,7 +168,7 @@ class Order:
             db = get_db()
             cur = db.cursor()
             print(type(self.getId()))
-            res = cur.execute(f"UPDATE Orders SET items = ?, totalPrice = ?",(json.dumps(items),self.__totalPrice, )).fetchall()
+            res = cur.execute(f"UPDATE Orders SET items = ?, totalPrice = ? WHERE OrderId = ?",(json.dumps(items),self.__totalPrice, self.getId())).fetchall()
             item = cur.execute(f"SELECT * FROM Orders where OrderId = ?", (self.getId(),)).fetchone()
             cur.close()
             db.commit()
@@ -180,6 +184,18 @@ class Order:
         if self.__status != status:
             if status.value -1 != self.__status.value:
                 raise ValueError(f"Cannot increment status from {self.__status} to {status}")
+            if status == self.Status.PLACED:
+                # Make sure We can actually perform the operation
+                # Sufficient Ingredients + Balance
+                self.__canFulfill()
+                # Decrement user balance, increment store balance
+                usr = Balance.fromUserID(self.getUserId())
+                store = Balance.getStoreBalance()
+                self.__totalPrice = self.__calculateTotalPrice()
+                usr.decrement_balance(self.__totalPrice)
+                store.increment_balance(self.__totalPrice)
+                # Decrement Stock
+                self.__subtractItems()
             self.__status = status
             db = get_db()
             cur = db.cursor()
@@ -194,6 +210,31 @@ class Order:
             cur.close()
             db.commit()
 
+    def __canFulfill(self) -> bool:
+        """
+        Calculates whether an order can be fulfilled or not
+
+        Returns true if it can, raise an exception otherwise
+        """
+        # Check enough in balance
+        bal = Balance.fromUserID(self.getUserId())
+        if bal.getBalance() - self.getTotalPrice() < 0:
+            raise TartarusException("Insufficient Balance")
+        
+        # Check enough ingredients
+        for i in self.getItems():
+            item = MenuItem.fromID(i["menuId"])
+            if not item.canFulfill(i["quantity"]):
+                raise TartarusException("Insufficient Ingredients")
+        return True
+
+    def __subtractItems(self) -> bool:
+        """Subtracts the ingredients from storage on an order"""
+        for i in self.getItems():
+            item = MenuItem.fromID(i["menuId"])
+            item.subtractQuantity(i["quantity"])
+        return True
+    
     def __calculateTotalPrice(self):
         """Goes through and gets the price of each MenuItem in the order, and returns the total + tax"""
         TAX = 0.07

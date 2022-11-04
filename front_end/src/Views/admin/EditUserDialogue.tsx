@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   FormControl,
   InputLabel,
   MenuItem,
@@ -11,17 +10,21 @@ import {
   Stack,
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import { getUserPermissionInt } from "../../utils/helperFunctions";
+import { Permission } from "../../api/models";
+import DialogHeader from "../../components/DialogHeader";
+import { isPermissionString } from "../../utils/userHelperFunctions";
 import { UserRow } from "./CustomerList";
 
 interface EditUserDialogueProps {
   user: UserRow | undefined;
   handleClose: () => void;
-  submitUser: (userId: string, newPerm: string) => void;
+  submitUser: (userId: string, newPerm: Permission) => void;
 }
 export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
   const { user, handleClose, submitUser } = props;
-  const [newPermission, setNewPermission] = useState<string | undefined>();
+  const [newPermission, setNewPermission] = useState<Permission>(
+    user?.permission ?? "None"
+  );
 
   const handleSubmit = () => {
     if (!user || !newPermission) return;
@@ -29,41 +32,41 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
   };
 
   useEffect(() => {
-    setNewPermission(getUserPermissionInt(user?.status ?? "0"));
+    if (!user) return;
+    setNewPermission(user.permission);
   }, [user]);
 
   if (!newPermission || !user) return <></>;
-  console.log("newPermission", newPermission);
+
   return (
     <Dialog open={user !== undefined} onClose={handleClose} fullWidth={true}>
       <DialogContent>
         <Stack gap="2rem">
-          <DialogContentText variant="h4" style={{ paddingBottom: 40 }}>
-            {user.name}
-          </DialogContentText>
-
+          <DialogHeader title={user.name} />
           <FormControl>
-            <InputLabel style={{ paddingBottom: 20 }}>Permission</InputLabel>
+            <InputLabel style={{ paddingBottom: 20 }}>Status</InputLabel>
             <Select
               value={newPermission}
-              label={"Permission"}
+              label={"Status"}
               onChange={(e) => {
-                setNewPermission(e.target.value);
+                setNewPermission(
+                  isPermissionString(e.target.value) ? e.target.value : "None"
+                );
               }}
             >
-              <MenuItem key={"0"} value={"0"}>
+              <MenuItem key={"None"} value={"None"}>
                 None
               </MenuItem>
-              <MenuItem key={"1"} value={"1"}>
+              <MenuItem key={"Customer"} value={"Customer"}>
                 Customer
               </MenuItem>
-              <MenuItem key={"2"} value={"2"}>
-                Worker
+              <MenuItem key={"Employee"} value={"Employee"}>
+                Employee
               </MenuItem>
-              <MenuItem key={"3"} value={"3"}>
+              <MenuItem key={"Manager"} value={"Manager"}>
                 Manager
               </MenuItem>
-              <MenuItem key={"4"} value={"4"}>
+              <MenuItem key={"Admin"} value={"Admin"}>
                 Admin
               </MenuItem>
             </Select>
@@ -71,12 +74,10 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} variant="contained">
-          Cancel
-        </Button>
+        <Button onClick={handleClose}>Cancel</Button>
         <Button
           variant="contained"
-          disabled={getUserPermissionInt(user.status) === newPermission}
+          disabled={user.permission === newPermission}
           onClick={handleSubmit}
         >
           Save

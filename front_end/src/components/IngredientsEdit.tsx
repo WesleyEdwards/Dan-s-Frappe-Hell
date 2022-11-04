@@ -1,11 +1,12 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { FC, useEffect, useState } from "react";
 import { getIngredients } from "../api/api-functions";
+import { IngredientType } from "../api/models";
 import { Loading } from "./Loading";
 
 export interface IngredientRow {
   id: string;
-  kind: string;
+  kind: IngredientType;
   name: string;
   price: number;
   upCharge: number;

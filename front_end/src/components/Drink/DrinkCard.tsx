@@ -1,8 +1,7 @@
 import { Card, CardContent, Dialog, Typography } from "@mui/material";
-import { FC, useState, useEffect } from "react";
+import { FC, useState } from "react";
 import { Drink, OrderItem } from "../../api/models";
 import CustomOrderDrink from "./CustomOrderDrink";
-import OrderDrink from "./OrderDrink";
 
 interface DrinkCardProps {
   drink: Drink;
@@ -14,28 +13,20 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
 
   const [open, setOpen] = useState(false);
   const [customizeDrink, setCustomizeDrink] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState(drink.menuItem.Price);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setQuantity(1);
     setCustomizeDrink(false);
     setOpen(false);
   };
 
-  const handleSubmit = () => {
-    // handleAddToCart(modifiedDrink);
+  const handleSubmit = (menuId: number, quantity: number, price: number) => {
     return handleAddToCart({
-      menuId: drink.menuItem.MenuId,
+      menuId: menuId,
       quantity: quantity,
       price: price,
     }).then(handleClose);
   };
-
-  useEffect(() => {
-    setPrice(Math.round(drink.menuItem.Price * quantity * 100) / 100);
-  }, [drink, quantity]);
 
   return (
     <>
@@ -54,27 +45,13 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
         </CardContent>
       </Card>
       <Dialog open={open} onClose={handleClose} fullWidth>
-        {customizeDrink ? (
-          <CustomOrderDrink
-            drink={drink}
-            handleClose={handleClose}
-            handleSubmit={handleSubmit}
-            standardDrink={() => setCustomizeDrink(false)}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            price={price}
-          />
-        ) : (
-          <OrderDrink
-            drink={drink}
-            handleClose={handleClose}
-            handleSubmit={handleSubmit}
-            customizeDrink={() => setCustomizeDrink(true)}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            price={price}
-          />
-        )}
+        <CustomOrderDrink
+          customizeDrink={customizeDrink}
+          drink={drink}
+          handleClose={handleClose}
+          handleSubmit={handleSubmit}
+          setCustomDrink={setCustomizeDrink}
+        />
       </Dialog>
     </>
   );

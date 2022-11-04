@@ -6,31 +6,21 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { loginUser } from "../api/api-functions";
+import { createUser, loginUser, NewUserProps } from "../api/api-functions";
 import { User } from "../api/models";
 
 interface Context {
   user: User | null | undefined;
-  createAccount: (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string
-  ) => Promise<void>;
-  login: (email: string, password: string) => Promise<string | undefined>;
+  createAccount: (newUserProps: NewUserProps) => Promise<User | null>;
+  login: (email: string, password: string) => Promise<User | null>;
   logout: () => void;
   refreshUser: () => void;
 }
 
 const AuthContext = createContext<Context>({
   user: undefined,
-  createAccount: {} as (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string
-  ) => Promise<void>,
-  login: {} as (email: string, password: string) => Promise<string | undefined>,
+  createAccount: {} as (newUserProps: NewUserProps) => Promise<User | null>,
+  login: {} as (email: string, password: string) => Promise<User | null>,
   logout: {} as () => void,
   refreshUser: {} as () => void,
 });
@@ -45,33 +35,23 @@ type AuthProps = {
 
 export const AuthProvider: FC<AuthProps> = (props) => {
   const { children } = props;
-  const [currentUser, setCurrentUser] = useState<User | null>();
+  const [user, setUser] = useState<User | null>();
   const [refreshTrigger, setRefreshTrigger] = useState(false);
   //   const [loading, setLoading] = useState(false);
 
-  const createAccount = (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string
-  ) => {
-    return Promise.resolve();
+  const createAccount = (newUserProps: NewUserProps) => {
+    return createUser(newUserProps);
   };
 
   const login = (email: string, password: string) => {
-    return loginUser(email, password).then((res) => {
-      if (res.user !== null && res.user !== undefined) {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("userObject", JSON.stringify(res.user));
-        setCurrentUser(res.user);
-        return "success";
-      }
-      return undefined;
+    return loginUser(email, password).then((user) => {
+      setUser(user);
+      return user;
     });
   };
 
   const logout = () => {
-    setCurrentUser(null);
+    setUser(null);
     localStorage.clear();
   };
   const refreshUser = () => {
@@ -79,18 +59,17 @@ export const AuthProvider: FC<AuthProps> = (props) => {
   };
 
   useEffect(() => {
-    console.log("refreshing user");
-    setCurrentUser(undefined);
+    setUser(undefined);
     if (localStorage.getItem("userObject")) {
-      setCurrentUser(JSON.parse(localStorage.getItem("userObject") || ""));
+      setUser(JSON.parse(localStorage.getItem("userObject") || ""));
     }
   }, [refreshTrigger]);
 
   const contextValue: Context = {
-    user: currentUser,
-    createAccount: createAccount,
+    user,
     login,
     logout,
+    createAccount,
     refreshUser,
   };
 

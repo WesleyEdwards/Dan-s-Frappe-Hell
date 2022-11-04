@@ -1,29 +1,25 @@
-import { Button } from "@mui/material";
+import { Button, Dialog } from "@mui/material";
 import React, { FC, useState } from "react";
 import { createIngredient } from "../api/api-functions";
 import { IngredientType } from "../api/models";
-import { EditIngredientDialogue } from "./EditIngredientDialogue";
+import { useAuth } from "../utils/AuthContext";
+import { hasPermission } from "../utils/userHelperFunctions";
 import { IngredientRow } from "./IngredientsEdit";
+import NewIngredientDialogue from "./NewIngredientDialogue";
 
 interface CreateIngredientProps {
   refreshIngredientList: () => void;
 }
 export const CreateIngredient: FC<CreateIngredientProps> = (props) => {
   const { refreshIngredientList } = props;
-  const [ingredient, setIngredient] = useState<IngredientRow | undefined>();
+  const { user } = useAuth();
+  const [open, setOpen] = useState(false);
 
   const handleClose = () => {
-    setIngredient(undefined);
+    setOpen(false);
   };
   const handleOpen = () => {
-    setIngredient({
-      id: "-1",
-      kind: IngredientType.ADDIN,
-      name: "",
-      price: 0,
-      upCharge: 0,
-      stock: 0,
-    });
+    setOpen(true);
   };
 
   const createNewIngredient = (ingredient: IngredientRow) => {
@@ -39,15 +35,18 @@ export const CreateIngredient: FC<CreateIngredientProps> = (props) => {
   };
   return (
     <>
-      <Button onClick={handleOpen} variant="contained">
-        New Ingredient
-      </Button>
-      <EditIngredientDialogue
-        ingredient={ingredient}
-        handleClose={handleClose}
-        newIngredient={true}
-        submitIngredient={createNewIngredient}
-      />
+      {hasPermission(user, "Manager") && (
+        <Button onClick={handleOpen} variant="contained">
+          New Ingredient
+        </Button>
+      )}
+      <Dialog open={open} onClose={handleClose} fullWidth={true}>
+        <NewIngredientDialogue
+          handleClose={handleClose}
+          newIngredient={true}
+          submitIngredient={createNewIngredient}
+        />
+      </Dialog>
     </>
   );
 };

@@ -1,69 +1,32 @@
-import { DFHeader } from "../../components/DFHeader";
-import { Loading } from "../../components/Loading";
-import { Button, Container, Grid, Stack, Typography } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
-import {
-  getMenuItems,
-  getOrdersByStatus,
-  updateOrder,
-} from "../../api/api-functions";
-import { MenuItem, Order } from "../../api/models";
-import CashierCreateOrder from "../../components/CashierCreateOrder";
-import { useAuth } from "../../utils/AuthContext";
+import { Container, Stack, Tabs, Tab } from "@mui/material";
+import React, { FC, useState } from "react";
+import Pickup from "./Pickup";
+import CashierCreateOrder from "./CashierCreateOrder";
 
 export const CashierView: FC = () => {
-  const { refreshUser } = useAuth();
-  const [menuitems, setMenuItems] = useState<MenuItem[]>();
-  const [finishedOrders, setFinishedOrders] = useState<Order[]>();
+  const [tabValue, setTabValue] = useState(0);
 
-  useEffect(() => {
-    getMenuItems().then(setMenuItems);
-    getOrdersByStatus("FINISHED").then((red) => {
-      setFinishedOrders(red);
-    });
-  }, []);
-
-  if (!menuitems) return <Loading />;
-
-  const completeOrder = (order: Order) => {
-    updateOrder(order.OrderId, order.Items, order.Favorite, "FULFILLED")
-      .then((res) => {
-        getOrdersByStatus("FINISHED").then((red) => {
-          setFinishedOrders(red);
-        });
-      })
-      .then(refreshUser);
+  const handleChange = () => {
+    setTabValue(tabValue === 0 ? 1 : 0);
   };
 
-  if (!finishedOrders || !menuitems) return <Loading />;
-
   return (
-    <Container maxWidth="md">
-      <Stack gap="2rem" justifyContent="center">
-        <DFHeader title="Cashier Portal" />
-        <CashierCreateOrder />
-        <Typography variant="h5" gutterBottom>
-          Customer Pickup
-        </Typography>
-        <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
-          {finishedOrders.map((order) => {
-            return (
-              <div key={order.OrderId}>
-                <Typography>Order {order.OrderId}</Typography>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    completeOrder(order);
-                  }}
-                >
-                  Mark as completed
-                </Button>
-              </div>
-            );
-          })}
-        </Grid>
-      </Stack>
-    </Container>
+    <Stack direction="row">
+      <Tabs
+        orientation="vertical"
+        value={tabValue}
+        onChange={handleChange}
+        sx={{ borderRight: 1, borderColor: "divider", minWidth: "14rem" }}
+      >
+        <Tab label="Pick-up" />
+        <Tab label="Place Order" />
+      </Tabs>
+      <Container maxWidth="lg">
+        <Stack direction="row">
+          {tabValue === 0 ? <Pickup /> : <CashierCreateOrder />}
+        </Stack>
+      </Container>
+    </Stack>
   );
 };
 

@@ -41,15 +41,11 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
     onSubmit: (values, { setSubmitting }) => {
       setError(null);
       login(values.password, values.email)
-        .then((res) => {
-          if (res === "success") {
-            navigateToHome();
-          } else {
-            setError("Invalid email or password.");
-          }
+        .then((user) => {
+          if (user) navigateToHome();
         })
         .then(() => setSubmitting(false))
-        .catch((err) => {
+        .catch(() => {
           setError("Invalid email or password.");
           setSubmitting(false);
         });
