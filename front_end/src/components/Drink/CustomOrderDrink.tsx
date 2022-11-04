@@ -22,6 +22,7 @@ import {
   roundToTwoDecimals,
 } from "../../utils/helperFunctions";
 import { CustomOrderActions } from "./CustomOrderActions";
+import DialogHeader from "../DialogHeader";
 
 export interface CustomOrderDrinkProps {
   drink: Drink;
@@ -80,14 +81,11 @@ export const CustomOrderDrink: FC<CustomOrderDrinkProps> = (props) => {
     <Stack padding="4rem" justifyContent="center" gap="2rem">
       {customizeDrink ? (
         <>
-          <Stack direction="row" gap="2rem" marginBottom="2rem">
-            <IconButton>
-              <ArrowBackIcon onClick={() => setCustomDrink(false)} />
-            </IconButton>
-            <DialogContentText variant="h4" sx={{ flex: 1 }}>
-              {drink.menuItem.Name}
-            </DialogContentText>
-          </Stack>
+          <DialogHeader
+            title={drink.menuItem.Name}
+            onBack={() => setCustomDrink(false)}
+          />
+
           {ingredients.map((recipeItem) => {
             return (
               <FormControl style={{ width: 400 }} error>
@@ -101,18 +99,11 @@ export const CustomOrderDrink: FC<CustomOrderDrinkProps> = (props) => {
         </>
       ) : (
         <>
-          <Stack gap="2rem" marginBottom="2rem">
-            <DialogContentText variant="h4" sx={{ flex: 1 }}>
-              {drink.menuItem.Name}
-            </DialogContentText>
-            <Button
-              variant="contained"
-              sx={{ alignSelf: "flex-start" }}
-              onClick={() => setCustomDrink(true)}
-            >
-              Customize
-            </Button>
-          </Stack>
+          <DialogHeader
+            title={drink.menuItem.Name}
+            onEdit={() => setCustomDrink(true)}
+            editTitle="Customize"
+          />
           <List>
             {ingredients.map((recipeItem) => {
               return (
