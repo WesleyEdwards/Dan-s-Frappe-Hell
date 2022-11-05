@@ -1,6 +1,7 @@
 from .models.User import User, checkExistingUser, addUser, getUserByEmail, getUserById, getUserList, createUserJSON, updatePermissions, updateEmail, updateName, updatePassword
 from .auth import check_token
 from .employee import newEmployee
+from .models.Employee import getEmployee
 from flask import(
     Blueprint, request
 )
@@ -71,7 +72,7 @@ def changePermissions():
         status = 403
     elif(auth[1]):
         try:
-            if user.getPermissions() == 0 and newPerm > 0:
+            if getEmployee(user.getId()) == None:
                 newEmployee(user.getId(), payRate)
             updatePermissions(user.getId(), newPerm)
             newUser = getUserById(user.getId())

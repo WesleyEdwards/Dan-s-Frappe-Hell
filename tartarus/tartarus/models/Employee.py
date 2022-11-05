@@ -6,7 +6,7 @@ class Employee:
     __PayRate = 0
     __HireDate = None
     __HoursWorked = 0
-    def __init__(self, userId, payRate, hireDate) -> None:
+    def __init__(self, userId, payRate, hireDate):
         self.__userId = userId
         self.__PayRate = payRate
         self.__HireDate = hireDate
@@ -49,7 +49,7 @@ def getEmployee(userId):
 def getAllHoursWorked():
     db = get_db()
     cur = db.cursor()
-    output = cur.execute('select userId, HoursWorked, PayRate from Employees')
+    output = cur.execute('select userId, HoursWorked, PayRate from Employees where HoursWorked > 0')
     return output.fetchall()
 
 def getEmployeeHoursWorked(userId):
@@ -77,6 +77,11 @@ def createEmployee(employee: Employee):
     cur = db.cursor()
     cur.execute(f"insert into Employees (UserId, PayRate, HireDate, HoursWorked) values ({employee.getUserId()}, {employee.getPayRate()}, '{employee.getHireDate()}', 0)")
     db.commit()
+
+def resetHours():
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(f"update Employees set HoursWorked = 0")
 
 def createEmployeeJSON(emp: Employee):
     id = emp.getId()
