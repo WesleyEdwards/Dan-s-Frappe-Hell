@@ -1,5 +1,7 @@
 from .models.User import User, checkExistingUser, addUser, getUserByEmail, getUserById, getUserList, createUserJSON, updatePermissions, updateEmail, updateName, updatePassword
 from .auth import check_token
+from .employee import newEmployee
+from .models.Employee import getEmployee
 from flask import(
     Blueprint, request
 )
@@ -61,9 +63,17 @@ def changePermissions():
 
     form = request.get_json()
     user = getUserById(form['userId'])
+    if user == None:
+        print("No User Found")
     newPerm = form['newPerm']
-    if(auth[1]):
+    payRate = form['payRate']
+    if auth[0] is None:
+        error = "No User Found"
+        status = 403
+    elif(auth[1]):
         try:
+            if getEmployee(user.getId()) == None:
+                newEmployee(user.getId(), payRate)
             updatePermissions(user.getId(), newPerm)
             newUser = getUserById(user.getId())
         except Exception as ex:
