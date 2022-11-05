@@ -55,6 +55,16 @@ export const CashierCreateOrder: FC = () => {
         ...cartOrder,
         Items: order.Items,
         Status: "PLACED",
+      }).then(() => {
+        setOrder({
+          OrderId: -1,
+          UserId: -1,
+          Favorite: false,
+          Items: [],
+          OrderDate: -1,
+          Status: "CART",
+          TotalPrice: -1,
+        });
       });
     });
   };

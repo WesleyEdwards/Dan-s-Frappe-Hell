@@ -14,7 +14,7 @@ interface CreateAccountProps {
 
 export const CreateAccount: FC<CreateAccountProps> = (props) => {
   const { switchToLogin, navigateToHome } = props;
-  const { createAccount } = useAuth();
+  const { createAccount, refreshUser } = useAuth();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -52,7 +52,9 @@ export const CreateAccount: FC<CreateAccountProps> = (props) => {
           if (user) navigateToHome();
           else setError("Error creating account");
         })
-        .then(() => setSubmitting(false));
+        .then(refreshUser)
+        .then(() => setSubmitting(false))
+        .catch(() => setError("Error creating account"));
     },
   });
 

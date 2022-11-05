@@ -48,7 +48,6 @@ export const CashierCheckoutModal: FC<CashierCheckoutModalProps> = (props) => {
       })
       .then(() => {
         setUserList(newUsers);
-        console.log(newUsers);
       });
   }, []);
 
@@ -60,6 +59,7 @@ export const CashierCheckoutModal: FC<CashierCheckoutModalProps> = (props) => {
     if (!selectedUser) return;
     onCheckout(selectedUser.id);
     handleClose();
+    setSelectedUser(undefined);
   };
 
   if (!userList) return <Loading />;
@@ -89,7 +89,11 @@ export const CashierCheckoutModal: FC<CashierCheckoutModalProps> = (props) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={handleCheckout}>
+          <Button
+            variant="contained"
+            onClick={handleCheckout}
+            disabled={selectedUser === undefined}
+          >
             Complete
           </Button>
         </DialogActions>

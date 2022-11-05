@@ -4,9 +4,6 @@ import {
   DialogActions,
   DialogContent,
   Divider,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
   Typography,
 } from "@mui/material";

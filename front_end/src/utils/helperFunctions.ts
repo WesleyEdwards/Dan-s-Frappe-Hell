@@ -1,7 +1,6 @@
 import { TextFieldProps } from "@mui/material";
 import { FormikValues, useFormik } from "formik";
 import { matchPath, useLocation } from "react-router";
-import { getCartOrder, updateOrder } from "../api/api-functions";
 import {
   Ingredient,
   MenuItem,
@@ -12,6 +11,12 @@ import {
   DisplayOrderItem,
   MappingOfIngredientToQuantity,
 } from "../api/models";
+
+
+
+// ================================
+// Routing
+// ================================
 
 export function useRouteMatch(patterns: string[]) {
   const { pathname } = useLocation();
@@ -25,9 +30,19 @@ export function useRouteMatch(patterns: string[]) {
   return null;
 }
 
+
+// ================================
+// Rounding
+// ================================
+
 export function roundToTwoDecimals(number: number): number {
   return Math.round((number + Number.EPSILON) * 100) / 100;
 }
+
+
+// ================================
+// Form Validation
+// ================================
 
 export function formikTextFieldProps<T extends FormikValues>(
   formik: ReturnType<typeof useFormik<T>>,
@@ -57,6 +72,11 @@ export function formikTextFieldNumberProps<T extends FormikValues>(
     error: formik.touched[field] && !!formik.errors[field],
   };
 }
+
+
+// ================================
+// Mapping Data
+// ================================
 
 export function mapMenuItemsToIngredients(
   menuItems: MenuItem[],
