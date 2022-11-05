@@ -16,6 +16,7 @@ import { DisplayOrder, Order } from "../api/models";
 import { Loading } from "./Loading";
 import { useAuth } from "../utils/AuthContext";
 import { useNavigate } from "react-router-dom";
+import CartList from "./CartList";
 
 interface CartDialogueProps {
   open: boolean;
@@ -50,65 +51,50 @@ export const CartDialogue: FC<CartDialogueProps> = (props) => {
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogContent>
-        <ShoppingCartIcon fontSize="large" />
         <>
-          {(() => {
-            if (!user || !displayOrder || !myCart) {
-              return (
-                <Stack justifyContent="center">
-                  <Button
-                    variant="contained"
-                    sx={{ my: "1rem", alignSelf: "center" }}
-                    onClick={navigateToLogin}
-                  >
-                    Sign In
-                  </Button>
-                </Stack>
-              );
-            }
-            if (processingOrder) {
-              return (
-                <Typography align="center" sx={{ my: "4rem" }}>
-                  Your order is being processed. Thank you for your patience.
-                </Typography>
-              );
-            }
-            if (myCart.Items.length === 0) {
-              return (
-                <Typography align="center" sx={{ my: "4rem" }}>
-                  Your cart is empty. Pick a drink and start
-                  ordering!
-                </Typography>
-              );
-            }
+          <ShoppingCartIcon fontSize="large" />
+          <>
+            {(() => {
+              if (!user || !displayOrder || !myCart) {
+                return (
+                  <Stack justifyContent="center">
+                    <Button
+                      variant="contained"
+                      sx={{ my: "1rem", alignSelf: "center" }}
+                      onClick={navigateToLogin}
+                    >
+                      Sign In
+                    </Button>
+                  </Stack>
+                );
+              }
+              if (processingOrder) {
+                return (
+                  <Typography align="center" sx={{ my: "4rem" }}>
+                    Your order is being processed. Thank you for your patience.
+                  </Typography>
+                );
+              }
+              if (myCart.Items.length === 0) {
+                return (
+                  <Typography align="center" sx={{ my: "4rem" }}>
+                    Your cart is empty. Pick a drink and start ordering!
+                  </Typography>
+                );
+              }
 
-            if (!displayOrder) return <Loading />;
-            return (
-              <>
-                <Typography variant="h4" align="center">
-                  My Cart
-                </Typography>
-                <Divider sx={{ my: "2rem" }} />
-                <List>
-                  {displayOrder.orderItems.map((item, i) => {
-                    return (
-                      <ListItem key={i}>
-                        <ListItemText
-                          primary={`${item.quantity} - ${item.drinkName} - $${item.price}`}
-                        />
-                      </ListItem>
-                    );
-                  })}
+              if (!displayOrder) return <Loading />;
+              return (
+                <>
+                  <Typography variant="h4" align="center">
+                    My Cart
+                  </Typography>
                   <Divider sx={{ my: "2rem" }} />
-                  <ListItem>
-                    <ListItemText
-                      primary={`Total: $${displayOrder.totalPrice}`}
-                    />
-                  </ListItem>
-                </List>
-              </>
-            );
-          })()}
+                  <CartList displayOrder={displayOrder} />
+                </>
+              );
+            })()}
+          </>
         </>
       </DialogContent>
       <DialogActions>

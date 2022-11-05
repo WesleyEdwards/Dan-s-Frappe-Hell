@@ -77,6 +77,10 @@ export function getIngredients(): Promise<Ingredient[]> {
   return makeGetRequest("ingredients/").then((res) => res.ingredients);
 }
 
+export function editIngredient(ingredient: Ingredient): Promise<Ingredient> {
+  return makePostRequest("ingredients/update", ingredient);
+}
+
 export function getAllMenuItems(): Promise<MenuItem[]> {
   return makeGetRequest("menuitems/").then((res) => res.menuitems);
 }

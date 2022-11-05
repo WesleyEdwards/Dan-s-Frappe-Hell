@@ -44,6 +44,7 @@ CREATE TABLE Balances(
 );
 
 INSERT INTO Balances (UserId, CurrentBalance) VALUES (-1, 10000.00); --SET UP INITIAL STORE BALANCE
+INSERT INTO Balances (UserId, CurrentBalance) VALUES (1, 100.00); --SET UP INITIAL MANAGER BALANCE
 
 DROP TABLE IF EXISTS BalanceAudit;
 

@@ -732,6 +732,187 @@ Related objects:
 - [MenuItem](#menuitem)
 - [Order](#order)
 
+## /balance
+
+### /\<id>
+
+> Gets balance from BalanceId
+
+METHODS: `GET`
+
+Authentication Required: `YES`, UserId of requester must match UserId of balance OR must have at least employee permissions
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "balance":None
+}
+```
+
+if not authorized:
+
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "balance":None
+}
+```
+
+If valid:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "balance":<Balance>
+}
+```
+Related objects:
+
+- [Balance](#Balance)
+
+### /user/\<id>
+
+> Gets balance from UserId
+>
+> This is the only way to create a balance object
+
+METHODS: `GET`
+
+Authentication Required: `YES`, UserId of requester must match UserId of balance OR must have at least employee permissions
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "balance":None
+}
+```
+
+if not authorized:
+
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "balance":None
+}
+```
+
+If valid:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "balance":<Balance>
+}
+```
+Related objects:
+
+- [Balance](#Balance)
+
+### /store
+
+> Gets The store's balance
+
+METHODS: `GET`
+
+Authentication Required: `YES`, must have at manager permissions
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "balance":None
+}
+```
+
+if not authorized:
+
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "balance":None
+}
+```
+
+If valid:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "balance":<Balance>
+}
+```
+Related objects:
+
+- [Balance](#Balance)
+
+### /\<id>/increment/\<amt>
+
+> Increments the balance of `id` by `amt`
+
+METHODS: `GET`
+
+Authentication Required: `YES`, UserId of requester must match UserId of balance OR must have at least employee permissions
+
+Parameters:
+- `None`
+
+Returns
+if token is invalid:
+
+```json
+STATUS:401
+{
+    "error":"Invalid Token",
+    "balance":None
+}
+```
+
+if not authorized:
+
+```json
+STATUS:403
+{
+    "error":"Insufficient Permissions",
+    "balance":None
+}
+```
+
+If valid:
+```json
+STATUS: 200
+{
+    "error":<str>,
+    "balance":<Balance>
+}
+```
+Related objects:
+
+- [Balance](#Balance)
+
+
 ## Objects
 
 ### USER
@@ -790,3 +971,16 @@ Related objects:
     "Status":<str>,
     "TotalPrice":<float>
 }
+```
+
+### BALANCE
+
+> Represents a user's or the store's balance
+
+```json
+{
+    "BalanceId": <int>,
+    "UserId": <int>,
+    "Balance": <float>
+}
+```
