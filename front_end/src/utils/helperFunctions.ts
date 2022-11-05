@@ -2,6 +2,11 @@ import { TextFieldProps } from "@mui/material";
 import { FormikValues, useFormik } from "formik";
 import { matchPath, useLocation } from "react-router";
 import {
+  getAllMenuItems,
+  getIngredients,
+  getUserBalance,
+} from "../api/api-functions";
+import {
   Ingredient,
   MenuItem,
   RecipeItem,
@@ -10,9 +15,8 @@ import {
   DisplayOrder,
   DisplayOrderItem,
   MappingOfIngredientToQuantity,
+  User,
 } from "../api/models";
-
-
 
 // ================================
 // Routing
@@ -30,7 +34,6 @@ export function useRouteMatch(patterns: string[]) {
   return null;
 }
 
-
 // ================================
 // Rounding
 // ================================
@@ -38,7 +41,6 @@ export function useRouteMatch(patterns: string[]) {
 export function roundToTwoDecimals(number: number): number {
   return Math.round((number + Number.EPSILON) * 100) / 100;
 }
-
 
 // ================================
 // Form Validation
@@ -72,7 +74,6 @@ export function formikTextFieldNumberProps<T extends FormikValues>(
     error: formik.touched[field] && !!formik.errors[field],
   };
 }
-
 
 // ================================
 // Mapping Data
@@ -111,6 +112,7 @@ export function createDisplayOrderFromOrder(
       drinkName: menuItem?.Name ?? "Error",
       quantity: item.quantity,
       price: item.price,
+      itemId: item.menuId.toString(),
     });
   });
   return {
@@ -140,3 +142,60 @@ export function recipeItemsToRawRecipeItems(
   });
   return rawRecipeItems;
 }
+
+export async function checkStockAndCost(
+  userId: string,
+  displayOrder: DisplayOrderItem[]
+): Promise<{ checkoutType: checkoutType; item?: string }> {
+  const totalCost = displayOrder.reduce((acc, item) => {
+    return acc + item.price;
+  }, 0);
+
+  const funds = await getUserBalance(userId);
+  if (roundToTwoDecimals(funds.Balance) < totalCost) {
+    return { checkoutType: "InsufficientFunds" };
+  }
+
+  const ingredients = await getIngredients();
+  const menuItems = await getAllMenuItems();
+
+  let insufficientItem: string | undefined = undefined;
+
+  const drinksInOrder: Drink[] = mapMenuItemsToIngredients(
+    menuItems,
+    ingredients
+  );
+
+  const recipeItems: RecipeItem[] = drinksInOrder.flatMap((drink) => {
+    return drink.recipe.map((recipeItem) => {
+      return {
+        ...recipeItem,
+        drinkName: drink.recipe,
+      };
+    });
+  });
+
+  const insufficientStock = recipeItems.some((item) => {
+    const ingredient = ingredients.find((ingredient) => {
+      return ingredient.IngredientId === item.ingredient.IngredientId;
+    });
+    if (ingredient === undefined) return true;
+    if (
+      roundToTwoDecimals(ingredient.Stock ?? 0) <
+      roundToTwoDecimals(item.quantity)
+    ) {
+      insufficientItem = item.ingredient.Name;
+      return true;
+    }
+  });
+
+  if (insufficientStock)
+    return { checkoutType: "InsufficientStock", item: insufficientItem };
+
+  return { checkoutType: "Success" };
+}
+
+export type checkoutType =
+  | "Success"
+  | "InsufficientStock"
+  | "InsufficientFunds";

@@ -50,7 +50,7 @@ export const CashierCreateOrder: FC = () => {
   };
 
   const handleCheckout = (userId: string) => {
-    getCartOrder(userId).then((cartOrder) => {
+    return getCartOrder(userId).then((cartOrder) => {
       updateOrder({
         ...cartOrder,
         Items: order.Items,
