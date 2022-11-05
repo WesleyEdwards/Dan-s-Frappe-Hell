@@ -1,5 +1,5 @@
 from hashlib import new
-from .models.Employee import Employee, createEmployee, getEmployee, getAllHoursWorked, getEmployeeHoursWorked, setHoursWorked, setEmployeePayRate, createEmployeeJSON
+from .models.Employee import Employee, createEmployee, getEmployee, getAllHoursWorked, getEmployeeHoursWorked, setHoursWorked, setEmployeePayRate, createEmployeeJSON, resetHours, allEmployeeInfo
 from .auth import check_token
 from flask import Blueprint, request
 from datetime import datetime
@@ -61,7 +61,7 @@ def payroll():
             except Exception as ex:
                 status = 409
                 error = str(ex)
-            setHoursWorked(userId, 0)
+        resetHours()       
     return(
         {
             "error": error
@@ -112,6 +112,36 @@ def logHours():
     return (
         {
             "error": error
+        },
+        status
+    )
+
+@bp.route('/all', methods=(['GET']))
+def allEmployees():
+    status = 200
+    error = None
+    employees = []
+    auth = check_token(request.headers['Authorization'], 2)
+    if auth[0] is None:
+        error = "Invalid Token"
+        status = 401
+    elif not auth[1]:
+        error = "Invalid permissions"
+        status = 403
+    else:
+        for element in allEmployeeInfo():
+            employees.append({
+                'userId': element[0],
+                'firstName': element[1],
+                'lastName': element[2],
+                'payRate': element[3],
+                'hireDate': element[4],
+                'hoursWorked': element[5]
+            })
+    return(
+        {
+            'employees': employees,
+            'error': error
         },
         status
     )

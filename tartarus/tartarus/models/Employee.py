@@ -83,6 +83,12 @@ def resetHours():
     cur = db.cursor()
     cur.execute(f"update Employees set HoursWorked = 0")
 
+def allEmployeeInfo():
+    db = get_db()
+    cur = db.cursor()
+    output = cur.execute(f"select u.UserId, u.FirstName, u.LastName, e.PayRate, e.HireDate, e.HoursWorked from Users u join Employees e on u.UserId = e.UserId where u.PermissionLevel > 0")
+    return output.fetchall()
+
 def createEmployeeJSON(emp: Employee):
     id = emp.getId()
     userId = emp.getUserId()
