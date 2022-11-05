@@ -1,72 +1,70 @@
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Grid, Stack, Container } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import {
   getAllMenuItems,
   getOrdersByStatus,
   updateOrder,
 } from "../../api/api-functions";
-import { Order, MenuItem } from "../../api/models";
+import {Order, MenuItem, DisplayOrder} from "../../api/models";
 import { DFHeader } from "../../components/DFHeader";
-import Loading from "../../components/Loading";
-import { useAuth } from "../../utils/AuthContext";
+import {createDisplayOrders} from "../../utils/helperFunctions";
+import PickupCard from "../../components/PickupCard";
 
 export const Pickup: FC = () => {
-  const { refreshUser } = useAuth();
-  const [menuitems, setMenuItems] = useState<MenuItem[]>();
-  const [finishedOrders, setFinishedOrders] = useState<Order[]>();
+  const [displayOrders, setDisplayOrders] = useState<
+      DisplayOrder[] | undefined | null
+      >();
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+  const [finishedOrders, setFinishedOrders] = useState<
+      Order[] | undefined | null
+      >();
 
-  useEffect(() => {
-    getAllMenuItems().then(setMenuItems);
-    getOrdersByStatus("FINISHED").then((red) => {
-      setFinishedOrders(red);
-    });
-  }, []);
-
-  const completeOrder = (order: Order) => {
-    updateOrder({
-      OrderId: order.OrderId,
-      Items: order.Items,
-      Favorite: order.Favorite,
-      Status: "FULFILLED",
-    })
-      .then((res) => {
-        getOrdersByStatus("FINISHED").then((red) => {
-          setFinishedOrders(red);
-        });
-      })
-      .then(refreshUser);
+  const fetchPlacedOrders = async () => {
+    setDisplayOrders(undefined);
+    const orders: Order[] = await getOrdersByStatus("FINISHED");
+    const menuItems: MenuItem[] = await getAllMenuItems();
+    const displayOrders = createDisplayOrders(orders, menuItems);
+    setFinishedOrders(orders);
+    setDisplayOrders(displayOrders);
   };
 
-  if (!menuitems) return <Loading />;
+  useEffect(() => {
+    fetchPlacedOrders();
+  }, [refreshTrigger]);
 
-  if (!finishedOrders || !menuitems) return <Loading />;
+  const completeOrder = (orderId: number) => {
+    const updatedOrder: Order | undefined = (() => {
+      return finishedOrders?.find((o) => o.OrderId === orderId);
+    })();
+    if (!updatedOrder) {
+      return Promise.reject("Error completing order");
+    }
+    return updateOrder({
+      ...updatedOrder,
+      Status: "FULFILLED",
+    }).then(() => {
+      getOrdersByStatus("FINISHED").then(() =>
+          setRefreshTrigger(!refreshTrigger)
+      );
+    });
+  };
 
   return (
-    <div>
-      <DFHeader title="Customer Pickup" />
-      <Stack gap="2rem" justifyContent="center" padding="4rem">
-        <Typography variant="h5" gutterBottom>
-          Customer Pickup,
-        </Typography>
+    <Container maxWidth="md">
+      <Stack gap="2rem" justifyContent="center">
+      <DFHeader title="Orders Awaiting Customer Pickup" />
         <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
-          {finishedOrders.map((order) => {
+          {displayOrders &&
+              displayOrders.map((order) => {
             return (
-              <div key={order.OrderId}>
-                <Typography>Order {order.OrderId}</Typography>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    completeOrder(order);
-                  }}
-                >
-                  Mark as completed
-                </Button>
-              </div>
+                <Grid item md={6}>
+                  <PickupCard order={order} completeOrder={completeOrder} />
+                </Grid>
             );
           })}
         </Grid>
       </Stack>
-    </div>
+    </Container>
   );
 };
 

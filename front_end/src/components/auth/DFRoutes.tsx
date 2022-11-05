@@ -7,7 +7,6 @@ import { PrivateRoute } from "../../utils/PrivateRoute";
 import CustomerManagement from "../../Views/admin/CustomerManagement";
 import EmployeeManagement from "../../Views/admin/EmployeeManagement";
 import EmployeePayroll from "../../Views/admin/EmployeePayroll";
-import StoreBalance from "../../Views/admin/StoreBalance";
 import Inventory from "../../Views/admin/Inventory";
 import BaristaView from "../../Views/employee/BaristaView";
 import CashierView from "../../Views/employee/CashierView";
@@ -77,11 +76,6 @@ export const DFRoutes: FC = () => {
     {
       path:"/employee-payroll",
       element: <EmployeePayroll/>,
-      permission: "Manager",
-    },
-    {
-      path:"/store-balance",
-      element: <StoreBalance/>,
       permission: "Manager",
     },
   ];

@@ -52,7 +52,7 @@ export const BaristaView: FC = () => {
   return (
     <Container maxWidth="md">
       <Stack gap="2rem" justifyContent="center">
-        <DFHeader title="Welcome to Dan's Frappuccino Hell" />
+        <DFHeader title="Current Orders" />
         <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
           {displayOrders &&
             displayOrders.map((order) => {

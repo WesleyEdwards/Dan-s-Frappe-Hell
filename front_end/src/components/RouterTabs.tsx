@@ -14,6 +14,7 @@ export const RouterTabs = () => {
     "/employee-management",
     "/cashier-view",
     "/barista-view",
+    "/employee-payroll",
   ]);
   const currentTab = routeMatch?.pattern?.path;
   const { user } = useAuth();
@@ -60,10 +61,6 @@ export const RouterTabs = () => {
     {
       label: "Payroll",
       path: "/employee-payroll"
-    },
-    {
-        label: "Store Balance",
-        path: "/store-balance"
     },
   ];
   const getTabOptions = (() => {
