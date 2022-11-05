@@ -58,6 +58,9 @@ def create_app(test_config=None):
     from . import orders
     app.register_blueprint(orders.bp)
 
+    # Register Employee Endpoints
+    from . import employee
+    app.register_blueprint(employee.bp)
     # Register Balance Endpoints
     from . import balances
     app.register_blueprint(balances.bp)
