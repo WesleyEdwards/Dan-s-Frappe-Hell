@@ -57,6 +57,14 @@ export const RouterTabs = () => {
       label: "Employee Management",
       path: "/employee-management",
     },
+    {
+      label: "Payroll",
+      path: "/employee-payroll"
+    },
+    {
+        label: "Store Balance",
+        path: "/store-balance"
+    },
   ];
   const getTabOptions = (() => {
     if (!user) {

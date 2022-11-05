@@ -12,6 +12,7 @@ import {
 import { mapMenuItemsToIngredients } from "../utils/helperFunctions";
 import { Drink, Order, OrderItem } from "../api/models";
 import { useAuth } from "../utils/AuthContext";
+import HomeCarousel from "../components/HomeCarousel";
 
 export const Home: FC = () => {
   const [drinks, setDrinks] = useState<Drink[]>();
@@ -54,6 +55,7 @@ export const Home: FC = () => {
     <Container maxWidth="md">
       <Stack gap="2rem" justifyContent="center">
         <DFHeader title="Welcome to Dan's Frappuccino Hell" />
+        <HomeCarousel></HomeCarousel>
         <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
           {drinks.map((drink, i) => {
             return (
