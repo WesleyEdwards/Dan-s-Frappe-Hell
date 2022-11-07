@@ -21,6 +21,7 @@ export const CashierView: FC = () => {
         <Tab label="Pick-up" />
         <Tab label="Place Order" />
       </Tabs>
+
       <Container maxWidth="lg">
         <Stack direction="row">
           {tabValue === 0 ? <Pickup /> : <CashierCreateOrder />}

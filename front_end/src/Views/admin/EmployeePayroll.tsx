@@ -1,94 +1,81 @@
 import {
-    Alert,
-    Button,
-    Container,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Stack,
-    Typography
+  Alert,
+  Button,
+  Container,
+  Dialog,
+  DialogContent,
+  Stack,
 } from "@mui/material";
-import React, {FC, useEffect, useState} from "react";
+import React, { FC, useState } from "react";
 import { DFHeader } from "../../components/DFHeader";
 
 import StoreFunds from "../../components/StoreFunds";
 import PayrollList from "./PayrollList";
-import {payAllEmployees} from "../../api/api-functions";
+import { payAllEmployees } from "../../api/api-functions";
+import { DFHDialogActions } from "../../components/DFHDialogActions";
+import DialogHeader from "../../components/DialogHeader";
 export const EmployeePayroll: FC = () => {
-    const [refreshTrigger, setRefreshTrigger] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [open, setOpen] = useState(false);
-    const [totalCost, setTotalCost] = useState(0);
-    const handleClick = () => setOpen(true);
-    const handleClose = () => {
-        setOpen(false);
-        setError(null);
-    }
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [totalCost, setTotalCost] = useState(0);
 
+  const handleClick = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setError(null);
+  };
 
-    const payEmployees = () => {
-        payAllEmployees().then((res)=>{
-            if(res.error === null){
-                setRefreshTrigger(!refreshTrigger);
-                handleClose();
-            }else{
-                setError(res.error);
-            }
-        })
-    }
+  const payEmployees = () => {
+    payAllEmployees().then((res) => {
+      if (res.error === null) {
+        setRefreshTrigger(!refreshTrigger);
+        handleClose();
+      } else {
+        setError(res.error);
+      }
+    });
+  };
 
-    useEffect(() => {
-        alert("Need to get total payroll cost from backend on endpoint completion")
-    }, [refreshTrigger])
+  return (
+    <>
+      <Container maxWidth="md">
+        <DFHeader title="Employee Management" paddingBottom />
+        <StoreFunds refreshTrigger={refreshTrigger} />
+        <Stack gap="2rem" justifyContent="center">
+          <Stack direction="row" gap="2rem" justifyContent="center">
+            <Button onClick={handleClick} variant="contained">
+              Pay All Employees
+            </Button>
+          </Stack>
+          <Alert severity="error">
+            Need to get total payroll cost from backend on endpoint completion
+          </Alert>
+          <PayrollList refreshTrigger={refreshTrigger} />
+        </Stack>
+      </Container>
 
-
-    return (
-        <>
-            <Container maxWidth="md">
-                <Stack gap="8rem" justifyContent="center">
-                    <Stack gap="2rem" justifyContent="center">
-                        <DFHeader title="Employee Management" />
-                        <StoreFunds refreshTrigger={refreshTrigger}/>
-                    </Stack>
-                    <Stack gap="2rem" justifyContent="center">
-                        <Stack direction="row" gap="2rem" justifyContent="center">
-                        <Button onClick={handleClick} variant="contained">
-                            Pay All Employees
-                        </Button>
-                        </Stack>
-                        <PayrollList refreshTrigger={refreshTrigger}/>
-                    </Stack>
-                </Stack>
-            </Container>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle sx={{ p: "4rem" }}>Confirm Employee Payment</DialogTitle>
-                <DialogContent>
-                    {error === null &&
-                        <Alert severity="info">
-                            This will deduct ${totalCost} from the store balance
-                        </Alert>
-                    }
-                    {error!== null &&
-                        <Alert severity="error">
-                            The store does not have enough funds to pay all employees
-                        </Alert>
-                    }
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button
-                        variant="contained"
-                        onClick={() =>
-                            payEmployees()
-                        }
-                    >
-                        Confirm
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent>
+          <DialogHeader title="Confirm Employee Payment" />
+          {error ? (
+            <Alert severity="error" sx={{ my: "2rem" }}>
+              The store does not have enough funds to pay all employees
+            </Alert>
+          ) : (
+            <Alert severity="info" sx={{ my: "2rem" }}>
+              This will deduct ${totalCost} from the store balance
+            </Alert>
+          )}
+        </DialogContent>
+        <DFHDialogActions
+          handleClose={handleClose}
+          handleSubmit={payEmployees}
+          submitText="Confirm"
+        />
+      </Dialog>
+    </>
+  );
 };
 
 export default EmployeePayroll;

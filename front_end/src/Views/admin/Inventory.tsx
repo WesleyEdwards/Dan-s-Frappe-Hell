@@ -37,7 +37,7 @@ export const Inventory: FC = () => {
   return (
     <>
       <Container maxWidth="md">
-        <DFHeader title="Inventory" />
+        <DFHeader title="Inventory" paddingBottom />
         <Stack gap="2rem" justifyContent="center" sx={{ pb: 12 }}>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body1">Ingredients</Typography>

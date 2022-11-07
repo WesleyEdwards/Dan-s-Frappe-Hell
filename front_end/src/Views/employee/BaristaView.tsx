@@ -1,4 +1,4 @@
-import { Container, Grid, Stack } from "@mui/material";
+import { Container, Grid, Stack, Typography } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../../components/DFHeader";
 import { DisplayOrder, MenuItem, Order } from "../../api/models";
@@ -9,6 +9,7 @@ import {
 } from "../../api/api-functions";
 import BaristaCard from "../../components/BaristaCard";
 import { createDisplayOrders } from "../../utils/helperFunctions";
+import Loading from "../../components/Loading";
 
 export const BaristaView: FC = () => {
   const [displayOrders, setDisplayOrders] = useState<
@@ -49,20 +50,26 @@ export const BaristaView: FC = () => {
     });
   };
 
+  if (!displayOrders) return <Loading />;
   return (
     <Container maxWidth="md">
       <Stack gap="2rem" justifyContent="center">
         <DFHeader title="Current Orders" />
-        <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
-          {displayOrders &&
-            displayOrders.map((order) => {
+        {displayOrders.length > 0 ? (
+          <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
+            {displayOrders.map((order) => {
               return (
                 <Grid item md={6}>
                   <BaristaCard order={order} completeOrder={completeOrder} />
                 </Grid>
               );
             })}
-        </Grid>
+          </Grid>
+        ) : (
+          <Typography align="center" paddingTop="2rem">
+            There are no orders awaiting Customer Pick-up
+          </Typography>
+        )}
       </Stack>
     </Container>
   );
