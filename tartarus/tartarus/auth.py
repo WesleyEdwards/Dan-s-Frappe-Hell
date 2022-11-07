@@ -26,11 +26,11 @@ def get_token():
         status = 200
         user = getUserByEmail(email)
         if user is None:
-            error = 'Incorrect email.'
+            error = 'Invalid Credentials'
             userJson = None
             status = 401
         elif not check_password_hash(user.getPassword(), password):
-            error = 'Incorrect password'
+            error = 'Invalid Credentials'
             userJson = None
             status = 401
         else:
