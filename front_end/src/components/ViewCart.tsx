@@ -38,6 +38,7 @@ export const ViewCart: FC = () => {
   };
 
   const fetchCartOrder = async () => {
+    setDisplayOrder(undefined);
     if (!user) return;
     const myCart: Order = await getCartOrder(user.userId);
     const menuItems: MenuItem[] = await getAllMenuItems();

@@ -63,10 +63,7 @@ export const CashierCheckoutModal: FC<CashierCheckoutModalProps> = (props) => {
     setError(undefined);
     if (!selectedUser) return;
 
-    const issue = await checkStockAndCost(
-      selectedUser.id,
-      displayOrder.orderItems
-    );
+    const issue = await checkStockAndCost(selectedUser.id, displayOrder);
 
     if (issue.checkoutType === "InsufficientStock") {
       setError(`Insufficient stock for ${issue.item}`);

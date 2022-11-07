@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  IconButton,
   InputAdornment,
   Stack,
   TextField,
@@ -18,6 +19,7 @@ import Loading from "../components/Loading";
 import { useAuth } from "../utils/AuthContext";
 import { roundToTwoDecimals } from "../utils/helperFunctions";
 import DialogHeader from "./DialogHeader";
+import AddIcon from "@mui/icons-material/Add";
 
 export const AccountFunds: FC = () => {
   const { user } = useAuth();
@@ -39,6 +41,7 @@ export const AccountFunds: FC = () => {
   };
   const addFunds = () => {
     if (!user || !balance) return;
+    setAddAmount(0);
     incrementUserBalance(balance.BalanceId, addAmount).then(() => {
       fetchBalance();
       handleClose();
@@ -54,15 +57,15 @@ export const AccountFunds: FC = () => {
   return (
     <>
       <Stack direction="row" gap="2rem" alignItems="center">
+        <IconButton onClick={handleOpen}>
+          <AddIcon />
+        </IconButton>
         <Typography>Account Balance: ${balance.Balance}</Typography>
-        <Button variant="contained" onClick={handleOpen}>
-          Add Funds
-        </Button>
       </Stack>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
           <Stack gap="2rem">
-            <DialogHeader title={"Add To Balance"} />
+            <DialogHeader title={`$${balance.Balance}`} />
             <Stack
               direction="row"
               justifyContent="flex-start"

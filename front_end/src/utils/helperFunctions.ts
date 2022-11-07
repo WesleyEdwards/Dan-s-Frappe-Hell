@@ -145,14 +145,10 @@ export function recipeItemsToRawRecipeItems(
 
 export async function checkStockAndCost(
   userId: string,
-  displayOrder: DisplayOrderItem[]
+  displayOrder: DisplayOrder
 ): Promise<{ checkoutType: checkoutType; item?: string }> {
-  const totalCost = displayOrder.reduce((acc, item) => {
-    return acc + item.price;
-  }, 0);
-
   const funds = await getUserBalance(userId);
-  if (roundToTwoDecimals(funds.Balance) < totalCost) {
+  if (roundToTwoDecimals(funds.Balance) < displayOrder.totalPrice) {
     return { checkoutType: "InsufficientFunds" };
   }
 

@@ -3,7 +3,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  InputAdornment,
+  IconButton,
   Stack,
   TextField,
   Typography,
@@ -14,6 +14,7 @@ import DialogHeader from "./components/DialogHeader";
 import Loading from "./components/Loading";
 import { useAuth } from "./utils/AuthContext";
 import { roundToTwoDecimals } from "./utils/helperFunctions";
+import AddIcon from "@mui/icons-material/Add";
 
 export const EmployeeInfo: FC = () => {
   const { user } = useAuth();
@@ -50,15 +51,15 @@ export const EmployeeInfo: FC = () => {
   return (
     <>
       <Stack direction="row" gap="2rem" alignItems="center">
+        <IconButton onClick={handleOpen}>
+          <AddIcon />
+        </IconButton>
         <Typography>Hours Worked: {employee.hoursWorked} hrs</Typography>
-        <Button variant="contained" onClick={handleOpen}>
-          Add Hours
-        </Button>
       </Stack>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
           <Stack gap="2rem">
-            <DialogHeader title={"Add Hours"} />
+            <DialogHeader title={`${employee.hoursWorked} hrs`} />
             <Stack
               direction="row"
               justifyContent="flex-start"

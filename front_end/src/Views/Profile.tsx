@@ -21,9 +21,8 @@ export const Profile: FC = () => {
 
   return (
     <Container maxWidth="md">
-      <DFHeader title="Profile" />
+      <DFHeader title={`${user.firstName} ${user.lastName}`} />
       <Stack direction="column" gap="2rem">
-        <Typography>{`${user.firstName} ${user.lastName}`}</Typography>
         <Typography>{`${user.email}`}</Typography>
         <Divider />
 
