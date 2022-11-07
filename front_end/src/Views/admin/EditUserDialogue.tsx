@@ -1,7 +1,5 @@
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   FormControl,
   InputLabel,
@@ -11,6 +9,7 @@ import {
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { Permission } from "../../api/models";
+import { DFHDialogActions } from "../../components/DFHDialogActions";
 import DialogHeader from "../../components/DialogHeader";
 import { isPermissionString } from "../../utils/userHelperFunctions";
 import { UserRow } from "./CustomerList";
@@ -73,16 +72,12 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
           </FormControl>
         </Stack>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button
-          variant="contained"
-          disabled={user.permission === newPermission}
-          onClick={handleSubmit}
-        >
-          Save
-        </Button>
-      </DialogActions>
+
+      <DFHDialogActions
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        disableSubmit={user.permission === newPermission}
+      />
     </Dialog>
   );
 };

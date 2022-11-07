@@ -1,4 +1,4 @@
-import { Grid, Stack } from "@mui/material";
+import { Grid } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { DrinkCard } from "../components/Drink/DrinkCard";
 import { Drink, OrderItem } from "../api/models";

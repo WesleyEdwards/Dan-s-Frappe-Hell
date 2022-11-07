@@ -1,8 +1,5 @@
 import {
-  Button,
-  DialogActions,
   DialogContent,
-  DialogContentText,
   FormControl,
   InputLabel,
   MenuItem,
@@ -19,6 +16,8 @@ import {
 } from "../utils/helperFunctions";
 import { IngredientType } from "../api/models";
 import { IngredientRow } from "./IngredientsEdit";
+import DialogHeader from "./DialogHeader";
+import { DFHDialogActions } from "./DFHDialogActions";
 
 interface NewIngredientDialogueProps {
   handleClose: () => void;
@@ -69,9 +68,7 @@ export const NewIngredientDialogue: FC<NewIngredientDialogueProps> = (
     <>
       <DialogContent>
         <Stack gap="2rem">
-          <DialogContentText variant="h4" style={{ paddingBottom: 40 }}>
-            New Ingredient
-          </DialogContentText>
+          <DialogHeader title="New Ingredient" />
 
           <TextField
             {...formikTextFieldProps(formik, "name", "Name")}
@@ -121,18 +118,12 @@ export const NewIngredientDialogue: FC<NewIngredientDialogueProps> = (
           </Stack>
         </Stack>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} variant="contained">
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          disabled={!formik.dirty}
-          onClick={() => formik.submitForm()}
-        >
-          Save
-        </Button>
-      </DialogActions>
+
+      <DFHDialogActions
+        handleClose={onClose}
+        handleSubmit={() => formik.submitForm()}
+        disableSubmit={!formik.dirty}
+      />
     </>
   );
 };

@@ -1,7 +1,5 @@
 import {
   Alert,
-  Button,
-  DialogActions,
   FormControl,
   InputLabel,
   MenuItem,
@@ -13,6 +11,7 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/AuthContext";
 import { roundToTwoDecimals } from "../../utils/helperFunctions";
+import { DFHDialogActions } from "../DFHDialogActions";
 
 interface CustomOrderActionsProps {
   error: string | undefined;
@@ -71,18 +70,12 @@ export const CustomOrderActions: FC<CustomOrderActionsProps> = (props) => {
         <Typography variant="h5">{`$${price}`}</Typography>
       </Stack>
       {error && <Alert severity="error">{error}</Alert>}
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        {user ? (
-          <Button variant="contained" onClick={handleSubmitOrder}>
-            Add To Cart
-          </Button>
-        ) : (
-          <Button variant="contained" onClick={navigateToLogin}>
-            Sign In
-          </Button>
-        )}
-      </DialogActions>
+
+      <DFHDialogActions
+        handleClose={handleClose}
+        handleSubmit={user ? handleSubmitOrder : navigateToLogin}
+        submitText={user ? "Add to Cart" : "Login to Order"}
+      />
     </>
   );
 };

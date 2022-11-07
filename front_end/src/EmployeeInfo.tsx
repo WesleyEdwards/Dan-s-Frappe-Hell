@@ -1,7 +1,5 @@
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   IconButton,
   Stack,
@@ -15,6 +13,7 @@ import Loading from "./components/Loading";
 import { useAuth } from "./utils/AuthContext";
 import { roundToTwoDecimals } from "./utils/helperFunctions";
 import AddIcon from "@mui/icons-material/Add";
+import { DFHDialogActions } from "./components/DFHDialogActions";
 
 export const EmployeeInfo: FC = () => {
   const { user } = useAuth();
@@ -78,12 +77,10 @@ export const EmployeeInfo: FC = () => {
             </Stack>
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" disabled={false} onClick={changeHours}>
-            Save
-          </Button>
-        </DialogActions>
+        <DFHDialogActions
+          handleClose={handleClose}
+          handleSubmit={changeHours}
+        />
       </Dialog>
     </>
   );

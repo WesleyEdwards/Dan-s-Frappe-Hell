@@ -3,7 +3,6 @@ import {
   Autocomplete,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   TextField,
   Typography,
@@ -11,9 +10,9 @@ import {
 import React, { FC, useEffect, useState } from "react";
 import { getAllUsers } from "../api/api-functions";
 import { DisplayOrder } from "../api/models";
-import { useAuth } from "../utils/AuthContext";
 import { checkStockAndCost } from "../utils/helperFunctions";
 import CartList from "./CartList";
+import { DFHDialogActions } from "./DFHDialogActions";
 import DialogHeader from "./DialogHeader";
 import Loading from "./Loading";
 
@@ -115,15 +114,12 @@ export const CashierCheckoutModal: FC<CashierCheckoutModalProps> = (props) => {
             {error}
           </Alert>
         )}
-        <DialogActions>
-          <Button
-            variant="contained"
-            onClick={handleCheckout}
-            disabled={selectedUser === undefined}
-          >
-            Complete
-          </Button>
-        </DialogActions>
+        <DFHDialogActions
+          handleClose={handleClose}
+          handleSubmit={handleCheckout}
+          submitText={"Complete"}
+          disableSubmit={!selectedUser}
+        />
       </Dialog>
     </>
   );

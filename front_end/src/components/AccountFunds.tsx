@@ -1,7 +1,5 @@
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   IconButton,
   InputAdornment,
@@ -20,6 +18,7 @@ import { useAuth } from "../utils/AuthContext";
 import { roundToTwoDecimals } from "../utils/helperFunctions";
 import DialogHeader from "./DialogHeader";
 import AddIcon from "@mui/icons-material/Add";
+import { DFHDialogActions } from "./DFHDialogActions";
 
 export const AccountFunds: FC = () => {
   const { user } = useAuth();
@@ -89,12 +88,8 @@ export const AccountFunds: FC = () => {
             </Stack>
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" disabled={false} onClick={addFunds}>
-            Save
-          </Button>
-        </DialogActions>
+
+        <DFHDialogActions handleClose={handleClose} handleSubmit={addFunds} />
       </Dialog>
     </>
   );
