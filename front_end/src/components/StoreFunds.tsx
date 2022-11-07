@@ -21,7 +21,12 @@ import { roundToTwoDecimals } from "../utils/helperFunctions";
 import DialogHeader from "./DialogHeader";
 import AddIcon from "@mui/icons-material/Add";
 
-export const StoreFunds: FC = () => {
+export interface StoreFundsProps {
+    refreshTrigger: Boolean;
+}
+
+export const StoreFunds: FC<StoreFundsProps> = (props) => {
+    const { refreshTrigger } = props
     const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const [balance, setBalance] = useState<Balance | undefined>(undefined);
@@ -50,7 +55,7 @@ export const StoreFunds: FC = () => {
 
     useEffect(() => {
         fetchBalance();
-    }, [user]);
+    }, [user, refreshTrigger]);
 
     if (!user) return <Loading />;
     if (!balance) return <Loading />;

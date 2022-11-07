@@ -36,6 +36,10 @@ export interface Balance {
   Balance: number;
 }
 
+export interface PayrollResponse{
+  error:string | null;
+}
+
 export interface Employee {
   employeeId: string;
   firstName: string;
@@ -117,7 +121,7 @@ export function setHoursWorked(hoursWorked: number): Promise<unknown> {
   return makePostRequest("employee/logHours", { hours: hoursWorked });
 }
 
-export function payAllEmployees(): Promise<unknown> {
+export function payAllEmployees(): Promise<PayrollResponse> {
   return makeGetRequest("employee/payroll");
 }
 

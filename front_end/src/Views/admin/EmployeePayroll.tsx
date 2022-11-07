@@ -9,7 +9,7 @@ import {
     Stack,
     Typography
 } from "@mui/material";
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import { DFHeader } from "../../components/DFHeader";
 
 import StoreFunds from "../../components/StoreFunds";
@@ -17,22 +17,31 @@ import PayrollList from "./PayrollList";
 import {payAllEmployees} from "../../api/api-functions";
 export const EmployeePayroll: FC = () => {
     const [refreshTrigger, setRefreshTrigger] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
+    const [totalCost, setTotalCost] = useState(0);
     const handleClick = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false);
+        setError(null);
+    }
 
-    const [error, setError] = useState<string | undefined>();
 
     const payEmployees = () => {
-        payAllEmployees()
-            .then(() => {
+        payAllEmployees().then((res)=>{
+            if(res.error === null){
                 setRefreshTrigger(!refreshTrigger);
                 handleClose();
-            })
-            .catch((err) => {
-                setError(err);
-            });
+            }else{
+                setError(res.error);
+            }
+        })
     }
+
+    useEffect(() => {
+        alert("Need to get total payroll cost from backend on endpoint completion")
+    }, [refreshTrigger])
+
 
     return (
         <>
@@ -40,7 +49,7 @@ export const EmployeePayroll: FC = () => {
                 <Stack gap="8rem" justifyContent="center">
                     <Stack gap="2rem" justifyContent="center">
                         <DFHeader title="Employee Management" />
-                        <StoreFunds/>
+                        <StoreFunds refreshTrigger={refreshTrigger}/>
                     </Stack>
                     <Stack gap="2rem" justifyContent="center">
                         <Stack direction="row" gap="2rem" justifyContent="center">
@@ -54,9 +63,17 @@ export const EmployeePayroll: FC = () => {
             </Container>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle sx={{ p: "4rem" }}>Confirm Employee Payment</DialogTitle>
-                {error && <Alert severity="error">{error}</Alert>}
                 <DialogContent>
-                    <Typography variant="subtitle1">This will cost the store $FILL IN LATER</Typography>
+                    {error === null &&
+                        <Alert severity="info">
+                            This will deduct ${totalCost} from the store balance
+                        </Alert>
+                    }
+                    {error!== null &&
+                        <Alert severity="error">
+                            The store does not have enough funds to pay all employees
+                        </Alert>
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
