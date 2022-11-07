@@ -78,6 +78,7 @@ export interface DisplayOrderItem {
   drinkName: string;
   quantity: number;
   price: number;
+  itemId: string;
 }
 export interface DisplayOrder {
   orderId: number;

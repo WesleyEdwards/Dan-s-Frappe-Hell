@@ -11,6 +11,8 @@ CREATE TABLE Users(
 
 -- Default Manager login: manager@dfh.com, password: password
 insert into Users(email, FirstName, LastName, password, PermissionLevel) values ('manager@dfh.com','default', 'manager','pbkdf2:sha256:260000$rKdwVgn05Bq2Uh8h$0f30a3773ac0fe972e6647885c1fdcc227075fe10b15211b46d74990faef8536',4);
+insert into Users(email, FirstName, LastName, password, PermissionLevel) values ('ben@frank.com','Benjamin', 'Franklin','pbkdf2:sha256:260000$rKdwVgn05Bq2Uh8h$0f30a3773ac0fe972e6647885c1fdcc227075fe10b15211b46d74990faef8536',1);
+insert into Users(email, FirstName, LastName, password, PermissionLevel) values ('john@adams.com','John', 'Adams','pbkdf2:sha256:260000$rKdwVgn05Bq2Uh8h$0f30a3773ac0fe972e6647885c1fdcc227075fe10b15211b46d74990faef8536',1);
 
 DROP TABLE IF EXISTS Employees;
 
@@ -22,6 +24,8 @@ CREATE TABLE Employees(
     HoursWorked NUMERIC NOT NULL,
     FOREIGN KEY(UserId) REFERENCES Users(UserId)
 );
+
+insert into Employees(UserId, PayRate, HireDate, HoursWorked) values (1, 66 , '2021-11-05 14:07:46.254885', 0);
 
 DROP TABLE IF EXISTS WorkLog;
 

@@ -50,11 +50,21 @@ export const CashierCreateOrder: FC = () => {
   };
 
   const handleCheckout = (userId: string) => {
-    getCartOrder(userId).then((cartOrder) => {
+    return getCartOrder(userId).then((cartOrder) => {
       updateOrder({
         ...cartOrder,
         Items: order.Items,
         Status: "PLACED",
+      }).then(() => {
+        setOrder({
+          OrderId: -1,
+          UserId: -1,
+          Favorite: false,
+          Items: [],
+          OrderDate: -1,
+          Status: "CART",
+          TotalPrice: -1,
+        });
       });
     });
   };

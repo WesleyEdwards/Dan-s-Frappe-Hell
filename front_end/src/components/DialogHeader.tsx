@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import React, { FC } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface DialogHeaderProps {
   title: string;
@@ -44,9 +45,15 @@ export const DialogHeader: FC<DialogHeaderProps> = (props) => {
               paddingBottom="1rem"
             >
               <DialogContentText variant="h4">{title}</DialogContentText>
-              <Button variant="contained" onClick={onEdit}>
-                {editTitle ? editTitle : "Edit"}
-              </Button>
+              {editTitle ? (
+                <Button variant="contained" onClick={onEdit}>
+                  {editTitle}
+                </Button>
+              ) : (
+                <IconButton>
+                  <EditIcon onClick={onEdit} />
+                </IconButton>
+              )}
             </Stack>
           );
         }
