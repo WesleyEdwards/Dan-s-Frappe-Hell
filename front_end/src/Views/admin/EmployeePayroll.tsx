@@ -32,9 +32,11 @@ export const EmployeePayroll: FC = () => {
                         <StoreFunds/>
                     </Stack>
                     <Stack gap="2rem" justifyContent="center">
+                        <Stack direction="row" gap="2rem" justifyContent="center">
                         <Button onClick={handleClick} variant="contained">
                             Pay All Employees
                         </Button>
+                        </Stack>
                         <PayrollList/>
                     </Stack>
                 </Stack>
