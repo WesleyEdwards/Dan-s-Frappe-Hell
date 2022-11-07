@@ -1,4 +1,14 @@
-import {Alert, Button, Container, Dialog, DialogActions, DialogTitle, Stack} from "@mui/material";
+import {
+    Alert,
+    Button,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Stack,
+    Typography
+} from "@mui/material";
 import React, {FC, useState} from "react";
 import { DFHeader } from "../../components/DFHeader";
 
@@ -44,6 +54,9 @@ export const EmployeePayroll: FC = () => {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle sx={{ p: "4rem" }}>Confirm Employee Payment</DialogTitle>
                 {error && <Alert severity="error">{error}</Alert>}
+                <DialogContent>
+                    <Typography variant="subtitle1">This will cost the store $FILL IN LATER</Typography>
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button
