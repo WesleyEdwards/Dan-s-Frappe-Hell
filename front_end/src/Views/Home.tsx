@@ -1,10 +1,11 @@
-import { Container, Stack } from "@mui/material";
+import { Container, Stack, Typography } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../components/DFHeader";
 import { getCartOrder, updateOrder } from "../api/api-functions";
 import { Order, OrderItem } from "../api/models";
 import { useAuth } from "../utils/AuthContext";
 import { OrderDrinkGrid } from "../components/OrderDrinkGrid";
+import HomeCarousel from "../components/HomeCarousel";
 
 export const Home: FC = () => {
   const { user, refreshUser } = useAuth();
@@ -33,12 +34,17 @@ export const Home: FC = () => {
   }, [user]);
 
   return (
-    <Container maxWidth="md">
-      <Stack gap="2rem" justifyContent="center">
-        <DFHeader title="Welcome to Dan's Frappuccino Hell" />
-        <OrderDrinkGrid handleAddToCart={handleAddToCart} />
-      </Stack>
-    </Container>
+    <>
+      <Typography padding="4rem" variant="h2" align="center">
+        Welcome to Dan's Frappuccino Hell
+      </Typography>
+      <Container maxWidth="md">
+        <Stack gap="2rem" justifyContent="center" alignItems="center">
+          <HomeCarousel />
+          <OrderDrinkGrid handleAddToCart={handleAddToCart} />
+        </Stack>
+      </Container>
+    </>
   );
 };
 
