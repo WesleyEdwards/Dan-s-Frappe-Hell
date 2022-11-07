@@ -16,7 +16,7 @@ import StoreFunds from "../../components/StoreFunds";
 import PayrollList from "./PayrollList";
 import {payAllEmployees} from "../../api/api-functions";
 export const EmployeePayroll: FC = () => {
-
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
     const [open, setOpen] = useState(false);
     const handleClick = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -26,6 +26,7 @@ export const EmployeePayroll: FC = () => {
     const payEmployees = () => {
         payAllEmployees()
             .then(() => {
+                setRefreshTrigger(!refreshTrigger);
                 handleClose();
             })
             .catch((err) => {
@@ -47,7 +48,7 @@ export const EmployeePayroll: FC = () => {
                             Pay All Employees
                         </Button>
                         </Stack>
-                        <PayrollList/>
+                        <PayrollList refreshTrigger={refreshTrigger}/>
                     </Stack>
                 </Stack>
             </Container>

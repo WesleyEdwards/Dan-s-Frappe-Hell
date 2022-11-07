@@ -2,6 +2,8 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { FC, useEffect, useState } from "react";
 import {getAllEmployees} from "../../api/api-functions";
 import { Loading } from "../../components/Loading";
+import {Permission} from "../../api/models";
+import {UserRow} from "./CustomerList";
 
 
 export interface EmployeeRow {
@@ -11,7 +13,13 @@ export interface EmployeeRow {
     payRate: number;
 }
 
-export const PayrollList: FC = () => {
+interface PayrollListProps {
+    refreshTrigger: boolean;
+
+}
+
+export const PayrollList: FC<PayrollListProps> = (props) => {
+    const {refreshTrigger} = props;
     const [currentEmployees, setCurrentEmployees] = useState<EmployeeRow[] | undefined>();
 
     const refreshUsers = () => {
@@ -33,7 +41,7 @@ export const PayrollList: FC = () => {
 
     useEffect(() => {
         refreshUsers();
-    }, []);
+    }, [refreshTrigger]);
 
     const columns: GridColDef[] = [
         {
