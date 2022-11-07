@@ -12,7 +12,7 @@ import {
     List,
     Divider,
     CardActions,
-    DialogTitle,
+    DialogTitle, Typography,
 } from "@mui/material";
 import React, { FC, useState } from "react";
 import { DisplayOrder } from "../api/models";
@@ -35,6 +35,7 @@ export const PickupCard: FC<PickupCardProps> = (props) => {
             <Card>
                 <CardContent>
                     <List>
+                        <Typography>Order {order.orderId}</Typography>
                         {order.orderItems.map((item, i) => (
                             <ListItem key={i}>
                                 <ListItemText

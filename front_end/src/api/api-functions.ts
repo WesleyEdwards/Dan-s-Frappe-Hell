@@ -36,9 +36,14 @@ export interface Balance {
   Balance: number;
 }
 
+export interface PayrollResponse{
+  error:string | null;
+}
+
 export interface Employee {
   employeeId: string;
-  userId: string;
+  firstName: string;
+  lastName: string;
   payRate: number;
   hireDate: string;
   hoursWorked: number;
@@ -94,7 +99,7 @@ export function modifyUserPermission(
 // ================================
 
 export function getAllEmployees(): Promise<Employee[]> {
-  return makeGetRequest("employees/all").then((res) => res.employees);
+  return makeGetRequest("employee/all").then((res) => res.employees);
 }
 
 export function getMyEmployee(): Promise<Employee> {
@@ -114,6 +119,10 @@ export function getStoreBalance(): Promise<Balance> {
 
 export function setHoursWorked(hoursWorked: number): Promise<unknown> {
   return makePostRequest("employee/logHours", { hours: hoursWorked });
+}
+
+export function payAllEmployees(): Promise<PayrollResponse> {
+  return makeGetRequest("employee/payroll");
 }
 
 export function incrementUserBalance(
