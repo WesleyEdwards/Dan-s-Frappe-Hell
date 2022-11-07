@@ -2,8 +2,6 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { FC, useEffect, useState } from "react";
 import {getAllEmployees} from "../../api/api-functions";
 import { Loading } from "../../components/Loading";
-import {Permission} from "../../api/models";
-import {UserRow} from "./CustomerList";
 
 
 export interface EmployeeRow {
