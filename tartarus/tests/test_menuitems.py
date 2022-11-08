@@ -41,6 +41,7 @@ def test_get_recipe(client,auth):
     res = client.get('/menuitems/recipe/{"1":50,"2":100}', headers={'Authorization':f'Bearer {token}'})
     assert res.status_code == 200
     assert res.json['menuitem']['Recipe'] == {'1':50, '2':100}
+    assert res.json['menuitem']['ImagePath']
 
 def test_update_ingredient(client,auth):
     token = auth.login()
