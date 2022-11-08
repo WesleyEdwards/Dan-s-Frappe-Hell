@@ -115,19 +115,19 @@ CREATE TABLE MenuItem(
 
 -- Insert base menu items from Dans menu items
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Green Devil', '{"1":1,"7":2,"8":1,"11":2}',0.0,TRUE,'');
+Values ('Cerberus Special', '{"1":1,"7":2,"8":1,"11":2}',0.0,TRUE,'https://globalassets.starbucks.com/assets/410cd92738514641bf497d4b6a18c30f.jpg?impolicy=1by1_wide_topcrop_630');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Fire and Brimstone', '{"1":2,"3":4,"6":2,"9":1,"10":2}',0.0,TRUE,'');
+Values ('Fire and Brimstone', '{"1":2,"3":4,"6":2,"9":1,"10":2}',0.0,TRUE,'https://globalassets.starbucks.com/assets/5ae10fb3c4964de19be98893c0a85f9d.jpg?impolicy=1by1_wide_topcrop_630');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Cerberus Special', '{"2":3,"4":4,"5":1,"12":3}',0.0,TRUE,'');
+Values ('Green Devil', '{"2":3,"4":4,"5":1,"12":3}',0.0,TRUE,'https://globalassets.starbucks.com/assets/17f8efcbdbc8476e9992503d4ee19f95.jpg?impolicy=1by1_wide_topcrop_630');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Holy Hades', '{"3":1,"4":2,"9":1,"10":2}',0.0,TRUE,'');
+Values ('Holy Hades', '{"3":1,"4":2,"9":1,"10":2}',0.0,TRUE,'https://globalassets.starbucks.com/assets/1fd99578d31f4072a52892398d8f1fa8.jpg?impolicy=1by1_wide_topcrop_630');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Tortured Soul', '{"5":1,"3":2,"6":1,"4":2}',0.0,TRUE,'');
+Values ('Tortured Soul', '{"5":1,"3":2,"6":1,"4":2}',0.0,TRUE,'https://globalassets.starbucks.com/assets/5ae10fb3c4964de19be98893c0a85f9d.jpg?impolicy=1by1_wide_topcrop_630');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Pain and Suffering', '{"2":3,"3":1,"4":2,"5":4}',0.0,TRUE,'');
+Values ('Pain and Suffering', '{"2":3,"3":1,"4":2,"5":4}',0.0,TRUE,'https://globalassets.starbucks.com/assets/b8f963bfe65b4117af17d316e6bc3bc8.jpg?impolicy=1by1_wide_topcrop_630');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Create Your Own', '{"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}',0.0,TRUE,'');
+Values ('Create Your Own', '{"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}',0.0,TRUE,'https://www.starbucks.com/weblx/images/product-placeholder.png');
 
 DROP TABLE IF EXISTS Orders;
 
