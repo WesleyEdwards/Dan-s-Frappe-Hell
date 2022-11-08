@@ -63,6 +63,8 @@ def logEmployeeHours(userId, hoursWorked):
     db = get_db()
     cur = db.cursor()
     total = getEmployeeHoursWorked(userId) + hoursWorked
+    if total < 0:
+        total = 0
     cur.execute(f'update Employees set HoursWorked = {total} where userId = {userId}')
     db.commit()
 
