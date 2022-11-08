@@ -82,6 +82,7 @@ def resetHours():
     db = get_db()
     cur = db.cursor()
     cur.execute(f"update Employees set HoursWorked = 0")
+    db.commit()
 
 def allEmployeeInfo():
     db = get_db()
