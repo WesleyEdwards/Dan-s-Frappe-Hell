@@ -3,17 +3,19 @@ import {
   Card,
   CardContent,
   Dialog,
-  DialogActions,
   Alert,
   ListItemText,
   ListItem,
   List,
   Divider,
   CardActions,
-  DialogTitle,
+  DialogContent,
 } from "@mui/material";
 import React, { FC, useState } from "react";
 import { DisplayOrder } from "../api/models";
+import { DFHDialogActions } from "./DFHDialogActions";
+import DialogHeader from "./DialogHeader";
+import { RecipeDialog } from "./RecipeDialog";
 
 interface BaristaCardProps {
   order: DisplayOrder;
@@ -25,6 +27,13 @@ export const BaristaCard: FC<BaristaCardProps> = (props) => {
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleCompleteOrder = () => {
+    setError(undefined);
+    completeOrder(order.orderId).catch(() =>
+      setError("Error completing order")
+    );
+  };
 
   const [error, setError] = useState<string | undefined>();
 
@@ -48,24 +57,20 @@ export const BaristaCard: FC<BaristaCardProps> = (props) => {
           <Button onClick={handleClick} variant="contained">
             Complete
           </Button>
+          <RecipeDialog order={order} />
         </CardActions>
       </Card>
+
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle sx={{ p: "4rem" }}>Confirm Order Completion</DialogTitle>
+        <DialogContent>
+          <DialogHeader title="Confirm Order Completion" />
+        </DialogContent>
         {error && <Alert severity="error">{error}</Alert>}
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            variant="contained"
-            onClick={() =>
-              completeOrder(order.orderId).catch(() =>
-                setError("Error completing order")
-              )
-            }
-          >
-            Complete
-          </Button>
-        </DialogActions>
+        <DFHDialogActions
+          handleClose={handleClose}
+          handleSubmit={handleCompleteOrder}
+          submitText="Complete"
+        />
       </Dialog>
     </>
   );

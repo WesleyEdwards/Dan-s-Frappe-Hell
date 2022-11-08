@@ -3,7 +3,7 @@ import React, { FC } from "react";
 
 interface DFHDialogActionsProps {
   handleClose: () => void;
-  handleSubmit: () => void;
+  handleSubmit?: () => void;
   submitText?: string;
   disableSubmit?: boolean;
 }
@@ -13,13 +13,15 @@ export const DFHDialogActions: FC<DFHDialogActionsProps> = (props) => {
   return (
     <DialogActions>
       <Button onClick={handleClose}>Cancel</Button>
-      <Button
-        variant="contained"
-        disabled={disableSubmit}
-        onClick={handleSubmit}
-      >
-        {submitText ? submitText : "Save"}
-      </Button>
+      {handleSubmit && (
+        <Button
+          variant="contained"
+          disabled={disableSubmit}
+          onClick={handleSubmit}
+        >
+          {submitText ? submitText : "Save"}
+        </Button>
+      )}
     </DialogActions>
   );
 };
