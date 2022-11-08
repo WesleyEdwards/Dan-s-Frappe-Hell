@@ -59,7 +59,7 @@ def getEmployeeHoursWorked(userId):
     data = output.fetchone()
     return data[0]
 
-def setHoursWorked(userId, hoursWorked):
+def logEmployeeHours(userId, hoursWorked):
     db = get_db()
     cur = db.cursor()
     total = getEmployeeHoursWorked(userId) + hoursWorked

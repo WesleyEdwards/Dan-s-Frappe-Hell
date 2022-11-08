@@ -1,5 +1,5 @@
 from hashlib import new
-from .models.Employee import Employee, createEmployee, getEmployee, getAllHoursWorked, getEmployeeHoursWorked, setHoursWorked, setEmployeePayRate, createEmployeeJSON, resetHours, allEmployeeInfo
+from .models.Employee import Employee, createEmployee, getEmployee, getAllHoursWorked, getEmployeeHoursWorked, logEmployeeHours, setEmployeePayRate, createEmployeeJSON, resetHours, allEmployeeInfo
 from .auth import check_token
 from flask import Blueprint, request
 from datetime import datetime
@@ -37,6 +37,33 @@ def getEmp():
         },
         status
     )
+
+@bp.route('payrollTotals', methods=(['GET']))
+def payrollTotals():
+    status = 200
+    error = None
+    total = 0
+    storeBalance = 0
+    auth = check_token(request.headers['Authorization'], 3)
+    if(not auth[1]):
+        status = 401
+        error = "Invalid or expired token"
+    else:
+        payrollData = getAllHoursWorked()
+        storeBalance = Balance.getStoreBalance().getBalance()
+        for element in payrollData:
+            hoursWorked = element[1]
+            payRate = element[2]
+            total += (hoursWorked * payRate)
+    return(
+        {
+            'error': error,
+            'total': total,
+            'storeBalance': storeBalance
+        },
+        status
+    )
+        
 
 @bp.route('/payroll', methods=(['GET']))
 def payroll():
@@ -108,7 +135,7 @@ def logHours():
         status = 403
     else:
         hours = request.get_json()['hours']
-        setHoursWorked(auth[0].getId(), hours)
+        logEmployeeHours(auth[0].getId(), hours)
     return (
         {
             "error": error
