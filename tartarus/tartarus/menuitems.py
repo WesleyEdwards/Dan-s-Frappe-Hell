@@ -79,7 +79,7 @@ def deactivate_item(id):
     return toggle_active(request, id, False)
 
 def toggle_active(request, id, active):
-    token = request.headers['Authorization'].split(' ')[-1]
+    token = request.headers.get('Authorization',"").split(' ')[-1]
     requester,authorized = check_token(token,2)
     error = None
     itemPayload={}
@@ -100,7 +100,7 @@ def toggle_active(request, id, active):
 @bp.route('/recipe/<recipe>')
 def get_recipe(recipe):
     """Returns menu item of recipe"""
-    token = request.headers['Authorization'].split(' ')[-1]
+    token = request.headers.get('Authorization',"").split(' ')[-1]
     requester,_ = check_token(token)
     if requester == None:
         error = "Invalid Token"
@@ -121,7 +121,7 @@ def get_recipe(recipe):
 
 @bp.route('/update', methods=['POST'])
 def update_menuitem():
-    token = request.headers['Authorization'].split(' ')[-1]
+    token = request.headers.get('Authorization',"").split(' ')[-1]
     user,authorized = check_token(token,3)
     status = 200
     error = None

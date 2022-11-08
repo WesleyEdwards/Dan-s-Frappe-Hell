@@ -54,11 +54,12 @@ def test_edit_ingredient(client,auth):
         "IngredientId":1,
         "Name":"EditedIngredient",
         "Kind":"ADDIN",
-        "Price":100.0,
+        "Price":1,
         "Stock":999,
         "Upcharge":100.0
     }
     res = client.post('/ingredients/update', headers={'Authorization':f'Bearer {token}'},json=test_ingredient)
+    print(res.text)
     assert res.status_code == 200
     for key in test_ingredient:
         assert test_ingredient[key] == res.json['ingredient'][key]
