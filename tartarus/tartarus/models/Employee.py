@@ -40,7 +40,7 @@ def getEmployee(userId):
     data = output.fetchone()
     if (data is not None):
         employee = Employee(data[1], data[2], data[3])
-        employee.setHoursWorked = (data[4])
+        employee.setHoursWorked(data[4])
         employee.setId(data[0])
         return employee
     else:
@@ -59,7 +59,7 @@ def getEmployeeHoursWorked(userId):
     data = output.fetchone()
     return data[0]
 
-def setHoursWorked(userId, hoursWorked):
+def logEmployeeHours(userId, hoursWorked):
     db = get_db()
     cur = db.cursor()
     total = getEmployeeHoursWorked(userId) + hoursWorked
