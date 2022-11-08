@@ -14,7 +14,7 @@ import { DFHeader } from "../../components/DFHeader";
 
 import StoreFunds from "../../components/StoreFunds";
 import PayrollList from "./PayrollList";
-import {payAllEmployees} from "../../api/api-functions";
+import {getPayrollTotal, payAllEmployees} from "../../api/api-functions";
 export const EmployeePayroll: FC = () => {
     const [refreshTrigger, setRefreshTrigger] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -39,7 +39,9 @@ export const EmployeePayroll: FC = () => {
     }
 
     useEffect(() => {
-        alert("Need to get total payroll cost from backend on endpoint completion")
+        getPayrollTotal().then((res)=>{
+            setTotalCost(res.total);
+        })
     }, [refreshTrigger])
 
 
