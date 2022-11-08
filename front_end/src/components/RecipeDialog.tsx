@@ -45,7 +45,7 @@ export const RecipeDialog: FC<RecipeDialogProps> = (props) => {
 
   useEffect(() => {
     fetchDrinks();
-  });
+  }, [order]);
 
   if (drinks === undefined) return <Loading />;
   return (
@@ -62,10 +62,9 @@ export const RecipeDialog: FC<RecipeDialogProps> = (props) => {
               </Typography>
               <List>
                 {drink.recipe.map((recipe, j) => (
-                  <ListItem key={i}>
+                  <ListItem key={`${recipe.ingredient} -${j}`}>
                     <ListItemText
                       primary={`${recipe.ingredient.Name} - ${recipe.quantity}`}
-                      key={`${recipe.ingredient.Name}-${j}`}
                     />
                     <Divider />
                     {i <= order.orderItems.length && <Divider />}

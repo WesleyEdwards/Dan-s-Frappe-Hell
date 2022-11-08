@@ -53,24 +53,22 @@ export const BaristaView: FC = () => {
   if (!displayOrders) return <Loading />;
   return (
     <Container maxWidth="md">
-      <Stack gap="2rem" justifyContent="center">
-        <DFHeader title="Current Orders" />
-        {displayOrders.length > 0 ? (
-          <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
-            {displayOrders.map((order) => {
-              return (
-                <Grid item md={6}>
-                  <BaristaCard order={order} completeOrder={completeOrder} />
-                </Grid>
-              );
-            })}
-          </Grid>
-        ) : (
-          <Typography align="center" paddingTop="2rem">
-            There are no orders awaiting Customer Pick-up
-          </Typography>
-        )}
-      </Stack>
+      <DFHeader title="Current Orders" paddingBottom />
+      {displayOrders.length > 0 ? (
+        <Grid container rowSpacing={4} columnSpacing={{ md: 8 }}>
+          {displayOrders.map((order) => {
+            return (
+              <Grid item md={6}>
+                <BaristaCard order={order} completeOrder={completeOrder} />
+              </Grid>
+            );
+          })}
+        </Grid>
+      ) : (
+        <Typography align="center" paddingTop="2rem">
+          There are no orders awaiting Customer Pick-up
+        </Typography>
+      )}
     </Container>
   );
 };
