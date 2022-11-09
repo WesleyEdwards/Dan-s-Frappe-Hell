@@ -79,12 +79,14 @@ export interface DisplayOrderItem {
   quantity: number;
   price: number;
   itemId: string;
+  menuId: number;
 }
 export interface DisplayOrder {
   orderId: number;
   orderItems: DisplayOrderItem[];
   status: OrderStatus;
   totalPrice: number;
+  userId: number;
 }
 
 export type CreateIngredientType = Omit<Ingredient, "IngredientId">;
