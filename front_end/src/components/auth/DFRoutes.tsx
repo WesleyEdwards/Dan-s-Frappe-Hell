@@ -74,8 +74,8 @@ export const DFRoutes: FC = () => {
       permission: "Manager",
     },
     {
-      path:"/store-finance",
-      element: <EmployeePayroll/>,
+      path: "/store-finance",
+      element: <EmployeePayroll />,
       permission: "Manager",
     },
   ];

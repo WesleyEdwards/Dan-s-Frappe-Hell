@@ -98,29 +98,21 @@ def payroll():
 
 @bp.route('/setPay', methods=(['POST']))
 def setPayRate():
-    status = 200
-    error = None
-    employee = None
     auth = check_token(request.headers['Authorization'], 3)
+
     if not auth[1]:
-        status = 403
-        error = "Invalid Permissions"
+        return ("Invalid Permission", 401)
+
     if auth[0] == None:
-        status = 401
-        error = "Ivalid Token"
-    else:
-        result = request.get_json()
-        userId = result['userId']
-        newRate = result['payRate']
-        if newRate < 15.0:
-            newRate = 15.0
-        setEmployeePayRate(userId, newRate)
-    return(
-        {
-            "error": error
-        },
-        status
-    )
+        return ("Invalid Token", 401)
+
+    result = request.get_json()
+    userId = result['userId']
+    newRate = result['payRate']
+    if newRate < 15.0:
+        newRate = 15.0
+    setEmployeePayRate(userId, newRate)
+    return({ "newPayRate": newRate }, 200)
 
 @bp.route('/logHours', methods=(['POST']))
 def logHours():
@@ -172,3 +164,20 @@ def allEmployees():
         },
         status
     )
+
+@bp.route('/<id>', methods=(['GET']))
+def employeeByUserId(id):
+    auth = check_token(request.headers['Authorization'], 2)
+
+    if auth[0] is None:
+        return ({"error": "Invalid Token"}, 401)
+
+    if not auth[1]:
+        return ({"error": "Invalid Permissions"}, 403)
+
+    employee = getEmployee(id)
+    if employee is None:
+        return ({"error": "No employee found"}, 404)
+
+    return ( {'employee': createEmployeeJSON(employee)}, 200 )
+    

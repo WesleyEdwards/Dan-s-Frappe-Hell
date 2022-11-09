@@ -49,11 +49,14 @@ export const EmployeeInfo: FC = () => {
 
   return (
     <>
-      <Stack direction="row" gap="2rem" alignItems="center">
-        <IconButton onClick={handleOpen}>
-          <AddIcon />
-        </IconButton>
-        <Typography>Hours Worked: {employee.hoursWorked} hrs</Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack direction="row" gap="2rem" alignItems="center">
+          <IconButton onClick={handleOpen}>
+            <AddIcon />
+          </IconButton>
+          <Typography>Hours Worked: {employee.hoursWorked} hrs</Typography>
+        </Stack>
+        <Typography>Pay Rate: {employee.payRate} $/hr</Typography>
       </Stack>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>

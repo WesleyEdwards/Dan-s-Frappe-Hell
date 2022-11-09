@@ -21,16 +21,16 @@ export const Profile: FC = () => {
 
   return (
     <Container maxWidth="md">
-      <DFHeader title={`${user.firstName} ${user.lastName}`} />
+      <DFHeader title={`${user.firstName} ${user.lastName}`} paddingBottom />
       <Stack direction="column" gap="2rem">
         <Typography>{`${user.email}`}</Typography>
         <Divider />
 
-        <AccountFunds />
+        <EmployeeInfo />
         {hasPermission(user, "Employee") && (
           <>
             <Divider />
-            <EmployeeInfo />
+            <AccountFunds />
           </>
         )}
 
