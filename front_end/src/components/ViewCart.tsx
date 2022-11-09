@@ -1,7 +1,7 @@
 import { Alert, Badge, IconButton } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { DisplayOrder, MenuItem, Order } from "../api/models";
+import { DisplayOrder, DisplayOrderItem, MenuItem, Order } from "../api/models";
 import {
   getCartOrder,
   getAllMenuItems,
@@ -26,12 +26,30 @@ export const ViewCart: FC = () => {
   const handleOpen = () => setOpen(true);
 
   const handleCheckOut = () => {
-    if (!myCart) return;
-    updateOrder({
+    if (!myCart) return Promise.reject();
+    return updateOrder({
       OrderId: myCart.OrderId,
       Items: myCart.Items,
       Favorite: myCart.Favorite,
       Status: "PLACED",
+    }).then(() => {
+      fetchCartOrder();
+    });
+  };
+
+  const handleDelete = (deleteItem: DisplayOrderItem) => {
+    if (!myCart) return;
+    const removedOrderItems = myCart.Items.filter(
+      (item) =>
+        item.menuId !== deleteItem.menuId ||
+        item.quantity !== deleteItem.quantity
+    );
+
+    updateOrder({
+      OrderId: myCart.OrderId,
+      Items: removedOrderItems,
+      Favorite: myCart.Favorite,
+      Status: myCart.Status,
     }).then(() => {
       fetchCartOrder();
     });
@@ -84,6 +102,7 @@ export const ViewCart: FC = () => {
         myOrders={myOrders}
         handleCheckOut={handleCheckOut}
         displayOrder={displayOrder}
+        handleDelete={handleDelete}
       />
     </>
   );

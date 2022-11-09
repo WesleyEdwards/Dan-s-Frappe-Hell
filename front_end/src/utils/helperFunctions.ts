@@ -15,7 +15,6 @@ import {
   DisplayOrder,
   DisplayOrderItem,
   MappingOfIngredientToQuantity,
-  User,
 } from "../api/models";
 
 // ================================
@@ -157,40 +156,59 @@ export async function checkStockAndCost(
   const ingredients = await getIngredients();
   const menuItems = await getAllMenuItems();
 
-  let insufficientItem: string | undefined = undefined;
-
-  const drinksInOrder: Drink[] = mapMenuItemsToIngredients(
-    menuItems,
-    ingredients
-  );
-
-  const recipeItems: RecipeItem[] = drinksInOrder.flatMap((drink) => {
-    return drink.recipe.map((recipeItem) => {
-      return {
-        ...recipeItem,
-        drinkName: drink.recipe,
-      };
+  const neededIngredients: RecipeItem[] = [];
+  displayOrder.orderItems.forEach((drink) => {
+    const required = getRequiredOneDrink(drink, menuItems, ingredients);
+    required.forEach((item) => {
+      const existing = neededIngredients.find(
+        (existing) =>
+          existing.ingredient.IngredientId === item.ingredient.IngredientId
+      );
+      if (existing) {
+        existing.quantity += item.quantity;
+      } else {
+        neededIngredients.push(item);
+      }
     });
   });
 
-  const insufficientStock = recipeItems.some((item) => {
-    const ingredient = ingredients.find((ingredient) => {
-      return ingredient.IngredientId === item.ingredient.IngredientId;
-    });
-    if (ingredient === undefined) return true;
-    if (
-      roundToTwoDecimals(ingredient.Stock ?? 0) <
-      roundToTwoDecimals(item.quantity)
-    ) {
+  let insufficientItem: string | undefined = undefined;
+  neededIngredients.forEach((item) => {
+    if (item.quantity > (item.ingredient.Stock ?? 0)) {
       insufficientItem = item.ingredient.Name;
-      return true;
     }
   });
 
-  if (insufficientStock)
+  if (insufficientItem !== undefined) {
     return { checkoutType: "InsufficientStock", item: insufficientItem };
+  }
 
   return { checkoutType: "Success" };
+}
+
+function getRequiredOneDrink(
+  drink: DisplayOrderItem,
+  menuItems: MenuItem[],
+  ingredients: Ingredient[]
+): RecipeItem[] {
+  const menuItem = menuItems.find((menuItem) => {
+    return menuItem.MenuId === drink.menuId;
+  });
+  if (menuItem === undefined) return [];
+
+  const recipeItems: RecipeItem[] = [];
+  Object.entries(menuItem.Recipe).forEach(([ingredientId, quantity]) => {
+    const ingredient: Ingredient | undefined = ingredients.find(
+      (ingredient) => {
+        return ingredient.IngredientId.toString() === ingredientId.toString();
+      }
+    );
+    if (ingredient) {
+      const finalQuantity = quantity * drink.quantity;
+      recipeItems.push({ ingredient, quantity: finalQuantity });
+    }
+  });
+  return recipeItems;
 }
 
 export type checkoutType =
