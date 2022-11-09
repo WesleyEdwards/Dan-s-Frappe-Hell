@@ -1,7 +1,5 @@
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   IconButton,
   Stack,
@@ -15,6 +13,7 @@ import Loading from "./components/Loading";
 import { useAuth } from "./utils/AuthContext";
 import { roundToTwoDecimals } from "./utils/helperFunctions";
 import AddIcon from "@mui/icons-material/Add";
+import { DFHDialogActions } from "./components/DFHDialogActions";
 
 export const EmployeeInfo: FC = () => {
   const { user } = useAuth();
@@ -50,11 +49,14 @@ export const EmployeeInfo: FC = () => {
 
   return (
     <>
-      <Stack direction="row" gap="2rem" alignItems="center">
-        <IconButton onClick={handleOpen}>
-          <AddIcon />
-        </IconButton>
-        <Typography>Hours Worked: {employee.hoursWorked} hrs</Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack direction="row" gap="2rem" alignItems="center">
+          <IconButton onClick={handleOpen}>
+            <AddIcon />
+          </IconButton>
+          <Typography>Hours Worked: {employee.hoursWorked} hrs</Typography>
+        </Stack>
+        <Typography>Pay Rate: {employee.payRate} $/hr</Typography>
       </Stack>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
@@ -78,12 +80,10 @@ export const EmployeeInfo: FC = () => {
             </Stack>
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" disabled={false} onClick={changeHours}>
-            Save
-          </Button>
-        </DialogActions>
+        <DFHDialogActions
+          handleClose={handleClose}
+          handleSubmit={changeHours}
+        />
       </Dialog>
     </>
   );

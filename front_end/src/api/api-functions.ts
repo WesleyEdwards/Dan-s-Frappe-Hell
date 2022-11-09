@@ -36,8 +36,8 @@ export interface Balance {
   Balance: number;
 }
 
-export interface PayrollResponse{
-  error:string | null;
+export interface PayrollResponse {
+  error: string | null;
 }
 
 export interface Employee {
@@ -49,7 +49,7 @@ export interface Employee {
   hoursWorked: number;
 }
 
-export interface PayrollTotal{
+export interface PayrollTotal {
   error: string;
   total: number;
   storeBalance: number;
@@ -110,6 +110,17 @@ export function getAllEmployees(): Promise<Employee[]> {
 
 export function getMyEmployee(): Promise<Employee> {
   return makeGetRequest("employee/data").then((res) => res.employee);
+}
+export function getMyEmployeeById(userId: string): Promise<Employee> {
+  return makeGetRequest(`employee/${userId}`).then((res) => res.employee);
+}
+export function setEmployeePayRate(
+  userId: string,
+  payRate: number
+): Promise<unknown> {
+  return makePostRequest(`employee/setPay`, { userId, payRate }).then(
+    (res) => res.employee
+  );
 }
 
 // ================================

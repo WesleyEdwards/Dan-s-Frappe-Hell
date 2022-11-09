@@ -1,10 +1,13 @@
 import { Container, Stack } from "@mui/material";
 import React, { FC, useState } from "react";
-import { modifyUserPermission } from "../../api/api-functions";
+import {
+  modifyUserPermission,
+  setEmployeePayRate,
+} from "../../api/api-functions";
 import { Permission } from "../../api/models";
 import { DFHeader } from "../../components/DFHeader";
+import EditEmployeeDialogue from "../../components/EditEmployeeDialogue";
 import CustomerList, { UserRow } from "./CustomerList";
-import EditUserDialogue from "./EditUserDialogue";
 
 export const EmployeeManagement: FC = () => {
   const [selectedUser, setSelectedUser] = useState<UserRow | undefined>();
@@ -14,8 +17,20 @@ export const EmployeeManagement: FC = () => {
     setSelectedUser(undefined);
   };
 
-  const changePermissionLevel = (userId: string, newPerm: Permission) => {
-    modifyUserPermission(userId, newPerm).then(() => {
+  const editEmployee = (
+    userId: string,
+    newPerm?: Permission,
+    newPayRate?: number
+  ) => {
+    const promises: Promise<unknown>[] = [];
+    if (newPerm) {
+      promises.push(modifyUserPermission(userId, newPerm));
+    }
+    if (newPayRate) {
+      promises.push(setEmployeePayRate(userId, newPayRate));
+    }
+
+    Promise.all(promises).then(() => {
       setRefreshTrigger(!refreshTrigger);
       handleClose();
     });
@@ -33,10 +48,10 @@ export const EmployeeManagement: FC = () => {
           />
         </Stack>
       </Container>
-      <EditUserDialogue
+      <EditEmployeeDialogue
         user={selectedUser}
         handleClose={handleClose}
-        submitUser={changePermissionLevel}
+        submitUser={editEmployee}
       />
     </>
   );

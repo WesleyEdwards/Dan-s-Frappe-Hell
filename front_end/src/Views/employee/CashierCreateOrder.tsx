@@ -1,5 +1,6 @@
 import {
   Divider,
+  IconButton,
   List,
   ListItem,
   ListItemText,
@@ -12,7 +13,12 @@ import {
   getCartOrder,
   updateOrder,
 } from "../../api/api-functions";
-import { DisplayOrder, Order, OrderItem } from "../../api/models";
+import {
+  DisplayOrder,
+  DisplayOrderItem,
+  Order,
+  OrderItem,
+} from "../../api/models";
 import CashierCheckoutModal from "../../components/CashierCheckoutModal";
 import { DFHeader } from "../../components/DFHeader";
 import Loading from "../../components/Loading";
@@ -21,6 +27,7 @@ import {
   createDisplayOrderFromOrder,
   roundToTwoDecimals,
 } from "../../utils/helperFunctions";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const CashierCreateOrder: FC = () => {
   const [displayCart, setDisplayCart] = useState<DisplayOrder>();
@@ -47,6 +54,21 @@ export const CashierCreateOrder: FC = () => {
       totalPrice += item.price;
     });
     return roundToTwoDecimals(totalPrice + orderItem.price);
+  };
+
+  const removeItem = (deletedItem: DisplayOrderItem) => {
+    if (!displayCart) return;
+    const newItems = displayCart.orderItems.filter(
+      (item) => item.itemId !== deletedItem.itemId
+    );
+    const newPrice = newItems.reduce((acc, item) => acc + item.price, 0);
+    const removedOrderItems = order.Items.filter(
+      (item) =>
+        item.menuId !== deletedItem.menuId ||
+        item.quantity !== deletedItem.quantity
+    );
+    setOrder({ ...order, Items: removedOrderItems, TotalPrice: newPrice });
+    setDisplayCart({ ...displayCart, orderItems: newItems });
   };
 
   const handleCheckout = (userId: string) => {
@@ -88,11 +110,19 @@ export const CashierCreateOrder: FC = () => {
             <List>
               {displayCart.orderItems.map((item, i) => {
                 return (
-                  <ListItem key={i}>
-                    <ListItemText
-                      primary={`${item.quantity} - ${item.drinkName} - $${item.price}`}
-                    />
-                  </ListItem>
+                  <>
+                    <ListItem key={i}>
+                      <IconButton
+                        sx={{ mr: "2rem" }}
+                        onClick={() => removeItem(item)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                      <ListItemText
+                        primary={`${item.quantity} - ${item.drinkName} - $${item.price}`}
+                      />
+                    </ListItem>
+                  </>
                 );
               })}
               <Divider sx={{ my: "1rem" }} />

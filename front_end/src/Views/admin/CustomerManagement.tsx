@@ -1,4 +1,4 @@
-import { Container, Stack } from "@mui/material";
+import { Container } from "@mui/material";
 import React, { FC, useState } from "react";
 import { modifyUserPermission } from "../../api/api-functions";
 import { Permission } from "../../api/models";
@@ -24,14 +24,12 @@ export const CustomerManagement: FC = () => {
   return (
     <>
       <Container maxWidth="md">
-        <Stack gap="8rem" justifyContent="center">
-          <DFHeader title="Customer Management" />
-          <CustomerList
-            refreshTrigger={refreshTrigger}
-            setSelectedUser={setSelectedUser}
-            permissionLevels={["None", "Customer"]}
-          />
-        </Stack>
+        <DFHeader title="Customer Management" paddingBottom />
+        <CustomerList
+          refreshTrigger={refreshTrigger}
+          setSelectedUser={setSelectedUser}
+          permissionLevels={["None", "Customer"]}
+        />
       </Container>
       <EditUserDialogue
         user={selectedUser}

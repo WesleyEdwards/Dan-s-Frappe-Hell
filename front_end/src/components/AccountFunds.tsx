@@ -1,12 +1,8 @@
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   IconButton,
-  InputAdornment,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
@@ -20,6 +16,8 @@ import { useAuth } from "../utils/AuthContext";
 import { roundToTwoDecimals } from "../utils/helperFunctions";
 import DialogHeader from "./DialogHeader";
 import AddIcon from "@mui/icons-material/Add";
+import { DFHDialogActions } from "./DFHDialogActions";
+import MoneyField from "./MoneyField";
 
 export const AccountFunds: FC = () => {
   const { user } = useAuth();
@@ -66,35 +64,16 @@ export const AccountFunds: FC = () => {
         <DialogContent>
           <Stack gap="2rem">
             <DialogHeader title={`$${balance.Balance}`} />
-            <Stack
-              direction="row"
-              justifyContent="flex-start"
-              gap="4rem"
-              alignItems="center"
-            >
-              <Typography>Add To Account:</Typography>
-              <TextField
-                type={"number"}
-                label={"Amount"}
-                value={addAmount}
-                onChange={(e) =>
-                  setAddAmount(roundToTwoDecimals(parseFloat(e.target.value)))
-                }
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">$</InputAdornment>
-                  ),
-                }}
-              />
-            </Stack>
+            <MoneyField
+              title={"Add Funds"}
+              value={addAmount}
+              onChange={setAddAmount}
+              float
+            />
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" disabled={false} onClick={addFunds}>
-            Save
-          </Button>
-        </DialogActions>
+
+        <DFHDialogActions handleClose={handleClose} handleSubmit={addFunds} />
       </Dialog>
     </>
   );

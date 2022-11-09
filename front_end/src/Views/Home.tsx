@@ -1,6 +1,5 @@
 import { Container, Stack, Typography } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import { DFHeader } from "../components/DFHeader";
 import { getCartOrder, updateOrder } from "../api/api-functions";
 import { Order, OrderItem } from "../api/models";
 import { useAuth } from "../utils/AuthContext";
@@ -33,11 +32,32 @@ export const Home: FC = () => {
     fetchCartOrder();
   }, [user]);
 
+  function LogoImage() {
+    return (
+      <img
+        src="https://media.discordapp.net/attachments/1017128616074674198/1028080577963905066/logo-color.png"
+        alt="logo"
+        width="100"
+        height="100"
+      />
+    );
+  }
+
   return (
     <>
-      <Typography padding="4rem" variant="h2" align="center">
-        Welcome to Dan's Frappuccino Hell
-      </Typography>
+      <Stack
+        direction="row"
+        padding="3rem"
+        justifyContent="center"
+        alignItems="center"
+        gap="1rem"
+      >
+        <LogoImage />
+        <Typography variant="h2" align="center">
+          Welcome to Dan's Frappuccino Hell
+        </Typography>
+        <LogoImage />
+      </Stack>
       <Container maxWidth="md">
         <Stack gap="2rem" justifyContent="center" alignItems="center">
           <HomeCarousel />

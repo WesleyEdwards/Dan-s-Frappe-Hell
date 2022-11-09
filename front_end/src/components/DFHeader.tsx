@@ -3,13 +3,22 @@ import React, { FC } from "react";
 
 interface DFHeaderProps {
   title: string;
+  paddingBottom?: boolean;
 }
 
 export const DFHeader: FC<DFHeaderProps> = (props) => {
-  const { title } = props;
+  const { title, paddingBottom } = props;
   return (
-    <Typography variant="h4" padding="4rem">
-      {title}
-    </Typography>
+    <>
+      {paddingBottom ? (
+        <Typography variant="h4" paddingTop="4rem" paddingBottom="8rem">
+          {title}
+        </Typography>
+      ) : (
+        <Typography variant="h4" paddingTop="4rem">
+          {title}
+        </Typography>
+      )}
+    </>
   );
 };

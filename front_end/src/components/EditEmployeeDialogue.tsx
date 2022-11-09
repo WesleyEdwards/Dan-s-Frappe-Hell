@@ -1,6 +1,8 @@
 import {
+  Alert,
   Dialog,
   DialogContent,
+  Divider,
   FormControl,
   InputLabel,
   MenuItem,
@@ -8,34 +10,44 @@ import {
   Stack,
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import { Permission } from "../../api/models";
-import { DFHDialogActions } from "../../components/DFHDialogActions";
-import DialogHeader from "../../components/DialogHeader";
-import { isPermissionString } from "../../utils/userHelperFunctions";
-import { UserRow } from "./CustomerList";
+import { Employee, getMyEmployeeById } from "../api/api-functions";
+import { Permission } from "../api/models";
+import { isPermissionString } from "../utils/userHelperFunctions";
+import { UserRow } from "../Views/admin/CustomerList";
+import { DFHDialogActions } from "./DFHDialogActions";
+import DialogHeader from "./DialogHeader";
+import Loading from "./Loading";
+import MoneyField from "./MoneyField";
 
-interface EditUserDialogueProps {
+interface EditEmployeeDialogueProps {
   user: UserRow | undefined;
   handleClose: () => void;
-  submitUser: (userId: string, newPerm: Permission) => void;
+  submitUser: (userId: string, newPerm: Permission, newPayRate: number) => void;
 }
-export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
+export const EditEmployeeDialogue: FC<EditEmployeeDialogueProps> = (props) => {
   const { user, handleClose, submitUser } = props;
+  const [employee, setEmployee] = useState<Employee | undefined>();
   const [newPermission, setNewPermission] = useState<Permission>(
     user?.permission ?? "None"
   );
+  const [newPayRate, setNewPayRate] = useState<number>(0);
 
   const handleSubmit = () => {
     if (!user || !newPermission) return;
-    submitUser(user.id.toString(), newPermission);
+    submitUser(user.id.toString(), newPermission, newPayRate);
   };
 
   useEffect(() => {
     if (!user) return;
+    getMyEmployeeById(user.id).then((employee) => {
+      setNewPayRate(employee.payRate);
+      setEmployee(employee);
+    });
     setNewPermission(user.permission);
   }, [user]);
 
   if (!newPermission || !user) return <></>;
+  if (!employee) return <Loading />;
 
   return (
     <Dialog open={user !== undefined} onClose={handleClose} fullWidth={true}>
@@ -70,16 +82,34 @@ export const EditUserDialogue: FC<EditUserDialogueProps> = (props) => {
               </MenuItem>
             </Select>
           </FormControl>
+
+          <Divider />
+
+          <MoneyField
+            title={"Pay Rate"}
+            value={newPayRate}
+            onChange={setNewPayRate}
+            float
+          />
+
+          {newPayRate < 15 && (
+            <Alert severity="info">
+              You cannot pay any employee less than 15 $/hr. This store is too
+              boujee for that.
+            </Alert>
+          )}
         </Stack>
       </DialogContent>
 
       <DFHDialogActions
         handleClose={handleClose}
         handleSubmit={handleSubmit}
-        disableSubmit={user.permission === newPermission}
+        disableSubmit={
+          user.permission === newPermission && newPayRate === employee.payRate
+        }
       />
     </Dialog>
   );
 };
 
-export default EditUserDialogue;
+export default EditEmployeeDialogue;

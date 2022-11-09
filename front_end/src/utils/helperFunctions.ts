@@ -113,6 +113,7 @@ export function createDisplayOrderFromOrder(
       quantity: item.quantity,
       price: item.price,
       itemId: item.menuId.toString(),
+      menuId: item.menuId,
     });
   });
   return {
@@ -120,6 +121,7 @@ export function createDisplayOrderFromOrder(
     orderItems: displayItems,
     status: order.Status,
     totalPrice: order.TotalPrice,
+    userId: order.UserId,
   };
 }
 
