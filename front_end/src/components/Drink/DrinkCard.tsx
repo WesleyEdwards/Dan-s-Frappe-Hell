@@ -1,4 +1,4 @@
-import { Card, CardContent, Dialog, Typography } from "@mui/material";
+import {Card, CardContent, CardMedia, Dialog, Typography} from "@mui/material";
 import { FC, useState } from "react";
 import { Drink, OrderItem } from "../../api/models";
 import CustomOrderDrink from "./CustomOrderDrink";
@@ -38,6 +38,12 @@ export const DrinkCard: FC<DrinkCardProps> = (props) => {
           minHeight: "200px",
         }}
       >
+          <CardMedia
+              component="img"
+              height="280"
+              image={drink.menuItem.ImagePath}
+              alt="Drink Image"
+          />
         <CardContent style={{ justifyContent: "center" }}>
           <Typography variant="h5" gutterBottom>
             {drink.menuItem.Name}

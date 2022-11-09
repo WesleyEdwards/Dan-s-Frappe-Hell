@@ -6,14 +6,14 @@ import {
   DialogContent,
   Stack,
 } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { DFHeader } from "../../components/DFHeader";
-
 import StoreFunds from "../../components/StoreFunds";
 import PayrollList from "./PayrollList";
-import { payAllEmployees } from "../../api/api-functions";
 import { DFHDialogActions } from "../../components/DFHDialogActions";
 import DialogHeader from "../../components/DialogHeader";
+import { getPayrollTotal, payAllEmployees } from "../../api/api-functions";
+
 export const EmployeePayroll: FC = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +37,12 @@ export const EmployeePayroll: FC = () => {
     });
   };
 
+  useEffect(() => {
+    getPayrollTotal().then((res) => {
+      setTotalCost(res.total);
+    });
+  }, [refreshTrigger]);
+
   return (
     <>
       <Container maxWidth="md">
@@ -54,7 +60,6 @@ export const EmployeePayroll: FC = () => {
           <PayrollList refreshTrigger={refreshTrigger} />
         </Stack>
       </Container>
-
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
           <DialogHeader title="Confirm Employee Payment" />
