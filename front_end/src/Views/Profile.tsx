@@ -25,14 +25,13 @@ export const Profile: FC = () => {
       <Stack direction="column" gap="2rem">
         <Typography>{`${user.email}`}</Typography>
         <Divider />
-
-        <EmployeeInfo />
         {hasPermission(user, "Employee") && (
           <>
+            <EmployeeInfo />
             <Divider />
-            <AccountFunds />
           </>
         )}
+        <AccountFunds />
 
         <Stack direction="row" gap="2rem" justifyContent="flex-end">
           <Button variant="contained" onClick={handleLogout}>
