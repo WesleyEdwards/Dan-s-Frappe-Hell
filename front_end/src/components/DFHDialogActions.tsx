@@ -6,14 +6,21 @@ interface DFHDialogActionsProps {
   handleSubmit?: () => void;
   submitText?: string;
   disableSubmit?: boolean;
+  showSubmit?: boolean;
 }
 
 export const DFHDialogActions: FC<DFHDialogActionsProps> = (props) => {
-  const { handleClose, handleSubmit, disableSubmit, submitText } = props;
+  const {
+    handleClose,
+    handleSubmit,
+    disableSubmit,
+    submitText,
+    showSubmit = true,
+  } = props;
   return (
     <DialogActions>
       <Button onClick={handleClose}>Cancel</Button>
-      {handleSubmit && (
+      {handleSubmit && showSubmit && (
         <Button
           variant="contained"
           disabled={disableSubmit}

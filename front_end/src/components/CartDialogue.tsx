@@ -10,26 +10,35 @@ import {
 } from "@mui/material";
 import React, { FC, useState } from "react";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { DisplayOrder, Order } from "../api/models";
+import { DisplayOrder, DisplayOrderItem, Order } from "../api/models";
 import { Loading } from "./Loading";
 import { useAuth } from "../utils/AuthContext";
 import { useNavigate } from "react-router-dom";
 import CartList from "./CartList";
 import { checkStockAndCost } from "../utils/helperFunctions";
+import { DFHDialogActions } from "./DFHDialogActions";
 
 interface CartDialogueProps {
   open: boolean;
   handleClose: () => void;
-  handleCheckOut: () => void;
+  handleCheckOut: () => Promise<unknown>;
   myCart: Order | undefined;
   myOrders: Order[] | undefined;
   displayOrder: DisplayOrder | undefined;
+  handleDelete: (deleteItem: DisplayOrderItem) => void;
 }
 export const CartDialogue: FC<CartDialogueProps> = (props) => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { open, handleClose, handleCheckOut, myCart, displayOrder, myOrders } =
-    props;
+  const {
+    open,
+    handleClose,
+    handleDelete,
+    handleCheckOut,
+    myCart,
+    displayOrder,
+    myOrders,
+  } = props;
 
   const [error, setError] = useState<string>();
 
@@ -41,13 +50,17 @@ export const CartDialogue: FC<CartDialogueProps> = (props) => {
   const onClose = () => {
     setError(undefined);
     handleClose();
-  }
+  };
+
+  const onDelete = (deleteItem: DisplayOrderItem) => {
+    setError(undefined);
+    handleDelete(deleteItem);
+  };
 
   const handleDialogCheckout = async () => {
     if (!user || !displayOrder) return;
     setError(undefined);
     const issue = await checkStockAndCost(user.userId, displayOrder);
-    console.log(issue);
 
     if (issue.checkoutType === "InsufficientStock") {
       setError(`Insufficient stock for ${issue.item}`);
@@ -57,7 +70,7 @@ export const CartDialogue: FC<CartDialogueProps> = (props) => {
       setError("Insufficient funds");
       return;
     }
-    handleCheckOut();
+    handleCheckOut().catch(() => setError("Insufficient Ingredients"));
   };
 
   const processingOrder = (() => {
@@ -113,27 +126,32 @@ export const CartDialogue: FC<CartDialogueProps> = (props) => {
                     My Cart
                   </Typography>
                   <Divider sx={{ my: "2rem" }} />
-                  <CartList displayOrder={displayOrder} />
+                  <CartList
+                    handleDelete={onDelete}
+                    displayOrder={displayOrder}
+                  />
                 </>
               );
             })()}
           </>
         </>
+        {error && <Alert severity="error">{error}</Alert>}
       </DialogContent>
-      {error && <Alert severity="error">{error}</Alert>}
-      <DialogActions>
-        <Button
-          onClick={onClose}
-        >
-          Close
-        </Button>
+      <DFHDialogActions
+        handleClose={onClose}
+        handleSubmit={handleDialogCheckout}
+        submitText="Checkout"
+        showSubmit={!!myCart?.Items?.length && myCart.Items.length > 0}
+      />
+      {/* <DialogActions>
+        <Button onClick={onClose}>Close</Button>
 
         {!!myCart?.Items?.length && myCart.Items.length > 0 && (
           <Button variant="contained" onClick={handleDialogCheckout}>
             Checkout
           </Button>
         )}
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
   );
 };

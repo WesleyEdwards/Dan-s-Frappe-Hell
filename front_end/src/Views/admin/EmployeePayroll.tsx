@@ -54,9 +54,6 @@ export const EmployeePayroll: FC = () => {
               Pay All Employees
             </Button>
           </Stack>
-          <Alert severity="error">
-            Need to get total payroll cost from backend on endpoint completion
-          </Alert>
           <PayrollList refreshTrigger={refreshTrigger} />
         </Stack>
       </Container>
