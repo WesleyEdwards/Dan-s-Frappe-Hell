@@ -57,5 +57,17 @@ def test_modify_User(client, auth):
     
     assert response.status_code == 200
 
+def test_getFromEmail(client, auth):
+    token = auth.login()
+    response = client.post(
+        '/users/fromEmail',
+        headers={
+            'Authorization': token
+        },
+        json={
+            "email": "test@testemail.com"
+        }
+    )
+    assert response.status_code == 200
 
     
