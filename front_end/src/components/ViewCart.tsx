@@ -7,6 +7,7 @@ import {
   getAllMenuItems,
   getOrdersByUser,
   updateOrder,
+  UpdateOrder,
 } from "../api/api-functions";
 import { createDisplayOrderFromOrder } from "../utils/helperFunctions";
 import { useAuth } from "../utils/AuthContext";
@@ -24,6 +25,24 @@ export const ViewCart: FC = () => {
 
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  const fetchCartOrder = async () => {
+    if (!user) return;
+    setMyOrders(undefined);
+    setDisplayOrder(undefined);
+    setMyCart(undefined);
+    const myCart: Order = await getCartOrder(user.userId);
+    const menuItems: MenuItem[] = await getAllMenuItems();
+    const myOrders = await getOrdersByUser(user.userId);
+    const display: DisplayOrder = createDisplayOrderFromOrder(
+      myCart,
+      menuItems
+    );
+
+    setMyCart(myCart);
+    setDisplayOrder(display);
+    setMyOrders(myOrders);
+  };
 
   const handleCheckOut = () => {
     if (!myCart) return Promise.reject();
@@ -44,31 +63,17 @@ export const ViewCart: FC = () => {
         item.menuId !== deleteItem.menuId ||
         item.quantity !== deleteItem.quantity
     );
+    console.log(removedOrderItems);
 
-    updateOrder({
+    const newCart: UpdateOrder = {
       OrderId: myCart.OrderId,
       Items: removedOrderItems,
       Favorite: myCart.Favorite,
       Status: myCart.Status,
-    }).then(() => {
+    };
+    updateOrder(newCart).then(() => {
       fetchCartOrder();
     });
-  };
-
-  const fetchCartOrder = async () => {
-    setDisplayOrder(undefined);
-    if (!user) return;
-    const myCart: Order = await getCartOrder(user.userId);
-    const menuItems: MenuItem[] = await getAllMenuItems();
-    setMyCart(myCart);
-    const displayOrder: DisplayOrder = createDisplayOrderFromOrder(
-      myCart,
-      menuItems
-    );
-    setDisplayOrder(displayOrder);
-
-    const myOrders = await getOrdersByUser(user.userId);
-    setMyOrders(myOrders);
   };
 
   useEffect(() => {

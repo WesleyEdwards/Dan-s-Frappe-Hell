@@ -1,36 +1,29 @@
 import { Container, Stack, Typography } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { getCartOrder, updateOrder } from "../api/api-functions";
-import { Order, OrderItem } from "../api/models";
+import { OrderItem } from "../api/models";
 import { useAuth } from "../utils/AuthContext";
 import { OrderDrinkGrid } from "../components/OrderDrinkGrid";
 import HomeCarousel from "../components/HomeCarousel";
 
 export const Home: FC = () => {
   const { user, refreshUser } = useAuth();
-  const [cartOrder, setCartOrder] = useState<Order>();
 
-  const fetchCartOrder = () => {
+  const handleAddToCart = async (menuItem: OrderItem) => {
     if (!user) return;
-    setCartOrder(undefined);
-    getCartOrder(user.userId).then(setCartOrder);
-  };
-
-  const handleAddToCart = (menuItem: OrderItem) => {
-    if (!cartOrder) return Promise.resolve();
+    const cartOrder = await getCartOrder(user.userId);
     const newList: OrderItem[] = cartOrder.Items;
     newList.push(menuItem);
-    return updateOrder({
+
+    await updateOrder({
       OrderId: cartOrder.OrderId,
       Items: newList,
       Favorite: cartOrder.Favorite,
       Status: "CART",
-    }).then(refreshUser);
-  };
+    });
 
-  useEffect(() => {
-    fetchCartOrder();
-  }, [user]);
+    refreshUser();
+  };
 
   function LogoImage() {
     return (
