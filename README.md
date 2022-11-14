@@ -25,9 +25,10 @@
 
 1. Clone this repository by using the following command:
    `$ git clone git@github.com:WesleyEdwards/Dan-s-Frappe-Hell.git`
-2. inside the cloned repository, you will see two important directories, titled <b>front-end/</b> and <b>back-end/</b>.
-3. The back-end directory contains a Flask Rest API Frame-work project (Named Tartarus.py). navigate into it and install necessary dependencies in the `requirements.txt` file.
-4. start serving it on port 5000 by typing the command
+2. inside the cloned repository, you will see two important directories, titled <b>front-end/</b> and <b>tartarus/</b>.
+3. The tartarus directory contains a Flask project that is the backend. navigate into it and install the back end by running `$ install_tartarus.sh` on UNIX or  `$ pip install -e .` on windows.
+4. Initialize the database by running `$ flask --app tartarus init-db`
+5. start serving it on port 5000 by typing the command
    `$ flask --app tartarus run`.
 5. The front-end directory contains a React.js project. navigate into the directory and install necessary node modules with the following command:
    `$ npm install`
