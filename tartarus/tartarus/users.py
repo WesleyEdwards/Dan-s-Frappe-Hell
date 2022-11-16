@@ -140,4 +140,26 @@ def modifyUser():
         },
         status
     )
-        
+
+@bp.route('/fromEmail', methods=(['POST']))
+def getUserFromEmail():
+    status = 200
+    error = None
+    user = None
+    auth = check_token(request.headers['Authorization'], 1)
+    if auth[0] is None:
+        error = "Invalid Token"
+        status = 401
+    elif not auth[1]:
+        error = "Invalid Permissions"
+        status = 401
+    else:
+        email = request.get_json()['email']
+        user = createUserJSON(getUserByEmail(email))
+    return(
+        {
+            'error': error,
+            'user': user
+        },
+        status
+    )
