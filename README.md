@@ -41,9 +41,15 @@
 1. Navigate to the `tartarus/` directory and run `install_tartarus.sh`
    - This adds the tartarus directory to the import path for python and is a one time step.
 2. Run `pytest` in the same directory
+
+All major functionality of the backend has unit tests in the positive case.
 ## System testing instructions
 
 - The system can be tested by running both the front-end and the back-end simultaneously and navigating to all possible locations on the web-app.
 - By so doing, the big picture or system can be tested for any big issues.
 
+
+## Sprint documents
+
+Sprint documents can be found in the docs/sprint-3-docs directory.
 ## Other development notes, as needed
