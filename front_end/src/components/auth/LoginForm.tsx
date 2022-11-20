@@ -42,13 +42,13 @@ export const LoginForm: FC<LoginFormProps> = (props) => {
       setError(null);
       login(values.password, values.email)
         .then((user) => {
-          if (user) navigateToHome();
+          if (user) {
+            navigateToHome();
+          } else {
+            setError("Invalid email or password.");
+          }
         })
-        .then(() => setSubmitting(false))
-        .catch(() => {
-          setError("Invalid email or password.");
-          setSubmitting(false);
-        });
+        .then(() => setSubmitting(false));
     },
   });
 
