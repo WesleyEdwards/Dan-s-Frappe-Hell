@@ -140,12 +140,15 @@ def modifyUser():
 
         if(status is 200):
             updatedUser = createUserJSON(getUserById(user.getId()))
-
-    return (
-        {
+            response = {
             "error": error,
-            "user": updatedUser
-        },
+            "userId": updatedUser['userId'],
+            "modifiedUser": updatedUser
+        }
+        else:
+            response = {"error": error}
+    return (
+        response,
         status
     )
 
