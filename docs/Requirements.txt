@@ -43,7 +43,7 @@ Functional Requirements
 4. Point of Sale (POS) functionality 
     4.1 There must exist a customer-facing POS functionality for a customer to order their own drinks (high)
         4.1.1 System must contain a menu of all options offered (high)
-            4.1.1.1 Customer must be able to select drink from existing menu items, or create their own drink
+            4.1.1.1 Customer must be able to select drink from existing menu items, or create their own drink by modifying an existing drink
             4.1.1.2 Customer must be able to modify a selected menu item with their preferred ingredients before the item is added to the cart
         4.1.2 System must have a cart to hold current customer order (high)
             4.1.2.1 If customer is logged out, or fails to complete the order, the cart is saved to the users account
@@ -68,7 +68,7 @@ Functional Requirements
     5.1 Employee must be able to view all active customer orders (high)
     5.2 Employee must be able to clear an order once drink is made (medium)
     5.3 System may display recipe for item to employee (low)
-    5.4 System must notify/update inventory once order is cleared (high)
+    5.4 System must update inventory once order is cleared (high)
 
 
 6. Managerial Functionality
