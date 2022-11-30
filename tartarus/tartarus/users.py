@@ -1,5 +1,5 @@
 from .models.User import User, checkExistingUser, addUser, getUserByEmail, getUserById, getUserList, createUserJSON, updatePermissions, updateEmail, updateName, updatePassword
-from .auth import check_token
+from .auth import check_token, generateToken
 from .employee import newEmployee
 from .models.Employee import getEmployee
 from flask import(
@@ -29,10 +29,15 @@ def create_user():
         print(e)
         return ({'error': 'Error creating user'}, 500)
 
+    user = getUserByEmail(email)
     
-    return ({'user': createUserJSON(getUserByEmail(email))}, 200)
+    return (
+        {
+            'user': createUserJSON(user),
+            'token': generateToken(user)
+        }, 
+        200)
 
-#TODO: figure out how to append data to a dictionary
 @bp.route('/all', methods=(['GET']))
 def getAllUsers():
     users = []

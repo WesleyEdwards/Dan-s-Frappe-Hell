@@ -37,28 +37,7 @@ def get_token():
             userJson = createUserJSON(user)
         
         if error is None:
-            header = {
-                'alg':'HS256',
-                'typ':'JWT'
-            }
-            now = int(time.time())
-
-            id = user.getId()
-            fname = user.getFirstName()
-            lname = user.getLastName()
-            uemail = user.getEmail()
-            perm = user.getPermissions()
-
-            payload = {
-                'sub':id,
-                'firstName':fname,
-                'lastName':lname,
-                'email':uemail,
-                'permissions':perm,
-                'iat':now,
-                'exp':now + 30 * 60, # Expires 30 minutes from issue
-            }
-            token = jwt.encode(headers=header, payload=payload, key=current_app.secret_key)
+            token = generateToken(user)
         return (
             {
             'token':token,
@@ -92,3 +71,25 @@ def check_token(token,permission_level=0) -> 'tuple[User,bool]':
     
     return user, (user.getPermissions() >= permission_level)
     
+def generateToken(user):
+    header = {
+                'alg':'HS256',
+                'typ':'JWT'
+            }
+    now = int(time.time())
+    id = user.getId()
+    fname = user.getFirstName()
+    lname = user.getLastName()
+    uemail = user.getEmail()
+    perm = user.getPermissions()
+
+    payload = {
+        'sub':id,
+        'firstName':fname,
+        'lastName':lname,
+        'email':uemail,
+        'permissions':perm,
+        'iat':now,
+        'exp':now + 30 * 60, # Expires 30 minutes from issue
+    }
+    return jwt.encode(headers=header, payload=payload, key=current_app.secret_key)
