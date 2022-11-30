@@ -17,6 +17,9 @@ def create_user():
     if(checkExistingUser(email)):
         return ({'error': 'User already exists'}, 400)
 
+    if(len(result['password']) < 8):
+        return ({'error': 'Password must be a minimum of 8 characters'}, 400)
+
     try:
         addUser(User(
             result['firstName'],
