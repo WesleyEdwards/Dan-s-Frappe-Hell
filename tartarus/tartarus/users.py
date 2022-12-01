@@ -1,5 +1,5 @@
 from .models.User import User, checkExistingUser, addUser, getUserByEmail, getUserById, getUserList, createUserJSON, updatePermissions, updateEmail, updateName, updatePassword
-from .auth import check_token
+from .auth import check_token, generateToken
 from .employee import newEmployee
 from .models.Employee import getEmployee
 from flask import(
@@ -17,6 +17,9 @@ def create_user():
     if(checkExistingUser(email)):
         return ({'error': 'User already exists'}, 400)
 
+    if(len(result['password']) < 8):
+        return ({'error': 'Password must be a minimum of 8 characters'}, 400)
+
     try:
         addUser(User(
             result['firstName'],
@@ -29,10 +32,15 @@ def create_user():
         print(e)
         return ({'error': 'Error creating user'}, 500)
 
+    user = getUserByEmail(email)
     
-    return ({'user': createUserJSON(getUserByEmail(email))}, 200)
+    return (
+        {
+            'user': createUserJSON(user),
+            'token': generateToken(user)
+        }, 
+        200)
 
-#TODO: figure out how to append data to a dictionary
 @bp.route('/all', methods=(['GET']))
 def getAllUsers():
     users = []
@@ -132,12 +140,15 @@ def modifyUser():
 
         if(status is 200):
             updatedUser = createUserJSON(getUserById(user.getId()))
-
-    return (
-        {
+            response = {
             "error": error,
-            "user": updatedUser
-        },
+            "userId": updatedUser['userId'],
+            "modifiedUser": updatedUser
+        }
+        else:
+            response = {"error": error}
+    return (
+        response,
         status
     )
 
