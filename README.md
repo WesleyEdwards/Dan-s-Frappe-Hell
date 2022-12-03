@@ -36,6 +36,11 @@
    `$ npm start`.
 7. Open a web-browser and go to `http//:localhost:3000/`. You will be presented with the project.
 
+
+## Use Instructions
+1. To login as a manager, the email is default@manager.com, and the password is "password".
+2. From there, you can create accounts, users, and test everything on the test environment
+
 ## Unit testing instructions
 
 1. Navigate to the `tartarus/` directory and run `install_tartarus.sh`
