@@ -113,17 +113,17 @@ CREATE TABLE MenuItem(
 
 -- Insert base menu items from Dans menu items
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Cerberus Special', '{"1":1,"7":2,"8":1,"11":2}',0.0,TRUE,'https://globalassets.starbucks.com/assets/410cd92738514641bf497d4b6a18c30f.jpg?impolicy=1by1_wide_topcrop_630');
+Values ('Cerberus Special', '{"1":1,"7":2,"8":1,"11":2}',0.0,TRUE,'https://user-images.githubusercontent.com/97990557/277687838-4a3a7f6c-3d81-4ed5-bf3a-fb8c7dc6dcf8.png');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Fire and Brimstone', '{"1":2,"3":4,"6":2,"9":1,"10":2}',0.0,TRUE,'https://globalassets.starbucks.com/assets/5ae10fb3c4964de19be98893c0a85f9d.jpg?impolicy=1by1_wide_topcrop_630');
+Values ('Fire and Brimstone', '{"1":2,"3":4,"6":2,"9":1,"10":2}',0.0,TRUE,'https://user-images.githubusercontent.com/97990557/277691324-452336fb-82b1-490f-b05e-7315562d8bff.png');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Green Devil', '{"2":3,"4":4,"5":1,"12":3}',0.0,TRUE,'https://globalassets.starbucks.com/assets/17f8efcbdbc8476e9992503d4ee19f95.jpg?impolicy=1by1_wide_topcrop_630');
+Values ('Green Devil', '{"2":3,"4":4,"5":1,"12":3}',0.0,TRUE,'https://user-images.githubusercontent.com/97990557/277691320-eef7775d-1bb2-4e82-ac8a-dc668e69bf3f.png');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Holy Hades', '{"3":1,"4":2,"9":1,"10":2}',0.0,TRUE,'https://globalassets.starbucks.com/assets/1fd99578d31f4072a52892398d8f1fa8.jpg?impolicy=1by1_wide_topcrop_630');
+Values ('Holy Hades', '{"3":1,"4":2,"9":1,"10":2}',0.0,TRUE,'https://user-images.githubusercontent.com/97990557/277691313-d220e382-0ea8-47ad-bdba-57c06bb1b641.png');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Tortured Soul', '{"5":1,"3":2,"6":1,"4":2}',0.0,TRUE,'https://globalassets.starbucks.com/assets/5ae10fb3c4964de19be98893c0a85f9d.jpg?impolicy=1by1_wide_topcrop_630');
+Values ('Tortured Soul', '{"5":1,"3":2,"6":1,"4":2}',0.0,TRUE,'https://user-images.githubusercontent.com/97990557/277691317-bd9344ba-e3f3-4e31-b513-34321d26faca.png');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
-Values ('Pain and Suffering', '{"2":3,"3":1,"4":2,"5":4}',0.0,TRUE,'https://globalassets.starbucks.com/assets/b8f963bfe65b4117af17d316e6bc3bc8.jpg?impolicy=1by1_wide_topcrop_630');
+Values ('Pain and Suffering', '{"2":3,"3":1,"4":2,"5":4}',0.0,TRUE,'https://user-images.githubusercontent.com/97990557/277691305-1ab7fa1a-9794-4048-9991-743b40115f32.png');
 INSERT INTO MenuItem (Name, Recipe, Price, Active, ImagePath)
 Values ('Create Your Own', '{"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}',0.0,TRUE,'https://www.starbucks.com/weblx/images/product-placeholder.png');
 

@@ -38,7 +38,7 @@
 
 
 ## Use Instructions
-1. To login as a manager, the email is default@manager.com, and the password is "password".
+1. To login as a manager, the email is manager@dfh.com, and the password is "password".
 2. From there, you can create accounts, users, and test everything on the test environment
 
 ## Unit testing instructions

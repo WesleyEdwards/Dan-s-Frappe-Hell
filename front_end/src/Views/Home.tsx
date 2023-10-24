@@ -28,7 +28,7 @@ export const Home: FC = () => {
   function LogoImage() {
     return (
       <img
-        src="https://media.discordapp.net/attachments/1017128616074674198/1028080577963905066/logo-color.png"
+        src="https://user-images.githubusercontent.com/97990557/277697115-7852eb33-5f00-45d7-90cc-eeaba048a7c6.png"
         alt="logo"
         width="100"
         height="100"

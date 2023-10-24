@@ -178,15 +178,15 @@ class MenuItem:
         Chooses a default image to represent a drink from a recipe.
         """
         if recipe.get("6",0) > 0:
-            return "https://globalassets.starbucks.com/assets/5ae10fb3c4964de19be98893c0a85f9d.jpg?impolicy=1by1_wide_topcrop_630"
+            return "https://user-images.githubusercontent.com/97990557/277696831-b9358428-b5e2-4464-80cd-1cd6fd5b220b.png"
         elif recipe.get("12",0) > 0:
-            return "https://globalassets.starbucks.com/assets/17f8efcbdbc8476e9992503d4ee19f95.jpg?impolicy=1by1_wide_topcrop_630"
+            return "https://user-images.githubusercontent.com/97990557/277696831-b9358428-b5e2-4464-80cd-1cd6fd5b220b.png"
         elif recipe.get("7",0) > 0:
-            return "https://globalassets.starbucks.com/assets/410cd92738514641bf497d4b6a18c30f.jpg?impolicy=1by1_wide_topcrop_630"
+            return "https://user-images.githubusercontent.com/97990557/277696831-b9358428-b5e2-4464-80cd-1cd6fd5b220b.png"
         elif recipe.get("9",0) > 0:
-            return "https://globalassets.starbucks.com/assets/1fd99578d31f4072a52892398d8f1fa8.jpg?impolicy=1by1_wide_topcrop_630"
+            return "https://user-images.githubusercontent.com/97990557/277696831-b9358428-b5e2-4464-80cd-1cd6fd5b220b.png"
         else:
-            return "https://globalassets.starbucks.com/assets/b8f963bfe65b4117af17d316e6bc3bc8.jpg?impolicy=1by1_wide_topcrop_630"
+            return "https://user-images.githubusercontent.com/97990557/277696831-b9358428-b5e2-4464-80cd-1cd6fd5b220b.png"
 
     @staticmethod
     def name_from_recipe(recipe:dict) -> str:
