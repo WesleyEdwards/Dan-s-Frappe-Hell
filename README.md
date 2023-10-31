@@ -1,3 +1,6 @@
+<img src="https://github.com/WesleyEdwards/Dan-s-Frappe-Hell/assets/97990557/acf7ba56-df09-4c60-ac1c-96c8b705e60a" alt="image 1" style="width:500px;" />
+<img src="https://github.com/WesleyEdwards/Dan-s-Frappe-Hell/assets/97990557/b96472a3-0978-4d5d-97e9-ac4a23914afc" alt="image 1" style="width:500px;" />
+
 # Dan's Frappuccino Hell
 
 ## Workspace layout
